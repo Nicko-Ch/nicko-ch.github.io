@@ -1,4 +1,4 @@
-baseURL = 'https://nicko-ch.github.io/docs/'
+baseURL = 'https://nicko-ch.github.io/'
 languageCode = 'zh-CN'
 title = "> $ cd /home"
 theme = 'hugo-PaperMod'
