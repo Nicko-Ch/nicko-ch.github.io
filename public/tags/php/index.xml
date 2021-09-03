@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>PHP on &gt; $ cd /home</title>
+    <link>https://nicko-ch.github.io/tags/php/</link>
+    <description>Recent content in PHP on &gt; $ cd /home</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 01 Nov 2018 14:40:26 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/tags/php/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PHPStorm 项目目录分类管理配置</title>
+      <link>https://nicko-ch.github.io/posts/201811011440/</link>
+      <pubDate>Thu, 01 Nov 2018 14:40:26 +0000</pubDate>
+      
+      <guid>https://nicko-ch.github.io/posts/201811011440/</guid>
+      <description>phpstorm 为了方便用户管理项目目录，目前可以将项目文件夹设置为 4 类 Test,Sources,Excluded,Resource Root。 1. Test (颜色为绿色) &amp;gt; 测试主目录，如 `Laravel` 的 `tests` 目录2. Source (颜色为蓝色) &amp;gt; 项目主代码目录，如 `Laravel` 的 `app` 目录3. Excluded (颜色为红色) &amp;gt; 第三方扩展依赖(不会修改代码)，不建立索引，不由`phpstorm`管理，如 `Laravel` 的 `vendor` 目录4. Resource Root (颜色为紫色) &amp;gt; 前端资源，如 `Laravel` 的 `public` 目录合理设置项目的目录是有作用的，如  1 设置 Test 目录，可以在project勾选只显示 Test,方便测试时查看 2 设置 Excluded 目录，可以减少 phpstorm 建立索引的时间 3 设置 Resource Root 目录，以 Laravel 为例，可以帮助检测模板文件的资源路径    </description>
+    </item>
+    
+  </channel>
+</rss>

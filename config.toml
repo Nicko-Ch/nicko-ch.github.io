@@ -1,0 +1,70 @@
+baseURL = 'https://nicko-ch.github.io/'
+languageCode = 'zh-CN'
+title = "> $ cd /home"
+theme = 'hugo-PaperMod'
+
+[params]
+  dateform        = "Jan 2, 2006"
+  dateformShort   = "Jan 2"
+  dateformNum     = "2006-01-02"
+  dateformNumTime = "2006-01-02 15:04"
+  defaultTheme    = "light"
+  ShowToc         = true
+
+  [params.logo]
+    logoMark     = ">"
+    logoText     = "$ cd /home/"
+    logoHomeLink = "/" 
+
+  [params.profileMode]
+    enabled = true
+    title = "Nicko_Ch's Home" # optional default will be site title
+    subtitle = ""
+    imageUrl = "https://avatars.githubusercontent.com/u/9588258?v=4" # optional
+    imageTitle = "<Nicko_Ch>" # optional
+    imageWidth = 120 # custom size
+    imageHeight = 120 # custom size
+    
+  [[params.profileMode.buttons]]
+    name = "Archive"
+    url = "/archive"
+  [[params.profileMode.buttons]]
+    name = "Github"
+    url = "https://github.com/"
+
+  [[params.socialIcons]]
+    name = "github"
+    title = "Github"
+    url  = "https://github.com/Nicko-Ch"
+  [[params.socialIcons]]
+    name = "email"
+    url = "mailto:cyn_411@sina.com"
+  [[params.socialIcons]]
+    name = "weibo"
+    title = "Sina Weibo"
+    url  = "https://weibo.com/cyn411/home"
+  [[params.socialIcons]]
+    name = "wechat"
+    title = "NicKo_Ch"
+
+[menu]
+  [[menu.main]]
+    identifier = "About"
+    name       = "About"
+    url        = "/about/"
+  [[menu.main]]
+    identifier = "Posts"
+    name       = "Posts"
+    url        = "/posts/"
+  [[menu.main]]
+    identifier = "Categories"
+    name       = "Categories"
+    url        = "/categories/"
+  [[menu.main]]
+    identifier = "Tags"
+    name       = "Tags"
+    url        = "/tags/"
+  [[menu.main]]
+    identifier = "Search"
+    name       = "Search"
+    url        = "/search/"

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>First | &gt; $ cd /home</title>
+<meta name="keywords" content="" />
+<meta name="description" content="bit ┌───┐ byte │ │ └───┘ ┌───┬───┐ short │ │ │ └───┴───┘ ┌───┬───┬───┬───┐ int │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ long │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┬───┬───┐ float │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ double │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┐ char │ │ │ └───┴───┘ /* golang */ package main import ( &#34;fmt&#34; &#34;time&#34; &#34;github.com/gin-gonic/gin&#34; ) // 定义中间 func MiddleWare() gin.">
+<meta name="author" content="">
+<link rel="canonical" href="https://nicko-ch.github.io/posts/202109021012/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.9aee4b15619512c14f0c0521b9bd82db57c0a161b693064f1d0fe99060cafa02.css" integrity="sha256-mu5LFWGVEsFPDAUhub2C21fAoWG2kwZPHQ/pkGDK&#43;gI=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js" integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5&#43;kdJvBz5iKbt6B5PJI="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nicko-ch.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://nicko-ch.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://nicko-ch.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.87.0" />
+<meta property="og:title" content="First" />
+<meta property="og:description" content="bit ┌───┐ byte │ │ └───┘ ┌───┬───┐ short │ │ │ └───┴───┘ ┌───┬───┬───┬───┐ int │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ long │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┬───┬───┐ float │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ double │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┐ char │ │ │ └───┴───┘ /* golang */ package main import ( &#34;fmt&#34; &#34;time&#34; &#34;github.com/gin-gonic/gin&#34; ) // 定义中间 func MiddleWare() gin." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://nicko-ch.github.io/posts/202109021012/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-09-02T10:12:10&#43;08:00" />
+<meta property="article:modified_time" content="2021-09-02T10:12:10&#43;08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="First"/>
+<meta name="twitter:description" content="bit ┌───┐ byte │ │ └───┘ ┌───┬───┐ short │ │ │ └───┴───┘ ┌───┬───┬───┬───┐ int │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ long │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┬───┬───┐ float │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ double │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┐ char │ │ │ └───┴───┘ /* golang */ package main import ( &#34;fmt&#34; &#34;time&#34; &#34;github.com/gin-gonic/gin&#34; ) // 定义中间 func MiddleWare() gin."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://nicko-ch.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "First",
+      "item": "https://nicko-ch.github.io/posts/202109021012/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "First",
+  "name": "First",
+  "description": "bit ┌───┐ byte │ │ └───┘ ┌───┬───┐ short │ │ │ └───┴───┘ ┌───┬───┬───┬───┐ int │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ long │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┬───┬───┐ float │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ double │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┐ char │ │ │ └───┴───┘ /* golang */ package main import ( \u0026#34;fmt\u0026#34; \u0026#34;time\u0026#34; \u0026#34;github.com/gin-gonic/gin\u0026#34; ) // 定义中间 func MiddleWare() gin.",
+  "keywords": [
+    
+  ],
+  "articleBody": "bit ┌───┐ byte │ │ └───┘ ┌───┬───┐ short │ │ │ └───┴───┘ ┌───┬───┬───┬───┐ int │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ long │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┬───┬───┐ float │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ double │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┐ char │ │ │ └───┴───┘ /* golang */ package main import ( \"fmt\" \"time\" \"github.com/gin-gonic/gin\" ) // 定义中间 func MiddleWare() gin.HandlerFunc { return func(c *gin.Context) { t := time.Now() fmt.Println(\"中间件开始执行了\") // 设置变量到Context的key中，可以通过Get()取  c.Set(\"request\", \"中间件\") // 执行函数  c.Next() // 中间件执行完后续的一些事情  status := c.Writer.Status() fmt.Println(\"中间件执行完毕\", status) t2 := time.Since(t) fmt.Println(\"time:\", t2) } } func main() { // 1.创建路由  // 默认使用了2个中间件Logger(), Recovery()  r := gin.Default() // 注册中间件  r.Use(MiddleWare()) // {}为了代码规范  { r.GET(\"/ce\", func(c *gin.Context) { // 取值  req, _ := c.Get(\"request\") fmt.Println(\"request:\", req) // 页面接收  c.JSON(200, gin.H{\"request\": req}) }) } r.Run() } ALTER TABLE hq_study_test.solution_wxapp_customer_service_msg\nADD COLUMN second_category_id int(11) NULL COMMENT ‘考试id’ AFTER status,\nADD COLUMN second_category_name varchar(255) NULL COMMENT ‘考试名称’ AFTER category_id,\nADD COLUMN order_value int(11) UNSIGNED NULL DEFAULT 1 COMMENT ‘排序值’ AFTER category_name;\n   table field     solution_activity_special_subject banner,enter_banner_img   solution_wx_lucky_activity logo   solution_miniapp_advertising_card images   solution_answer audio   solution_app_release app_icon,app_pics   solution_article cover   solution_miniapp_channel_icon images   solution_delivery_special_subject banner   solution_wx_documents_activity_data document_url   solution_huoma_group_qr qr_code_img   solution_wxapp_red_pack_activity share_image   solution_wxapp_advertising_postion images   solution_wxapp_evaluation_activity images   solution_wxapp_activity_group avatar,qrcode   solution_wxapp_live_room desc_pic   solution_wxapp_poster pic_url   solution_train_plan header_pic,description_pic   solution_train_plan_award header_pic,description_pic    ",
+  "wordCount" : "213",
+  "inLanguage": "en",
+  "datePublished": "2021-09-02T10:12:10+08:00",
+  "dateModified": "2021-09-02T10:12:10+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://nicko-ch.github.io/posts/202109021012/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\u003e $ cd /home",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://nicko-ch.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://nicko-ch.github.io/" accesskey="h" title="&gt; $ cd /home (Alt + H)">&gt; $ cd /home</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://nicko-ch.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      First
+    </h1>
+    <div class="post-meta">September 2, 2021
+</div>
+  </header> 
+
+  <div class="post-content"><pre><code class="language-ascii" data-lang="ascii">  bit         
+       
+       ┌───┐
+  byte │   │
+       └───┘
+       ┌───┬───┐
+ short │   │   │
+       └───┴───┘
+       ┌───┬───┬───┬───┐
+   int │   │   │   │   │
+       └───┴───┴───┴───┘
+       ┌───┬───┬───┬───┬───┬───┬───┬───┐
+  long │   │   │   │   │   │   │   │   │
+       └───┴───┴───┴───┴───┴───┴───┴───┘
+       ┌───┬───┬───┬───┐
+ float │   │   │   │   │
+       └───┴───┴───┴───┘
+       ┌───┬───┬───┬───┬───┬───┬───┬───┐
+double │   │   │   │   │   │   │   │   │
+       └───┴───┴───┴───┴───┴───┴───┴───┘
+       ┌───┬───┐
+  char │   │   │
+       └───┴───┘
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">
+<span style="color:#75715e">/* golang */</span>
+
+<span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+
+<span style="color:#f92672">import</span> (
+    <span style="color:#e6db74">&#34;fmt&#34;</span>
+    <span style="color:#e6db74">&#34;time&#34;</span>
+
+    <span style="color:#e6db74">&#34;github.com/gin-gonic/gin&#34;</span>
+)
+
+<span style="color:#75715e">// 定义中间
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">MiddleWare</span>() <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">HandlerFunc</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+        <span style="color:#a6e22e">t</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>()
+        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;中间件开始执行了&#34;</span>)
+        <span style="color:#75715e">// 设置变量到Context的key中，可以通过Get()取
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#e6db74">&#34;request&#34;</span>, <span style="color:#e6db74">&#34;中间件&#34;</span>)
+        <span style="color:#75715e">// 执行函数
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Next</span>()
+        <span style="color:#75715e">// 中间件执行完后续的一些事情
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">status</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Writer</span>.<span style="color:#a6e22e">Status</span>()
+        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;中间件执行完毕&#34;</span>, <span style="color:#a6e22e">status</span>)
+        <span style="color:#a6e22e">t2</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Since</span>(<span style="color:#a6e22e">t</span>)
+        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;time:&#34;</span>, <span style="color:#a6e22e">t2</span>)
+    }
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+    <span style="color:#75715e">// 1.创建路由
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 默认使用了2个中间件Logger(), Recovery()
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Default</span>()
+    <span style="color:#75715e">// 注册中间件
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Use</span>(<span style="color:#a6e22e">MiddleWare</span>())
+    <span style="color:#75715e">// {}为了代码规范
+</span><span style="color:#75715e"></span>    {
+        <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/ce&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+            <span style="color:#75715e">// 取值
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;request&#34;</span>)
+            <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;request:&#34;</span>, <span style="color:#a6e22e">req</span>)
+            <span style="color:#75715e">// 页面接收
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">JSON</span>(<span style="color:#ae81ff">200</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;request&#34;</span>: <span style="color:#a6e22e">req</span>})
+        })
+
+    }
+    <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Run</span>()
+}
+
+</code></pre></div><p>ALTER TABLE <code>hq_study_test</code>.<code>solution_wxapp_customer_service_msg</code></p>
+<p>ADD COLUMN <code>second_category_id</code> int(11) NULL COMMENT &lsquo;考试id&rsquo; AFTER <code>status</code>,</p>
+<p>ADD COLUMN <code>second_category_name</code> varchar(255) NULL COMMENT &lsquo;考试名称&rsquo; AFTER <code>category_id</code>,</p>
+<p>ADD COLUMN <code>order_value</code> int(11) UNSIGNED NULL DEFAULT 1 COMMENT &lsquo;排序值&rsquo; AFTER <code>category_name</code>;</p>
+<table>
+<thead>
+<tr>
+<th>table</th>
+<th>field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>solution_activity_special_subject</td>
+<td>banner,enter_banner_img</td>
+</tr>
+<tr>
+<td>solution_wx_lucky_activity</td>
+<td>logo</td>
+</tr>
+<tr>
+<td>solution_miniapp_advertising_card</td>
+<td>images</td>
+</tr>
+<tr>
+<td>solution_answer</td>
+<td>audio</td>
+</tr>
+<tr>
+<td>solution_app_release</td>
+<td>app_icon,app_pics</td>
+</tr>
+<tr>
+<td>solution_article</td>
+<td>cover</td>
+</tr>
+<tr>
+<td>solution_miniapp_channel_icon</td>
+<td>images</td>
+</tr>
+<tr>
+<td>solution_delivery_special_subject</td>
+<td>banner</td>
+</tr>
+<tr>
+<td>solution_wx_documents_activity_data</td>
+<td>document_url</td>
+</tr>
+<tr>
+<td>solution_huoma_group_qr</td>
+<td>qr_code_img</td>
+</tr>
+<tr>
+<td>solution_wxapp_red_pack_activity</td>
+<td>share_image</td>
+</tr>
+<tr>
+<td>solution_wxapp_advertising_postion</td>
+<td>images</td>
+</tr>
+<tr>
+<td>solution_wxapp_evaluation_activity</td>
+<td>images</td>
+</tr>
+<tr>
+<td>solution_wxapp_activity_group</td>
+<td>avatar,qrcode</td>
+</tr>
+<tr>
+<td>solution_wxapp_live_room</td>
+<td>desc_pic</td>
+</tr>
+<tr>
+<td>solution_wxapp_poster</td>
+<td>pic_url</td>
+</tr>
+<tr>
+<td>solution_train_plan</td>
+<td>header_pic,description_pic</td>
+</tr>
+<tr>
+<td>solution_train_plan_award</td>
+<td>header_pic,description_pic</td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+
+  <footer class="post-footer">
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2021 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
