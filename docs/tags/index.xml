@@ -2,89 +2,89 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on &gt; $ cd /home</title>
-    <link>https://nicko-ch.github.io/tags/</link>
+    <link>https://nicko-ch.github.io/docs/tags/</link>
     <description>Recent content in Tags on &gt; $ cd /home</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 07 Nov 2018 08:34:55 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 07 Nov 2018 08:34:55 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/docs/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Docker</title>
-      <link>https://nicko-ch.github.io/tags/docker/</link>
+      <link>https://nicko-ch.github.io/docs/tags/docker/</link>
       <pubDate>Wed, 07 Nov 2018 08:34:55 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/tags/docker/</guid>
+      <guid>https://nicko-ch.github.io/docs/tags/docker/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Laradock</title>
-      <link>https://nicko-ch.github.io/tags/laradock/</link>
+      <link>https://nicko-ch.github.io/docs/tags/laradock/</link>
       <pubDate>Wed, 07 Nov 2018 08:34:55 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/tags/laradock/</guid>
+      <guid>https://nicko-ch.github.io/docs/tags/laradock/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Mysql</title>
-      <link>https://nicko-ch.github.io/tags/mysql/</link>
+      <link>https://nicko-ch.github.io/docs/tags/mysql/</link>
       <pubDate>Wed, 07 Nov 2018 08:34:55 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/tags/mysql/</guid>
+      <guid>https://nicko-ch.github.io/docs/tags/mysql/</guid>
       <description></description>
     </item>
     
     <item>
       <title>PHP</title>
-      <link>https://nicko-ch.github.io/tags/php/</link>
+      <link>https://nicko-ch.github.io/docs/tags/php/</link>
       <pubDate>Thu, 01 Nov 2018 14:40:26 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/tags/php/</guid>
+      <guid>https://nicko-ch.github.io/docs/tags/php/</guid>
       <description></description>
     </item>
     
     <item>
       <title>PHPStorm</title>
-      <link>https://nicko-ch.github.io/tags/phpstorm/</link>
+      <link>https://nicko-ch.github.io/docs/tags/phpstorm/</link>
       <pubDate>Thu, 01 Nov 2018 14:40:26 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/tags/phpstorm/</guid>
+      <guid>https://nicko-ch.github.io/docs/tags/phpstorm/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Cmd Mardown</title>
-      <link>https://nicko-ch.github.io/tags/cmd-mardown/</link>
+      <link>https://nicko-ch.github.io/docs/tags/cmd-mardown/</link>
       <pubDate>Wed, 31 Oct 2018 15:11:07 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/tags/cmd-mardown/</guid>
+      <guid>https://nicko-ch.github.io/docs/tags/cmd-mardown/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Grammar</title>
-      <link>https://nicko-ch.github.io/tags/grammar/</link>
+      <link>https://nicko-ch.github.io/docs/tags/grammar/</link>
       <pubDate>Wed, 31 Oct 2018 15:11:07 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/tags/grammar/</guid>
+      <guid>https://nicko-ch.github.io/docs/tags/grammar/</guid>
       <description></description>
     </item>
     
     <item>
       <title>语法</title>
-      <link>https://nicko-ch.github.io/tags/%E8%AF%AD%E6%B3%95/</link>
+      <link>https://nicko-ch.github.io/docs/tags/%E8%AF%AD%E6%B3%95/</link>
       <pubDate>Wed, 31 Oct 2018 15:11:07 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/tags/%E8%AF%AD%E6%B3%95/</guid>
+      <guid>https://nicko-ch.github.io/docs/tags/%E8%AF%AD%E6%B3%95/</guid>
       <description></description>
     </item>
     
     <item>
       <title>HELLO WORLD</title>
-      <link>https://nicko-ch.github.io/tags/hello-world/</link>
+      <link>https://nicko-ch.github.io/docs/tags/hello-world/</link>
       <pubDate>Tue, 23 Oct 2018 15:54:01 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/tags/hello-world/</guid>
+      <guid>https://nicko-ch.github.io/docs/tags/hello-world/</guid>
       <description></description>
     </item>
     

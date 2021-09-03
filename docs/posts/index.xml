@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on &gt; $ cd /home</title>
-    <link>https://nicko-ch.github.io/posts/</link>
+    <link>https://nicko-ch.github.io/docs/posts/</link>
     <description>Recent content in Posts on &gt; $ cd /home</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 02 Sep 2021 10:12:10 +0800</lastBuildDate><atom:link href="https://nicko-ch.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 02 Sep 2021 10:12:10 +0800</lastBuildDate><atom:link href="https://nicko-ch.github.io/docs/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>First</title>
-      <link>https://nicko-ch.github.io/posts/202109021012/</link>
+      <link>https://nicko-ch.github.io/docs/posts/202109021012/</link>
       <pubDate>Thu, 02 Sep 2021 10:12:10 +0800</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202109021012/</guid>
+      <guid>https://nicko-ch.github.io/docs/posts/202109021012/</guid>
       <description>bit ┌───┐ byte │ │ └───┘ ┌───┬───┐ short │ │ │ └───┴───┘ ┌───┬───┬───┬───┐ int │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ long │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┬───┬───┐ float │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ double │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┐ char │ │ │ └───┴───┘ /* golang */ package main import ( &amp;#34;fmt&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.com/gin-gonic/gin&amp;#34; ) // 定义中间 func MiddleWare() gin.</description>
     </item>
     
     <item>
       <title>Laradock 切换数据库错误</title>
-      <link>https://nicko-ch.github.io/posts/201811070834/</link>
+      <link>https://nicko-ch.github.io/docs/posts/201811070834/</link>
       <pubDate>Wed, 07 Nov 2018 08:34:55 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/201811070834/</guid>
+      <guid>https://nicko-ch.github.io/docs/posts/201811070834/</guid>
       <description>Laradock 切换 数据库5.7版本 1. 修改.env文件 源文件
 ### MYSQL #################################################MYSQL_VERSION=latestMYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d修改为
 ### MYSQL #################################################MYSQL_VERSION=5.7.24MYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d 2. 删除旧容器相关数据 2.1 列出所有容器 docker ps -a2.2 停止所有容器 docker ps -a2.3 删除容器 docker rm &amp;lt;容器ID1&amp;gt; &amp;lt;容器ID2&amp;gt; ...2.4 列出镜像 docker images2.5 删除镜像 docker rmi &amp;lt;镜像ID1&amp;gt; &amp;lt;镜像ID2&amp;gt; ...2.6 查看挂载盘 docker volume ls2.7 删除镜像 docker volume rm &amp;lt;VOLUME NAME1&amp;gt; &amp;lt;VOLUME NAME2&amp;gt; .</description>
@@ -29,19 +29,19 @@
     
     <item>
       <title>PHPStorm 项目目录分类管理配置</title>
-      <link>https://nicko-ch.github.io/posts/201811011440/</link>
+      <link>https://nicko-ch.github.io/docs/posts/201811011440/</link>
       <pubDate>Thu, 01 Nov 2018 14:40:26 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/201811011440/</guid>
+      <guid>https://nicko-ch.github.io/docs/posts/201811011440/</guid>
       <description>phpstorm 为了方便用户管理项目目录，目前可以将项目文件夹设置为 4 类 Test,Sources,Excluded,Resource Root。 1. Test (颜色为绿色) &amp;gt; 测试主目录，如 `Laravel` 的 `tests` 目录2. Source (颜色为蓝色) &amp;gt; 项目主代码目录，如 `Laravel` 的 `app` 目录3. Excluded (颜色为红色) &amp;gt; 第三方扩展依赖(不会修改代码)，不建立索引，不由`phpstorm`管理，如 `Laravel` 的 `vendor` 目录4. Resource Root (颜色为紫色) &amp;gt; 前端资源，如 `Laravel` 的 `public` 目录合理设置项目的目录是有作用的，如  1 设置 Test 目录，可以在project勾选只显示 Test,方便测试时查看 2 设置 Excluded 目录，可以减少 phpstorm 建立索引的时间 3 设置 Resource Root 目录，以 Laravel 为例，可以帮助检测模板文件的资源路径    </description>
     </item>
     
     <item>
       <title>Cmd Markdown 简明语法手册</title>
-      <link>https://nicko-ch.github.io/posts/201810311511/</link>
+      <link>https://nicko-ch.github.io/docs/posts/201810311511/</link>
       <pubDate>Wed, 31 Oct 2018 15:11:07 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/201810311511/</guid>
+      <guid>https://nicko-ch.github.io/docs/posts/201810311511/</guid>
       <description>『Cmd 技术渲染的沙箱页面，点击此处编写自己的文档』
 Cmd Markdown 简明语法手册 标签： Cmd-Markdown
  1. 斜体和粗体 使用 * 和 ** 表示斜体和粗体。
@@ -62,10 +62,10 @@ Cmd Markdown 简明语法手册 标签： Cmd-Markdown
     
     <item>
       <title>Hello World</title>
-      <link>https://nicko-ch.github.io/posts/201810231554/</link>
+      <link>https://nicko-ch.github.io/docs/posts/201810231554/</link>
       <pubDate>Tue, 23 Oct 2018 15:54:01 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/201810231554/</guid>
+      <guid>https://nicko-ch.github.io/docs/posts/201810231554/</guid>
       <description>Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
 Quick Start Create a new post $ hexo new &amp;#34;My New Post&amp;#34; More info: Writing
 Run server $ hexo server More info: Server
