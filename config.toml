@@ -1,5 +1,6 @@
 baseURL = 'https://nicko-ch.github.io/'
 languageCode = 'zh-CN'
+publishDir = "docs"
 theme = 'hugo-PaperMod'
 title = "> $ cd /home"
 
