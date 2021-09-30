@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Go on &gt; $ cd /home</title>
+    <link>https://nicko-ch.github.io/tags/go/</link>
+    <description>Recent content in Go on &gt; $ cd /home</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 14 Jan 2021 00:00:00 +0800</lastBuildDate><atom:link href="https://nicko-ch.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go基础语法</title>
+      <link>https://nicko-ch.github.io/posts/202101140000/</link>
+      <pubDate>Thu, 14 Jan 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://nicko-ch.github.io/posts/202101140000/</guid>
+      <description>array 数组 声明方式
+var identifier [len]type // var arr [5]int  var arrAge = [5]int{18, 20, 15, 22, 16} // 声明容量为5的数组并初始化 var arrLazy = [...]int{5, 6, 7, 8, 22} // 初始化数组自动计算容量（实际上已是切片） var arrLazy = []int{5, 6, 7, 8, 22}	// 初始化得到的实际上是切片slice var arrKeyValue = [5]string{3: &amp;#34;Chris&amp;#34;, 4: &amp;#34;Ron&amp;#34;} // 0,1,2 都未空值 var arrKeyValue = []string{3: &amp;#34;Chris&amp;#34;, 4: &amp;#34;Ron&amp;#34;}	// 初始化得到的实际上是切片slice  slice 切片 本质
+不是一组数组的指针，是一种数据结构，用来操作内部元素。
+切片名称 [low : high : max] low: 起始下标位置 high: 结束下标位置 len = high - low max: 容量 cap = max - low 声明方式</description>
+    </item>
+    
+  </channel>
+</rss>

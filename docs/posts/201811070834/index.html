@@ -12,8 +12,8 @@
 ### MYSQL #################################################MYSQL_VERSION=5.7.24MYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d 2. 删除旧容器相关数据 2.1 列出所有容器 docker ps -a2.2 停止所有容器 docker ps -a2.3 删除容器 docker rm &lt;容器ID1&gt; &lt;容器ID2&gt; ...2.4 列出镜像 docker images2.5 删除镜像 docker rmi &lt;镜像ID1&gt; &lt;镜像ID2&gt; ...2.6 查看挂载盘 docker volume ls2.7 删除镜像 docker volume rm &lt;VOLUME NAME1&gt; &lt;VOLUME NAME2&gt; .">
 <meta name="author" content="">
 <link rel="canonical" href="https://nicko-ch.github.io/posts/201811070834/" />
-<link crossorigin="anonymous" href="/assets/css/stylesheet.min.04141b6f2c802a65b7a7435712985acabab43bd1821fdf24ca59e78fa20285e9.css" integrity="sha256-BBQbbyyAKmW3p0NXEphayrq0O9GCH98kylnnj6IChek=" rel="preload stylesheet" as="style">
-<script defer crossorigin="anonymous" src="/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js" integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5&#43;kdJvBz5iKbt6B5PJI="
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.f9fbda349130cbc2701b107d81ffce9fa97df5920ffcd75db0c8a4ca8445c96c.css" integrity="sha256-&#43;fvaNJEwy8JwGxB9gf/On6l99ZIP/NddsMikyoRFyWw=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.2a6a1edde80ff92a8df0fc8a2542788ebe38bbafad2c733a37dea6f0768880c6.js" integrity="sha256-Kmoe3egP&#43;SqN8PyKJUJ4jr44u6&#43;tLHM6N96m8HaIgMY="
     onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
@@ -69,8 +69,8 @@
   "keywords": [
     "Laradock", "Docker", "Mysql"
   ],
-  "articleBody": "Laradock 切换 数据库5.7版本 1. 修改.env文件 源文件\n### MYSQL #################################################\rMYSQL_VERSION=latest\rMYSQL_DATABASE=default\rMYSQL_USER=default\rMYSQL_PASSWORD=secret\rMYSQL_PORT=3306\rMYSQL_ROOT_PASSWORD=root123456\rMYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d\r修改为\n### MYSQL #################################################\rMYSQL_VERSION=5.7.24\rMYSQL_DATABASE=default\rMYSQL_USER=default\rMYSQL_PASSWORD=secret\rMYSQL_PORT=3306\rMYSQL_ROOT_PASSWORD=root123456\rMYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d\r 2. 删除旧容器相关数据 2.1 列出所有容器 docker ps -a\r2.2 停止所有容器 docker ps -a\r2.3 删除容器 docker rm   ...\r2.4 列出镜像 docker images\r2.5 删除镜像 docker rmi   ...\r2.6 查看挂载盘 docker volume ls\r2.7 删除镜像 docker volume rm ...\r 3. 重新加载创建新容器 3.1 启动Mysql docker-compose up -d mysql\r 未清理干净残留数据可能导致错误 导致产生 Exited(2) 错误 mysql_1 | 2017-05-19T08:37:22.284861Z 0 [ERROR] InnoDB: posix_fallocate(): Failed to preallocate data for file ./mysql/time_zone.ibd, desired size 16384 bytes. Operating system error number 28. Check that the disk is not full or a disk quota exceeded. Make sure the file system supports this function. Some operating system error numbers are described at http://dev.mysql.com/doc/refman/5.7/en/ operating-system-error-codes.html\rmysql_1 | 2017-05-19T08:37:22.284915Z 0 [Warning] InnoDB: Retry attempts for writing partial data failed.\rmysql_1 | 2017-05-19T08:37:22.284923Z 0 [Warning] InnoDB: Error while writing 16384 zeroes to ./mysql/time_zone.ibd starting at offset 131072\rmysql_1 | 2017-05-19T08:37:22.335184Z 0 [ERROR] InnoDB: posix_fallocate(): Failed to preallocate data for file ./mysql/time_zone.ibd, desired size 16384 bytes. Operating system error number 28. Check that the disk is not full or a disk quota exceeded. Make sure the file system supports this function. Some operating system error numbers are described at http://dev.mysql.com/doc/refman/5.7/en/ operating-system-error-codes.html\rmysql_1 | 2017-05-19T08:37:22.335236Z 0 [Warning] InnoDB: Retry attempts for writing partial data failed.\rmysql_1 | 2017-05-19T08:37:22.335244Z 0 [Warning] InnoDB: Error while writing 16384 zeroes to ./mysql/time_zone.ibd starting at offset 131072\rmysql_1 | 2017-05-19T08:37:22.385395Z 0 [ERROR] InnoDB: posix_fallocate(): Failed to preallocate data for file ./mysql/time_zone.ibd, desired size 16384 bytes. Operating system error number 28. Check that the disk is not full or a disk quota exceeded. Make sure the file system supports this function. Some operating system error numbers are described at http://dev.mysql.com/doc/refman/5.7/en/ operating-system-error-codes.html\rmysql_1 | 2017-05-19T08:37:22.385444Z 0 [Warning] InnoDB: Retry attempts for writing partial data failed.\rmysql_1 | 2017-05-19T08:37:22.385452Z 0 [Warning] InnoDB: Error while writing 16384 zeroes to ./mysql/time_zone.ibd starting at offset 131072\rmysql_1 | 2017-05-19T08:37:22.435737Z 0 [ERROR] InnoDB: posix_fallocate(): Failed to preallocate data for file ./mysql/time_zone.ibd, desired size 16384 bytes. Operating system error number 28. Check that the disk is not full or a disk quota exceeded. Make sure the file system supports this function. Some operating system error numbers are described at http://dev.mysql.com/doc/refman/5.7/en/ operating-system-error-codes.html\rmysql_1 | 2017-05-19T08:37:22.435788Z 0 [Warning] InnoDB: Retry attempts for writing partial data failed.\rmysql_1 | 2017-05-19T08:37:22.435797Z 0 [Warning] InnoDB: Error while writing 16384 zeroes to ./mysql/time_zone.ibd starting at offset 131072\rmysql_1 | 2017-05-19T08:37:22.435957Z 0 [ERROR] [FATAL] InnoDB: Out of tablespace during rollback. Consider increasing your tablespace.\rmysql_1 | 2017-05-19 08:37:22 0x7fd031586700 InnoDB: Assertion failure in thread 140532157802240 in file ut0ut.cc line 916\rmysql_1 | InnoDB: We intentionally generate a memory trap.\rmysql_1 | InnoDB: Submit a detailed bug report to http://bugs.mysql.com.\rmysql_1 | InnoDB: If you get repeated assertion failures or crashes, even\rmysql_1 | InnoDB: immediately after the mysqld startup, there may be\rmysql_1 | InnoDB: corruption in the InnoDB tablespace. Please refer to\rmysql_1 | InnoDB: http://dev.mysql.com/doc/refman/5.7/en/forcing-innodb-recovery.html\rmysql_1 | InnoDB: about forcing recovery.\rmysql_1 | 08:37:22 UTC - mysqld got signal 6 ;\rmysql_1 | This could be because you hit a bug. It is also possible that this binary\rmysql_1 | or one of the libraries it was linked against is corrupt, improperly built,\rmysql_1 | or misconfigured. This error can also be caused by malfunctioning hardware.\rmysql_1 | Attempting to collect some information that could help diagnose the problem.\rmysql_1 | As this is a crash and something is definitely wrong, the information\rmysql_1 | collection process might fail.\rmysql_1 |\rmysql_1 | key_buffer_size=8388608\rmysql_1 | read_buffer_size=131072\rmysql_1 | max_used_connections=0\rmysql_1 | max_threads=151\rmysql_1 | thread_count=0\rmysql_1 | connection_count=0\rmysql_1 | It is possible that mysqld could use up to\rmysql_1 | key_buffer_size + (read_buffer_size + sort_buffer_size)*max_threads = 68190 K bytes of memory\rmysql_1 | Hope that's ok; if not, decrease some variables in the equation.\rmysql_1 |\rmysql_1 | Thread pointer: 0x0\rmysql_1 | Attempting backtrace. You can use the following information to find out\rmysql_1 | where mysqld died. If you see no messages after this, something went\rmysql_1 | terribly wrong...\rmysql_1 | stack_bottom = 0 thread_stack 0x40000\rmysql_1 | mysqld(my_print_stacktrace+0x2c)[0xe81c7c]\rmysql_1 | mysqld(handle_fatal_signal+0x459)[0x7aa4c9]\rmysql_1 | /lib/x86_64-linux-gnu/libpthread.so.0(+0xf890)[0x7fd04d101890]\rmysql_1 | /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x37)[0x7fd04bb0a067]\rmysql_1 | /lib/x86_64-linux-gnu/libc.so.6(abort+0x148)[0x7fd04bb0b448]\rmysql_1 | mysqld[0x780c0b]\rmysql_1 | mysqld(_ZN2ib5fatalD1Ev+0x15d)[0x110b54d]\rmysql_1 | mysqld(_Z13row_undo_stepP9que_thr_t+0x66c)[0x109785c]\rmysql_1 | mysqld(_Z15que_run_threadsP9que_thr_t+0xa34)[0x1026a74]\rmysql_1 | mysqld(_Z31trx_rollback_or_clean_recoveredm+0xd2f)[0x10e693f]\rmysql_1 | mysqld(trx_rollback_or_clean_all_recovered+0x4e)[0x10e77de]\rmysql_1 | /lib/x86_64-linux-gnu/libpthread.so.0(+0x8064)[0x7fd04d0fa064]\rmysql_1 | /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d)[0x7fd04bbbd62d]\rmysql_1 | The manual page at http://dev.mysql.com/doc/mysql/en/crashing.html contains\rmysql_1 | information that should help you find out what is causing the crash.\rlaradock_mysql_1 exited with code 2\r处理方法  删除容器挂载盘 清空mysql挂载目录  ~/.laradock/data (默认目录)\r 修改.env文件中mysql保存路径  # Choose storage path on your machine. For all storage systems\rDATA_PATH_HOST=~/.laradock//data\r处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法 处理方法   ",
-  "wordCount" : "810",
+  "articleBody": "Laradock 切换 数据库5.7版本 1. 修改.env文件 源文件\n### MYSQL #################################################\rMYSQL_VERSION=latest\rMYSQL_DATABASE=default\rMYSQL_USER=default\rMYSQL_PASSWORD=secret\rMYSQL_PORT=3306\rMYSQL_ROOT_PASSWORD=root123456\rMYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d\r修改为\n### MYSQL #################################################\rMYSQL_VERSION=5.7.24\rMYSQL_DATABASE=default\rMYSQL_USER=default\rMYSQL_PASSWORD=secret\rMYSQL_PORT=3306\rMYSQL_ROOT_PASSWORD=root123456\rMYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d\r 2. 删除旧容器相关数据 2.1 列出所有容器 docker ps -a\r2.2 停止所有容器 docker ps -a\r2.3 删除容器 docker rm   ...\r2.4 列出镜像 docker images\r2.5 删除镜像 docker rmi   ...\r2.6 查看挂载盘 docker volume ls\r2.7 删除镜像 docker volume rm ...\r 3. 重新加载创建新容器 3.1 启动Mysql docker-compose up -d mysql\r 未清理干净残留数据可能导致错误 导致产生 Exited(2) 错误 mysql_1 | 2017-05-19T08:37:22.284861Z 0 [ERROR] InnoDB: posix_fallocate(): Failed to preallocate data for file ./mysql/time_zone.ibd, desired size 16384 bytes. Operating system error number 28. Check that the disk is not full or a disk quota exceeded. Make sure the file system supports this function. Some operating system error numbers are described at http://dev.mysql.com/doc/refman/5.7/en/ operating-system-error-codes.html\rmysql_1 | 2017-05-19T08:37:22.284915Z 0 [Warning] InnoDB: Retry attempts for writing partial data failed.\rmysql_1 | 2017-05-19T08:37:22.284923Z 0 [Warning] InnoDB: Error while writing 16384 zeroes to ./mysql/time_zone.ibd starting at offset 131072\rmysql_1 | 2017-05-19T08:37:22.335184Z 0 [ERROR] InnoDB: posix_fallocate(): Failed to preallocate data for file ./mysql/time_zone.ibd, desired size 16384 bytes. Operating system error number 28. Check that the disk is not full or a disk quota exceeded. Make sure the file system supports this function. Some operating system error numbers are described at http://dev.mysql.com/doc/refman/5.7/en/ operating-system-error-codes.html\rmysql_1 | 2017-05-19T08:37:22.335236Z 0 [Warning] InnoDB: Retry attempts for writing partial data failed.\rmysql_1 | 2017-05-19T08:37:22.335244Z 0 [Warning] InnoDB: Error while writing 16384 zeroes to ./mysql/time_zone.ibd starting at offset 131072\rmysql_1 | 2017-05-19T08:37:22.385395Z 0 [ERROR] InnoDB: posix_fallocate(): Failed to preallocate data for file ./mysql/time_zone.ibd, desired size 16384 bytes. Operating system error number 28. Check that the disk is not full or a disk quota exceeded. Make sure the file system supports this function. Some operating system error numbers are described at http://dev.mysql.com/doc/refman/5.7/en/ operating-system-error-codes.html\rmysql_1 | 2017-05-19T08:37:22.385444Z 0 [Warning] InnoDB: Retry attempts for writing partial data failed.\rmysql_1 | 2017-05-19T08:37:22.385452Z 0 [Warning] InnoDB: Error while writing 16384 zeroes to ./mysql/time_zone.ibd starting at offset 131072\rmysql_1 | 2017-05-19T08:37:22.435737Z 0 [ERROR] InnoDB: posix_fallocate(): Failed to preallocate data for file ./mysql/time_zone.ibd, desired size 16384 bytes. Operating system error number 28. Check that the disk is not full or a disk quota exceeded. Make sure the file system supports this function. Some operating system error numbers are described at http://dev.mysql.com/doc/refman/5.7/en/ operating-system-error-codes.html\rmysql_1 | 2017-05-19T08:37:22.435788Z 0 [Warning] InnoDB: Retry attempts for writing partial data failed.\rmysql_1 | 2017-05-19T08:37:22.435797Z 0 [Warning] InnoDB: Error while writing 16384 zeroes to ./mysql/time_zone.ibd starting at offset 131072\rmysql_1 | 2017-05-19T08:37:22.435957Z 0 [ERROR] [FATAL] InnoDB: Out of tablespace during rollback. Consider increasing your tablespace.\rmysql_1 | 2017-05-19 08:37:22 0x7fd031586700 InnoDB: Assertion failure in thread 140532157802240 in file ut0ut.cc line 916\rmysql_1 | InnoDB: We intentionally generate a memory trap.\rmysql_1 | InnoDB: Submit a detailed bug report to http://bugs.mysql.com.\rmysql_1 | InnoDB: If you get repeated assertion failures or crashes, even\rmysql_1 | InnoDB: immediately after the mysqld startup, there may be\rmysql_1 | InnoDB: corruption in the InnoDB tablespace. Please refer to\rmysql_1 | InnoDB: http://dev.mysql.com/doc/refman/5.7/en/forcing-innodb-recovery.html\rmysql_1 | InnoDB: about forcing recovery.\rmysql_1 | 08:37:22 UTC - mysqld got signal 6 ;\rmysql_1 | This could be because you hit a bug. It is also possible that this binary\rmysql_1 | or one of the libraries it was linked against is corrupt, improperly built,\rmysql_1 | or misconfigured. This error can also be caused by malfunctioning hardware.\rmysql_1 | Attempting to collect some information that could help diagnose the problem.\rmysql_1 | As this is a crash and something is definitely wrong, the information\rmysql_1 | collection process might fail.\rmysql_1 |\rmysql_1 | key_buffer_size=8388608\rmysql_1 | read_buffer_size=131072\rmysql_1 | max_used_connections=0\rmysql_1 | max_threads=151\rmysql_1 | thread_count=0\rmysql_1 | connection_count=0\rmysql_1 | It is possible that mysqld could use up to\rmysql_1 | key_buffer_size + (read_buffer_size + sort_buffer_size)*max_threads = 68190 K bytes of memory\rmysql_1 | Hope that's ok; if not, decrease some variables in the equation.\rmysql_1 |\rmysql_1 | Thread pointer: 0x0\rmysql_1 | Attempting backtrace. You can use the following information to find out\rmysql_1 | where mysqld died. If you see no messages after this, something went\rmysql_1 | terribly wrong...\rmysql_1 | stack_bottom = 0 thread_stack 0x40000\rmysql_1 | mysqld(my_print_stacktrace+0x2c)[0xe81c7c]\rmysql_1 | mysqld(handle_fatal_signal+0x459)[0x7aa4c9]\rmysql_1 | /lib/x86_64-linux-gnu/libpthread.so.0(+0xf890)[0x7fd04d101890]\rmysql_1 | /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x37)[0x7fd04bb0a067]\rmysql_1 | /lib/x86_64-linux-gnu/libc.so.6(abort+0x148)[0x7fd04bb0b448]\rmysql_1 | mysqld[0x780c0b]\rmysql_1 | mysqld(_ZN2ib5fatalD1Ev+0x15d)[0x110b54d]\rmysql_1 | mysqld(_Z13row_undo_stepP9que_thr_t+0x66c)[0x109785c]\rmysql_1 | mysqld(_Z15que_run_threadsP9que_thr_t+0xa34)[0x1026a74]\rmysql_1 | mysqld(_Z31trx_rollback_or_clean_recoveredm+0xd2f)[0x10e693f]\rmysql_1 | mysqld(trx_rollback_or_clean_all_recovered+0x4e)[0x10e77de]\rmysql_1 | /lib/x86_64-linux-gnu/libpthread.so.0(+0x8064)[0x7fd04d0fa064]\rmysql_1 | /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d)[0x7fd04bbbd62d]\rmysql_1 | The manual page at http://dev.mysql.com/doc/mysql/en/crashing.html contains\rmysql_1 | information that should help you find out what is causing the crash.\rlaradock_mysql_1 exited with code 2\r处理方法  删除容器挂载盘 清空mysql挂载目录  ~/.laradock/data (默认目录)\r 修改.env文件中mysql保存路径  # Choose storage path on your machine. For all storage systems\rDATA_PATH_HOST=~/.laradock//data\r  ",
+  "wordCount" : "786",
   "inLanguage": "en",
   "datePublished": "2018-11-07T08:34:55Z",
   "dateModified": "2018-11-07T08:34:55Z",
@@ -221,55 +221,7 @@
                 <li>
                     <a href="#%e5%af%bc%e8%87%b4%e4%ba%a7%e7%94%9f-exited2-%e9%94%99%e8%af%af" aria-label="导致产生 Exited(2) 错误">导致产生 Exited(2) 错误</a></li>
                 <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-1" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-2" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-3" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-4" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-5" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-6" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-7" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-8" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-9" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-10" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-11" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-12" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-13" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-14" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-15" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-16" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-17" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-18" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-19" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-20" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-21" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-22" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-23" aria-label="处理方法">处理方法</a></li>
-                <li>
-                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95-24" aria-label="处理方法">处理方法</a>
+                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95" aria-label="处理方法">处理方法</a>
                 </li>
             </ul>
             </li>
@@ -394,31 +346,7 @@ laradock_mysql_1 exited with code 2
 </ul>
 <pre><code># Choose storage path on your machine. For all storage systems
 DATA_PATH_HOST=~/.laradock/&lt;project name&gt;/data
-</code></pre><h3 id="处理方法-1">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-1">#</a></h3>
-<h3 id="处理方法-2">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-2">#</a></h3>
-<h3 id="处理方法-3">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-3">#</a></h3>
-<h3 id="处理方法-4">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-4">#</a></h3>
-<h3 id="处理方法-5">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-5">#</a></h3>
-<h3 id="处理方法-6">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-6">#</a></h3>
-<h3 id="处理方法-7">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-7">#</a></h3>
-<h3 id="处理方法-8">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-8">#</a></h3>
-<h3 id="处理方法-9">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-9">#</a></h3>
-<h3 id="处理方法-10">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-10">#</a></h3>
-<h3 id="处理方法-11">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-11">#</a></h3>
-<h3 id="处理方法-12">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-12">#</a></h3>
-<h3 id="处理方法-13">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-13">#</a></h3>
-<h3 id="处理方法-14">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-14">#</a></h3>
-<h3 id="处理方法-15">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-15">#</a></h3>
-<h3 id="处理方法-16">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-16">#</a></h3>
-<h3 id="处理方法-17">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-17">#</a></h3>
-<h3 id="处理方法-18">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-18">#</a></h3>
-<h3 id="处理方法-19">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-19">#</a></h3>
-<h3 id="处理方法-20">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-20">#</a></h3>
-<h3 id="处理方法-21">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-21">#</a></h3>
-<h3 id="处理方法-22">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-22">#</a></h3>
-<h3 id="处理方法-23">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-23">#</a></h3>
-<h3 id="处理方法-24">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法-24">#</a></h3>
-<!-- raw HTML omitted -->
+</code></pre><!-- raw HTML omitted -->
 <!-- raw HTML omitted -->
 <blockquote>
 </blockquote>
