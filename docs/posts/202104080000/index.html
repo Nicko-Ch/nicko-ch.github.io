@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>分布式唯一ID | &gt; $ cd /home</title>
+<meta name="keywords" content="分布式" />
+<meta name="description" content="1. 为什么要用分布式ID 1.1 什么是分布式ID 拿MySQL数据库举个栗子：
+在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。
+但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有唯一ID做标识。此时一个能够生成全局唯一ID的系统是非常必要的。那么这个全局唯一ID就叫分布式ID。
+1.2 那么分布式ID需要满足那些条件？  全局唯一：必须保证ID是全局性唯一的，基本要求 高性能：高可用低延时，ID生成响应要块，否则反倒会成为业务瓶颈 高可用：100%的可用性是骗人的，但是也要无限接近于100%的可用性 好接入：要秉着拿来即用的设计原则，在系统设计和实现上要尽可能的简单 趋势递增：最好趋势递增，这个要求就得看具体业务场景了，一般不严格要求  2. 分布式ID都有哪些生成方式 2.1 UUID 优点：
+ 生成足够简单，本地生成无网络消耗，具有唯一性  缺点：
+ 无序的字符串，不具备自增特性 没有具体的业务含义 长度较大，不适合作为数据库主键，严重影响查询性能  2.2 数据库自增ID 优点：
+ 实现简单，ID主键，数值类型，带自增特性  缺点：
+ DB单机生成，存在并发宕机风险，无法扛住高并发场景  2.3 数据库集群模式 为了应对单机数据库的并发压力，设计上可以用双主模式集群的方式解决，但是这样也会引入一个新的问题，两个Mysql实例都是自增ID从1开始，会产生重复的ID怎么办？
+解决方案：设置起始值和自增步长
+MySQL_1 配置：
+set @@auto_increment_offset = 1; -- 起始值set @@auto_increment_increment = 2; -- 步长MySQL_2 配置：
+set @@auto_increment_offset = 2; -- 起始值set @@auto_increment_increment = 2; -- 步长这样两个MySQL实例的自增ID分别就是：">
+<meta name="author" content="">
+<link rel="canonical" href="https://nicko-ch.github.io/posts/202104080000/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0459a4ebf56f381ae411e97a494635ba7ce9db741ff9a2cfbf7e12366bf1e73d.css" integrity="sha256-BFmk6/VvOBrkEel6SUY1unzp23Qf&#43;aLPv34SNmvx5z0=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.6f62d19b78590241c3e007a10f91f45f95ce2528ca8f3e33c542e95f8ed5691f.js" integrity="sha256-b2LRm3hZAkHD4AehD5H0X5XOJSjKjz4zxULpX47VaR8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nicko-ch.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://nicko-ch.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://nicko-ch.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.88.0" />
+<meta property="og:title" content="分布式唯一ID" />
+<meta property="og:description" content="1. 为什么要用分布式ID 1.1 什么是分布式ID 拿MySQL数据库举个栗子：
+在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。
+但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有唯一ID做标识。此时一个能够生成全局唯一ID的系统是非常必要的。那么这个全局唯一ID就叫分布式ID。
+1.2 那么分布式ID需要满足那些条件？  全局唯一：必须保证ID是全局性唯一的，基本要求 高性能：高可用低延时，ID生成响应要块，否则反倒会成为业务瓶颈 高可用：100%的可用性是骗人的，但是也要无限接近于100%的可用性 好接入：要秉着拿来即用的设计原则，在系统设计和实现上要尽可能的简单 趋势递增：最好趋势递增，这个要求就得看具体业务场景了，一般不严格要求  2. 分布式ID都有哪些生成方式 2.1 UUID 优点：
+ 生成足够简单，本地生成无网络消耗，具有唯一性  缺点：
+ 无序的字符串，不具备自增特性 没有具体的业务含义 长度较大，不适合作为数据库主键，严重影响查询性能  2.2 数据库自增ID 优点：
+ 实现简单，ID主键，数值类型，带自增特性  缺点：
+ DB单机生成，存在并发宕机风险，无法扛住高并发场景  2.3 数据库集群模式 为了应对单机数据库的并发压力，设计上可以用双主模式集群的方式解决，但是这样也会引入一个新的问题，两个Mysql实例都是自增ID从1开始，会产生重复的ID怎么办？
+解决方案：设置起始值和自增步长
+MySQL_1 配置：
+set @@auto_increment_offset = 1; -- 起始值set @@auto_increment_increment = 2; -- 步长MySQL_2 配置：
+set @@auto_increment_offset = 2; -- 起始值set @@auto_increment_increment = 2; -- 步长这样两个MySQL实例的自增ID分别就是：" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://nicko-ch.github.io/posts/202104080000/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-04-08T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-04-08T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="分布式唯一ID"/>
+<meta name="twitter:description" content="1. 为什么要用分布式ID 1.1 什么是分布式ID 拿MySQL数据库举个栗子：
+在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。
+但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有唯一ID做标识。此时一个能够生成全局唯一ID的系统是非常必要的。那么这个全局唯一ID就叫分布式ID。
+1.2 那么分布式ID需要满足那些条件？  全局唯一：必须保证ID是全局性唯一的，基本要求 高性能：高可用低延时，ID生成响应要块，否则反倒会成为业务瓶颈 高可用：100%的可用性是骗人的，但是也要无限接近于100%的可用性 好接入：要秉着拿来即用的设计原则，在系统设计和实现上要尽可能的简单 趋势递增：最好趋势递增，这个要求就得看具体业务场景了，一般不严格要求  2. 分布式ID都有哪些生成方式 2.1 UUID 优点：
+ 生成足够简单，本地生成无网络消耗，具有唯一性  缺点：
+ 无序的字符串，不具备自增特性 没有具体的业务含义 长度较大，不适合作为数据库主键，严重影响查询性能  2.2 数据库自增ID 优点：
+ 实现简单，ID主键，数值类型，带自增特性  缺点：
+ DB单机生成，存在并发宕机风险，无法扛住高并发场景  2.3 数据库集群模式 为了应对单机数据库的并发压力，设计上可以用双主模式集群的方式解决，但是这样也会引入一个新的问题，两个Mysql实例都是自增ID从1开始，会产生重复的ID怎么办？
+解决方案：设置起始值和自增步长
+MySQL_1 配置：
+set @@auto_increment_offset = 1; -- 起始值set @@auto_increment_increment = 2; -- 步长MySQL_2 配置：
+set @@auto_increment_offset = 2; -- 起始值set @@auto_increment_increment = 2; -- 步长这样两个MySQL实例的自增ID分别就是："/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://nicko-ch.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "分布式唯一ID",
+      "item": "https://nicko-ch.github.io/posts/202104080000/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "分布式唯一ID",
+  "name": "分布式唯一ID",
+  "description": "1. 为什么要用分布式ID 1.1 什么是分布式ID 拿MySQL数据库举个栗子：\n在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。\n但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有唯一ID做标识。此时一个能够生成全局唯一ID的系统是非常必要的。那么这个全局唯一ID就叫分布式ID。\n1.2 那么分布式ID需要满足那些条件？  全局唯一：必须保证ID是全局性唯一的，基本要求 高性能：高可用低延时，ID生成响应要块，否则反倒会成为业务瓶颈 高可用：100%的可用性是骗人的，但是也要无限接近于100%的可用性 好接入：要秉着拿来即用的设计原则，在系统设计和实现上要尽可能的简单 趋势递增：最好趋势递增，这个要求就得看具体业务场景了，一般不严格要求  2. 分布式ID都有哪些生成方式 2.1 UUID 优点：\n 生成足够简单，本地生成无网络消耗，具有唯一性  缺点：\n 无序的字符串，不具备自增特性 没有具体的业务含义 长度较大，不适合作为数据库主键，严重影响查询性能  2.2 数据库自增ID 优点：\n 实现简单，ID主键，数值类型，带自增特性  缺点：\n DB单机生成，存在并发宕机风险，无法扛住高并发场景  2.3 数据库集群模式 为了应对单机数据库的并发压力，设计上可以用双主模式集群的方式解决，但是这样也会引入一个新的问题，两个Mysql实例都是自增ID从1开始，会产生重复的ID怎么办？\n解决方案：设置起始值和自增步长\nMySQL_1 配置：\nset @@auto_increment_offset = 1; -- 起始值\rset @@auto_increment_increment = 2; -- 步长\rMySQL_2 配置：\nset @@auto_increment_offset = 2; -- 起始值\rset @@auto_increment_increment = 2; -- 步长\r这样两个MySQL实例的自增ID分别就是：",
+  "keywords": [
+    "分布式"
+  ],
+  "articleBody": "1. 为什么要用分布式ID 1.1 什么是分布式ID 拿MySQL数据库举个栗子：\n在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。\n但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有唯一ID做标识。此时一个能够生成全局唯一ID的系统是非常必要的。那么这个全局唯一ID就叫分布式ID。\n1.2 那么分布式ID需要满足那些条件？  全局唯一：必须保证ID是全局性唯一的，基本要求 高性能：高可用低延时，ID生成响应要块，否则反倒会成为业务瓶颈 高可用：100%的可用性是骗人的，但是也要无限接近于100%的可用性 好接入：要秉着拿来即用的设计原则，在系统设计和实现上要尽可能的简单 趋势递增：最好趋势递增，这个要求就得看具体业务场景了，一般不严格要求  2. 分布式ID都有哪些生成方式 2.1 UUID 优点：\n 生成足够简单，本地生成无网络消耗，具有唯一性  缺点：\n 无序的字符串，不具备自增特性 没有具体的业务含义 长度较大，不适合作为数据库主键，严重影响查询性能  2.2 数据库自增ID 优点：\n 实现简单，ID主键，数值类型，带自增特性  缺点：\n DB单机生成，存在并发宕机风险，无法扛住高并发场景  2.3 数据库集群模式 为了应对单机数据库的并发压力，设计上可以用双主模式集群的方式解决，但是这样也会引入一个新的问题，两个Mysql实例都是自增ID从1开始，会产生重复的ID怎么办？\n解决方案：设置起始值和自增步长\nMySQL_1 配置：\nset @@auto_increment_offset = 1; -- 起始值\rset @@auto_increment_increment = 2; -- 步长\rMySQL_2 配置：\nset @@auto_increment_offset = 2; -- 起始值\rset @@auto_increment_increment = 2; -- 步长\r这样两个MySQL实例的自增ID分别就是：\n 1、3、5、7、9 2、4、6、8、10\n 如果日后并发上升，就要对Mysql节点进行扩容，这是一个比较麻烦的事情。并且这样会涉及到新增的Mysql实例起始值和步长修改问题，必要时可能还需要停机修改\n优点：\n 解决单点DB性能问题  缺点：\n 不利于后续扩展，而且实际上单个数据库自身压力还是大，依旧无法满足高并发场景。  2.4 数据库号段模式 号段模式是当下分布式ID生成器的主流实现方式之一，号段模式可以理解为从数据库批量的获取自增ID，每次从数据库取出一个号段范围，例如 (1,1000] 代表1000个ID，具体的业务服务将本号段，生成1~1000的自增ID并加载到内存。表结构如下：\nCREATE TABLE id_generator (\rid int(10) NOT NULL,\rmax_id bigint(20) NOT NULL COMMENT '当前最大id',\rstep int(20) NOT NULL COMMENT '号段的布长',\rbiz_type int(20) NOT NULL COMMENT '业务类型',\rversion int(20) NOT NULL COMMENT '版本号',\rPRIMARY KEY (`id`)\r)\rbiz_type ：代表不同业务类型\nmax_id ：当前最大的可用id\nstep ：代表号段的长度\nversion ：是一个乐观锁，每次都更新version，保证并发时数据的正确性\n等这批号段ID用完，再次向数据库申请新号段，对max_id字段做一次update操作，update max_id= max_id + step，update成功则说明新号段获取成功，新的号段范围是(max_id ,max_id +step]。\nupdate id_generator set max_id = #{max_id+step}, version = version + 1 where version = # {version} and biz_type = XXX\r由于多业务端可能同时操作，所以采用版本号version乐观锁方式更新，这种分布式ID生成方式不强依赖于数据库，不会频繁的访问数据库，对数据库的压力小很多。\n2.5 Redis模式 Redis也同样可以实现，原理就是利用redis的 incr命令实现ID的原子性自增。\n127.0.0.1:6379 set seq_id 1 // 初始化自增ID为1\rOK\r127.0.0.1:6379 incr seq_id // 增加1，并返回递增后的数值\r(integer) 2\r用redis实现需要注意一点，要考虑到redis持久化的问题。redis有两种持久化方式RDB和AOF\n RDB会定时打一个快照进行持久化，假如连续自增但redis没及时持久化，而这会Redis挂掉了，重启Redis后会出现ID重复的情况。 AOF会对每条写命令进行持久化，即使Redis挂掉了也不会出现ID重复的情况，但由于incr命令的特殊性，会导致Redis重启恢复的数据时间过长。  2.6 雪花算法（Snowflake） Snowflake生成的是Long类型的ID，一个Long类型占8个字节，每个字节占8比特，也就是说一个Long类型占64个比特。\nSnowflake ID组成结构：正数位（占1比特）+ 时间戳（占41比特）+ 机器ID（占5比特）+ 数据中心（占5比特）+ 自增值（占12比特），总共64比特组成的一个Long类型。\n 第一个bit位（1bit）：Java中long的最高位是符号位代表正负，正数是0，负数是1，一般生成ID都为正数，所以默认为0。 时间戳部分（41bit）：毫秒级的时间，不建议存当前时间戳，而是用（当前时间戳 - 固定开始时间戳）的差值，可以使产生的ID从更小的值开始；41位的时间戳可以使用69年，(1L « 41) / (1000L * 60 * 60 * 24 * 365) = 69年 工作机器id（10bit）：也被叫做workId，这个可以灵活配置，机房或者机器号组合都可以。 序列号部分（12bit），自增值支持同一毫秒内同一个节点可以生成4096个ID  根据这个算法的逻辑，只需要将这个算法用Java语言实现出来，封装为一个工具方法，那么各个业务应用可以直接使用该工具方法来获取分布式ID，只需保证每个业务应用有自己的工作机器id即可，而不需要单独去搭建一个获取分布式ID的应用。\n2.7 百度（uid-generator） uid-generator是由百度技术部开发，项目GitHub地址 https://github.com/baidu/uid-generator\nuid-generator是基于Snowflake算法实现的，与原始的snowflake算法不同在于，uid-generator支持自定义时间戳、工作机器ID和 序列号 等各部分的位数，而且uid-generator中采用用户自定义workId的生成策略。\nuid-generator需要与数据库配合使用，需要新增一个WORKER_NODE表。当应用启动时会向数据库表中去插入一条数据，插入成功后返回的自增ID就是该机器的workId数据由host，port组成。\n对于uid-generator ID组成结构：\nworkId，占用了22个bit位，时间占用了28个bit位，序列化占用了13个bit位，需要注意的是，和原始的snowflake不太一样，时间的单位是秒，而不是毫秒，workId也不一样，而且同一应用每次重启就会消费一个workId。\n2.8 美团（Leaf） Leaf由美团开发，github地址：https://github.com/Meituan-Dianping/Leaf\nLeaf同时支持号段模式和snowflake算法模式，可以切换使用。\n号段模式 先导入源码 https://github.com/Meituan-Dianping/Leaf ，在建一张表leaf_alloc\nDROP TABLE IF EXISTS `leaf_alloc`;\rCREATE TABLE `leaf_alloc` (\r`biz_tag` varchar(128) NOT NULL DEFAULT '' COMMENT '业务key',\r`max_id` bigint(20) NOT NULL DEFAULT '1' COMMENT '当前已经分配了的最大id',\r`step` int(11) NOT NULL COMMENT '初始步长，也是动态调整的最小步长',\r`description` varchar(256) DEFAULT NULL COMMENT '业务key的描述',\r`update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '数据库维护的更新时间',\rPRIMARY KEY (`biz_tag`)\r) ENGINE=InnoDB;\r然后在项目中开启号段模式，配置对应的数据库信息，并关闭snowflake模式\nleaf.name=com.sankuai.leaf.opensource.test\rleaf.segment.enable=true\rleaf.jdbc.url=jdbc:mysql://localhost:3306/leaf_test?useUnicode=true\u0026characterEncoding=utf8\u0026characterSetResults=utf8\rleaf.jdbc.username=root\rleaf.jdbc.password=root\rleaf.snowflake.enable=false\r#leaf.snowflake.zk.address=\r#leaf.snowflake.port=\r启动leaf-server 模块的 LeafServerApplication项目就跑起来了\n号段模式获取分布式自增ID的测试url ：http：//localhost：8080/api/segment/get/leaf-segment-test\n监控号段模式：http://localhost:8080/cache\nsnowflake模式 Leaf的snowflake模式依赖于ZooKeeper，不同于原始snowflake算法也主要是在workId的生成上，Leaf中workId是基于ZooKeeper的顺序Id来生成的，每个应用在使用Leaf-snowflake时，启动时都会都在Zookeeper中生成一个顺序Id，相当于一台机器对应一个顺序节点，也就是一个workId。\nleaf.snowflake.enable=true\rleaf.snowflake.zk.address=127.0.0.1\rleaf.snowflake.port=2181\rsnowflake模式获取分布式自增ID的测试url：http://localhost:8080/api/snowflake/get/test\n2.9 滴滴（Tinyid） Tinyid由滴滴开发，Github地址：https://github.com/didi/tinyid。\nTinyid是基于号段模式原理实现的与Leaf如出一辙，每个服务获取一个号段（1000,2000]、（2000,3000]、（3000,4000]\nhttps://mmbiz.qpic.cn/mmbiz_png/0OzaL5uW2aN77sK4V1x5e5dSVZcibkzSRRKsAGqcpaauibVfY9iaOR5LFvzDPictNjHXmmdhr31153iaiaStvXIJEo2g/640?wx_fmt=png\u0026tp=webp\u0026wxfrom=5\u0026wx_lazy=1\u0026wx_co=1\nTinyid提供http和tinyid-client两种方式接入\nHttp方式接入 （1）导入Tinyid源码：\ngit clone https://github.com/didi/tinyid.git\n（2）创建数据表：\nCREATE TABLE `tiny_id_info` ( `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键', `biz_type` varchar(63) NOT NULL DEFAULT '' COMMENT '业务类型，唯一', `begin_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '开始id，仅记录初始值，无其他含义。初始化时begin_id和max_id应相同', `max_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '当前最大id', `step` int(11) DEFAULT '0' COMMENT '步长', `delta` int(11) NOT NULL DEFAULT '1' COMMENT '每次id增量', `remainder` int(11) NOT NULL DEFAULT '0' COMMENT '余数', `create_time` timestamp NOT NULL DEFAULT '2010-01-01 00:00:00' COMMENT '创建时间', `update_time` timestamp NOT NULL DEFAULT '2010-01-01 00:00:00' COMMENT '更新时间', `version` bigint(20) NOT NULL DEFAULT '0' COMMENT '版本号', PRIMARY KEY (`id`), UNIQUE KEY `uniq_biz_type` (`biz_type`) ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT 'id信息表'; CREATE TABLE `tiny_id_token` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id', `token` varchar(255) NOT NULL DEFAULT '' COMMENT 'token', `biz_type` varchar(63) NOT NULL DEFAULT '' COMMENT '此token可访问的业务类型标识', `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注', `create_time` timestamp NOT NULL DEFAULT '2010-01-01 00:00:00' COMMENT '创建时间', `update_time` timestamp NOT NULL DEFAULT '2010-01-01 00:00:00' COMMENT '更新时间', PRIMARY KEY (`id`) ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT 'token信息表'; INSERT INTO `tiny_id_info` (`id`, `biz_type`, `begin_id`, `max_id`, `step`, `delta`, `remainder`, `create_time`, `update_time`, `version`) VALUES (1, 'test', 1, 1, 100000, 1, 0, '2018-07-21 23:52:58', '2018-07-22 23:19:27', 1); INSERT INTO `tiny_id_info` (`id`, `biz_type`, `begin_id`, `max_id`, `step`, `delta`, `remainder`, `create_time`, `update_time`, `version`) VALUES (2, 'test_odd', 1, 1, 100000, 2, 1, '2018-07-21 23:52:58', '2018-07-23 00:39:24', 3); INSERT INTO `tiny_id_token` (`id`, `token`, `biz_type`, `remark`, `create_time`, `update_time`) VALUES (1, '0f673adf80504e2eaa552f5d791b644c', 'test', '1', '2017-12-14 16:36:46', '2017-12-14 16:36:48'); INSERT INTO `tiny_id_token` (`id`, `token`, `biz_type`, `remark`, `create_time`, `update_time`) VALUES (2, '0f673adf80504e2eaa552f5d791b644c', 'test_odd', '1', '2017-12-14 16:36:46', '2017-12-14 16:36:48'); （3）配置数据库：\ndatasource.tinyid.names=primary\rdatasource.tinyid.primary.driver-class-name=com.mysql.jdbc.Driver\rdatasource.tinyid.primary.url=jdbc:mysql://ip:port/databaseName?autoReconnect=true\u0026useUnicode=true\u0026characterEncoding=UTF-8\rdatasource.tinyid.primary.username=root\rdatasource.tinyid.primary.password=123456\r（4）启动tinyid-server后测试\n获取分布式自增ID: http://localhost:9999/tinyid/id/nextIdSimple?bizType=test\u0026token=0f673adf80504e2eaa552f5d791b644c'\r返回结果: 3\r批量获取分布式自增ID:\rhttp://localhost:9999/tinyid/id/nextIdSimple?bizType=test\u0026token=0f673adf80504e2eaa552f5d791b644c\u0026batchSize=10'\r返回结果: 4,5,6,7,8,9,10,11,12,13\rJava客户端方式接入 重复Http方式的（2）（3）操作\n引入依赖\n \rcom.xiaoju.uemc.tinyid\rtinyid-client\r${tinyid.version}\r\r配置文件\ntinyid.server =localhost:9999\rtinyid.token =0f673adf80504e2eaa552f5d791b644c\rtest 、tinyid.token是在数据库表中预先插入的数据，test 是具体业务类型，tinyid.token表示可访问的业务类型\n// 获取单个分布式自增ID\rLong id = TinyId . nextId( \" test \" );\r// 按需批量分布式自增ID\rListids = TinyId . nextId( \" test \" , 10 );\r",
+  "wordCount" : "612",
+  "inLanguage": "en",
+  "datePublished": "2021-04-08T00:00:00Z",
+  "dateModified": "2021-04-08T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://nicko-ch.github.io/posts/202104080000/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\u003e $ cd /home",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://nicko-ch.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://nicko-ch.github.io/" accesskey="h" title="&gt; $ cd /home (Alt + H)">&gt; $ cd /home</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://nicko-ch.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://nicko-ch.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://nicko-ch.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      分布式唯一ID
+    </h1>
+    <div class="post-meta">April 8, 2021&nbsp;·&nbsp;3 min
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <div class="details">Table of Contents</div>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#1-%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e7%94%a8%e5%88%86%e5%b8%83%e5%bc%8fid" aria-label="1. 为什么要用分布式ID">1. 为什么要用分布式ID</a><ul>
+                        
+                <li>
+                    <a href="#11-%e4%bb%80%e4%b9%88%e6%98%af%e5%88%86%e5%b8%83%e5%bc%8fid" aria-label="1.1 什么是分布式ID">1.1 什么是分布式ID</a></li>
+                <li>
+                    <a href="#12-%e9%82%a3%e4%b9%88%e5%88%86%e5%b8%83%e5%bc%8fid%e9%9c%80%e8%a6%81%e6%bb%a1%e8%b6%b3%e9%82%a3%e4%ba%9b%e6%9d%a1%e4%bb%b6" aria-label="1.2 那么分布式ID需要满足那些条件？">1.2 那么分布式ID需要满足那些条件？</a></li></ul>
+                </li>
+                <li>
+                    <a href="#2-%e5%88%86%e5%b8%83%e5%bc%8fid%e9%83%bd%e6%9c%89%e5%93%aa%e4%ba%9b%e7%94%9f%e6%88%90%e6%96%b9%e5%bc%8f" aria-label="2. 分布式ID都有哪些生成方式">2. 分布式ID都有哪些生成方式</a><ul>
+                        
+                <li>
+                    <a href="#21-uuid" aria-label="2.1 UUID">2.1 UUID</a></li>
+                <li>
+                    <a href="#22-%e6%95%b0%e6%8d%ae%e5%ba%93%e8%87%aa%e5%a2%9eid" aria-label="2.2 数据库自增ID">2.2 数据库自增ID</a></li>
+                <li>
+                    <a href="#23-%e6%95%b0%e6%8d%ae%e5%ba%93%e9%9b%86%e7%be%a4%e6%a8%a1%e5%bc%8f" aria-label="2.3 数据库集群模式">2.3 数据库集群模式</a></li>
+                <li>
+                    <a href="#24-%e6%95%b0%e6%8d%ae%e5%ba%93%e5%8f%b7%e6%ae%b5%e6%a8%a1%e5%bc%8f" aria-label="2.4 数据库号段模式">2.4 数据库号段模式</a></li>
+                <li>
+                    <a href="#25-redis%e6%a8%a1%e5%bc%8f" aria-label="2.5 Redis模式">2.5 Redis模式</a></li>
+                <li>
+                    <a href="#26-%e9%9b%aa%e8%8a%b1%e7%ae%97%e6%b3%95snowflake" aria-label="2.6 雪花算法（Snowflake）">2.6 雪花算法（Snowflake）</a></li>
+                <li>
+                    <a href="#27-%e7%99%be%e5%ba%a6uid-generator" aria-label="2.7 百度（uid-generator）">2.7 百度（uid-generator）</a></li>
+                <li>
+                    <a href="#28-%e7%be%8e%e5%9b%a2leaf" aria-label="2.8 美团（Leaf）">2.8 美团（Leaf）</a><ul>
+                        
+                <li>
+                    <a href="#%e5%8f%b7%e6%ae%b5%e6%a8%a1%e5%bc%8f" aria-label="号段模式"><strong>号段模式</strong></a></li>
+                <li>
+                    <a href="#snowflake%e6%a8%a1%e5%bc%8f" aria-label="snowflake模式"><strong>snowflake模式</strong></a></li></ul>
+                </li>
+                <li>
+                    <a href="#29-%e6%bb%b4%e6%bb%b4tinyid" aria-label="2.9 滴滴（Tinyid）">2.9 滴滴（Tinyid）</a><ul>
+                        
+                <li>
+                    <a href="#http%e6%96%b9%e5%bc%8f%e6%8e%a5%e5%85%a5" aria-label="Http方式接入"><strong>Http方式接入</strong></a></li>
+                <li>
+                    <a href="#java%e5%ae%a2%e6%88%b7%e7%ab%af%e6%96%b9%e5%bc%8f%e6%8e%a5%e5%85%a5" aria-label="Java客户端方式接入"><strong>Java客户端方式接入</strong></a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p><img loading="lazy" src="/../static/images/202104080000/Untitled.png" alt="../static/images/202104080000/Untitled.png"  />
+</p>
+<h1 id="1-为什么要用分布式id">1. 为什么要用分布式ID<a hidden class="anchor" aria-hidden="true" href="#1-为什么要用分布式id">#</a></h1>
+<h2 id="11-什么是分布式id">1.1 什么是分布式ID<a hidden class="anchor" aria-hidden="true" href="#11-什么是分布式id">#</a></h2>
+<p>拿MySQL数据库举个栗子：</p>
+<p>在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。</p>
+<p>但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有<code>唯一ID</code>做标识。此时一个能够生成<code>全局唯一ID</code>的系统是非常必要的。那么这个<code>全局唯一ID</code>就叫<code>分布式ID</code>。</p>
+<h2 id="12-那么分布式id需要满足那些条件">1.2 那么分布式ID需要满足那些条件？<a hidden class="anchor" aria-hidden="true" href="#12-那么分布式id需要满足那些条件">#</a></h2>
+<ul>
+<li>全局唯一：必须保证ID是全局性唯一的，基本要求</li>
+<li>高性能：高可用低延时，ID生成响应要块，否则反倒会成为业务瓶颈</li>
+<li>高可用：100%的可用性是骗人的，但是也要无限接近于100%的可用性</li>
+<li>好接入：要秉着拿来即用的设计原则，在系统设计和实现上要尽可能的简单</li>
+<li>趋势递增：最好趋势递增，这个要求就得看具体业务场景了，一般不严格要求</li>
+</ul>
+<h1 id="2-分布式id都有哪些生成方式">2. 分布式ID都有哪些生成方式<a hidden class="anchor" aria-hidden="true" href="#2-分布式id都有哪些生成方式">#</a></h1>
+<h2 id="21-uuid">2.1 UUID<a hidden class="anchor" aria-hidden="true" href="#21-uuid">#</a></h2>
+<p>优点：</p>
+<ul>
+<li>生成足够简单，本地生成无网络消耗，具有唯一性</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>无序的字符串，不具备自增特性</li>
+<li>没有具体的业务含义</li>
+<li>长度较大，不适合作为数据库主键，严重影响查询性能</li>
+</ul>
+<h2 id="22-数据库自增id">2.2 数据库自增ID<a hidden class="anchor" aria-hidden="true" href="#22-数据库自增id">#</a></h2>
+<p>优点：</p>
+<ul>
+<li>实现简单，ID主键，数值类型，带自增特性</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>DB单机生成，存在并发宕机风险，无法扛住高并发场景</li>
+</ul>
+<h2 id="23-数据库集群模式">2.3 数据库集群模式<a hidden class="anchor" aria-hidden="true" href="#23-数据库集群模式">#</a></h2>
+<p>为了应对单机数据库的并发压力，设计上可以用双主模式集群的方式解决，但是这样也会引入一个新的问题，两个Mysql实例都是自增ID从1开始，<code>会产生重复的ID怎么办</code>？</p>
+<p>解决方案：设置<code>起始值</code>和<code>自增步长</code></p>
+<p>MySQL_1 配置：</p>
+<pre tabindex="0"><code>set @@auto_increment_offset = 1;     -- 起始值
+set @@auto_increment_increment = 2;  -- 步长
+
+</code></pre><p>MySQL_2 配置：</p>
+<pre tabindex="0"><code>set @@auto_increment_offset = 2;     -- 起始值
+set @@auto_increment_increment = 2;  -- 步长
+
+</code></pre><p>这样两个MySQL实例的自增ID分别就是：</p>
+<blockquote>
+<p>1、3、5、7、9 
+2、4、6、8、10</p>
+</blockquote>
+<p>如果日后并发上升，就要对Mysql节点进行扩容，这是一个比较麻烦的事情。并且这样会涉及到新增的Mysql实例起始值和步长修改问题，<code>必要时可能还需要停机修改</code></p>
+<p><img loading="lazy" src="/../static/images/202104080000/Untitled%201.png" alt="../static/images/202104080000/Untitled%201.png"  />
+</p>
+<p>优点：</p>
+<ul>
+<li>解决单点DB性能问题</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>不利于后续扩展，而且实际上单个数据库自身压力还是大，依旧无法满足高并发场景。</li>
+</ul>
+<h2 id="24-数据库号段模式">2.4 数据库号段模式<a hidden class="anchor" aria-hidden="true" href="#24-数据库号段模式">#</a></h2>
+<p>号段模式是当下分布式ID生成器的主流实现方式之一，号段模式可以理解为从数据库批量的获取自增ID，每次从数据库取出一个号段范围，例如 (1,1000] 代表1000个ID，具体的业务服务将本号段，生成1~1000的自增ID并加载到内存。表结构如下：</p>
+<pre tabindex="0"><code>CREATE TABLE id_generator (
+  id int(10) NOT NULL,
+  max_id bigint(20) NOT NULL COMMENT '当前最大id',
+  step int(20) NOT NULL COMMENT '号段的布长',
+  biz_type    int(20) NOT NULL COMMENT '业务类型',
+  version int(20) NOT NULL COMMENT '版本号',
+  PRIMARY KEY (`id`)
+)
+
+</code></pre><p>biz_type ：代表不同业务类型</p>
+<p>max_id ：当前最大的可用id</p>
+<p>step ：代表号段的长度</p>
+<p>version ：是一个乐观锁，每次都更新version，保证并发时数据的正确性</p>
+<p><img loading="lazy" src="/../static/images/202104080000/Untitled%202.png" alt="../static/images/202104080000/Untitled%202.png"  />
+</p>
+<p>等这批号段ID用完，再次向数据库申请新号段，对<code>max_id</code>字段做一次<code>update</code>操作，<code>update max_id= max_id + step</code>，update成功则说明新号段获取成功，新的号段范围是<code>(max_id ,max_id +step]</code>。</p>
+<pre tabindex="0"><code>update id_generator set max_id = #{max_id+step}, version = version + 1 where version = # {version} and biz_type = XXX
+
+</code></pre><p>由于多业务端可能同时操作，所以采用版本号<code>version</code>乐观锁方式更新，这种<code>分布式ID</code>生成方式不强依赖于数据库，不会频繁的访问数据库，对数据库的压力小很多。</p>
+<h2 id="25-redis模式">2.5 Redis模式<a hidden class="anchor" aria-hidden="true" href="#25-redis模式">#</a></h2>
+<p><code>Redis</code>也同样可以实现，原理就是利用<code>redis</code>的 <code>incr</code>命令实现ID的原子性自增。</p>
+<pre tabindex="0"><code>127.0.0.1:6379&gt; set seq_id 1     // 初始化自增ID为1
+OK
+127.0.0.1:6379&gt; incr seq_id      // 增加1，并返回递增后的数值
+(integer) 2
+</code></pre><p>用<code>redis</code>实现需要注意一点，要考虑到redis持久化的问题。<code>redis</code>有两种持久化方式<code>RDB</code>和<code>AOF</code></p>
+<ul>
+<li><code>RDB</code>会定时打一个快照进行持久化，假如连续自增但<code>redis</code>没及时持久化，而这会Redis挂掉了，重启Redis后会出现ID重复的情况。</li>
+<li><code>AOF</code>会对每条写命令进行持久化，即使<code>Redis</code>挂掉了也不会出现ID重复的情况，但由于incr命令的特殊性，会导致<code>Redis</code>重启恢复的数据时间过长。</li>
+</ul>
+<h2 id="26-雪花算法snowflake">2.6 雪花算法（Snowflake）<a hidden class="anchor" aria-hidden="true" href="#26-雪花算法snowflake">#</a></h2>
+<p><img loading="lazy" src="/../static/images/202104080000/Untitled%203.png" alt="../static/images/202104080000/Untitled%203.png"  />
+</p>
+<p><code>Snowflake</code>生成的是Long类型的ID，一个Long类型占8个字节，每个字节占8比特，也就是说一个Long类型占64个比特。</p>
+<p>Snowflake ID组成结构：<code>正数位</code>（占1比特）+ <code>时间戳</code>（占41比特）+ <code>机器ID</code>（占5比特）+ <code>数据中心</code>（占5比特）+ <code>自增值</code>（占12比特），总共64比特组成的一个Long类型。</p>
+<ul>
+<li>第一个bit位（1bit）：Java中long的最高位是符号位代表正负，正数是0，负数是1，一般生成ID都为正数，所以默认为0。</li>
+<li>时间戳部分（41bit）：毫秒级的时间，不建议存当前时间戳，而是用（<code>当前时间戳 - 固定开始时间戳</code>）的差值，可以使产生的ID从更小的值开始；41位的时间戳可以使用69年，(1L &laquo; 41) / (1000L * 60 * 60 * 24 * 365) = 69年</li>
+<li>工作机器id（10bit）：也被叫做<code>workId</code>，这个可以灵活配置，机房或者机器号组合都可以。</li>
+<li>序列号部分（12bit），自增值支持同一毫秒内同一个节点可以生成4096个ID</li>
+</ul>
+<p>根据这个算法的逻辑，只需要将这个算法用Java语言实现出来，封装为一个工具方法，那么各个业务应用可以直接使用该工具方法来获取分布式ID，只需保证每个业务应用有自己的工作机器id即可，而不需要单独去搭建一个获取分布式ID的应用。</p>
+<h2 id="27-百度uid-generator">2.7 百度（uid-generator）<a hidden class="anchor" aria-hidden="true" href="#27-百度uid-generator">#</a></h2>
+<p><code>uid-generator</code>是由百度技术部开发，项目GitHub地址 <a href="https://github.com/baidu/uid-generator">https://github.com/baidu/uid-generator</a></p>
+<p><code>uid-generator</code>是基于<code>Snowflake</code>算法实现的，与原始的<code>snowflake</code>算法不同在于，<code>uid-generator</code>支持自<code>定义时间戳</code>、<code>工作机器ID</code>和 <code>序列号</code> 等各部分的位数，而且<code>uid-generator</code>中采用用户自定义<code>workId</code>的生成策略。</p>
+<p><code>uid-generator</code>需要与数据库配合使用，需要新增一个<code>WORKER_NODE</code>表。当应用启动时会向数据库表中去插入一条数据，插入成功后返回的自增ID就是该机器的<code>workId</code>数据由host，port组成。</p>
+<p><strong>对于<code>uid-generator</code> ID组成结构</strong>：</p>
+<p><code>workId</code>，占用了22个bit位，时间占用了28个bit位，序列化占用了13个bit位，需要注意的是，和原始的<code>snowflake</code>不太一样，时间的单位是秒，而不是毫秒，<code>workId</code>也不一样，而且同一应用每次重启就会消费一个<code>workId</code>。</p>
+<h2 id="28-美团leaf">2.8 美团（Leaf）<a hidden class="anchor" aria-hidden="true" href="#28-美团leaf">#</a></h2>
+<p><code>Leaf</code>由美团开发，github地址：https://github.com/Meituan-Dianping/Leaf</p>
+<p><code>Leaf</code>同时支持号段模式和<code>snowflake</code>算法模式，可以切换使用。</p>
+<h3 id="号段模式"><strong>号段模式</strong><a hidden class="anchor" aria-hidden="true" href="#号段模式">#</a></h3>
+<p>先导入源码 <a href="https://github.com/Meituan-Dianping/Leaf">https://github.com/Meituan-Dianping/Leaf</a> ，在建一张表<code>leaf_alloc</code></p>
+<pre tabindex="0"><code>DROP TABLE IF EXISTS `leaf_alloc`;
+
+CREATE TABLE `leaf_alloc` (
+  `biz_tag` varchar(128)  NOT NULL DEFAULT '' COMMENT '业务key',
+  `max_id` bigint(20) NOT NULL DEFAULT '1' COMMENT '当前已经分配了的最大id',
+  `step` int(11) NOT NULL COMMENT '初始步长，也是动态调整的最小步长',
+  `description` varchar(256)  DEFAULT NULL COMMENT '业务key的描述',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '数据库维护的更新时间',
+  PRIMARY KEY (`biz_tag`)
+) ENGINE=InnoDB;
+</code></pre><p>然后在项目中开启<code>号段模式</code>，配置对应的数据库信息，并关闭<code>snowflake</code>模式</p>
+<pre tabindex="0"><code>leaf.name=com.sankuai.leaf.opensource.test
+leaf.segment.enable=true
+leaf.jdbc.url=jdbc:mysql://localhost:3306/leaf_test?useUnicode=true&amp;characterEncoding=utf8&amp;characterSetResults=utf8
+leaf.jdbc.username=root
+leaf.jdbc.password=root
+
+leaf.snowflake.enable=false
+#leaf.snowflake.zk.address=
+#leaf.snowflake.port=
+</code></pre><p>启动<code>leaf-server</code> 模块的 <code>LeafServerApplication</code>项目就跑起来了</p>
+<p>号段模式获取分布式自增ID的测试url ：http：//localhost：8080/api/segment/get/leaf-segment-test</p>
+<p>监控号段模式：http://localhost:8080/cache</p>
+<h3 id="snowflake模式"><strong>snowflake模式</strong><a hidden class="anchor" aria-hidden="true" href="#snowflake模式">#</a></h3>
+<p><code>Leaf</code>的snowflake模式依赖于<code>ZooKeeper</code>，不同于<code>原始snowflake</code>算法也主要是在<code>workId</code>的生成上，<code>Leaf</code>中<code>workId</code>是基于<code>ZooKeeper</code>的顺序Id来生成的，每个应用在使用<code>Leaf-snowflake</code>时，启动时都会都在<code>Zookeeper</code>中生成一个顺序Id，相当于一台机器对应一个顺序节点，也就是一个<code>workId</code>。</p>
+<pre tabindex="0"><code>leaf.snowflake.enable=true
+leaf.snowflake.zk.address=127.0.0.1
+leaf.snowflake.port=2181
+</code></pre><p>snowflake模式获取分布式自增ID的测试url：http://localhost:8080/api/snowflake/get/test</p>
+<h2 id="29-滴滴tinyid">2.9 滴滴（Tinyid）<a hidden class="anchor" aria-hidden="true" href="#29-滴滴tinyid">#</a></h2>
+<p><code>Tinyid</code>由滴滴开发，Github地址：https://github.com/didi/tinyid。</p>
+<p><code>Tinyid</code>是基于号段模式原理实现的与<code>Leaf</code>如出一辙，每个服务获取一个号段（1000,2000]、（2000,3000]、（3000,4000]</p>
+<p><a href="https://mmbiz.qpic.cn/mmbiz_png/0OzaL5uW2aN77sK4V1x5e5dSVZcibkzSRRKsAGqcpaauibVfY9iaOR5LFvzDPictNjHXmmdhr31153iaiaStvXIJEo2g/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1">https://mmbiz.qpic.cn/mmbiz_png/0OzaL5uW2aN77sK4V1x5e5dSVZcibkzSRRKsAGqcpaauibVfY9iaOR5LFvzDPictNjHXmmdhr31153iaiaStvXIJEo2g/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1</a></p>
+<p><code>Tinyid</code>提供<code>http</code>和<code>tinyid-client</code>两种方式接入</p>
+<h3 id="http方式接入"><strong>Http方式接入</strong><a hidden class="anchor" aria-hidden="true" href="#http方式接入">#</a></h3>
+<p>（1）导入Tinyid源码：</p>
+<p>git clone <a href="https://github.com/didi/tinyid.git">https://github.com/didi/tinyid.git</a></p>
+<p>（2）创建数据表：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#f92672">`</span>tiny_id_info<span style="color:#f92672">`</span> (
+  <span style="color:#f92672">`</span>id<span style="color:#f92672">`</span> bigint(<span style="color:#ae81ff">20</span>) unsigned <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> AUTO_INCREMENT <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;自增主键&#39;</span>,
+  <span style="color:#f92672">`</span>biz_type<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">63</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;业务类型，唯一&#39;</span>,
+  <span style="color:#f92672">`</span>begin_id<span style="color:#f92672">`</span> bigint(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;开始id，仅记录初始值，无其他含义。初始化时begin_id和max_id应相同&#39;</span>,
+  <span style="color:#f92672">`</span>max_id<span style="color:#f92672">`</span> bigint(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;当前最大id&#39;</span>,
+  <span style="color:#f92672">`</span>step<span style="color:#f92672">`</span> int(<span style="color:#ae81ff">11</span>) <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;步长&#39;</span>,
+  <span style="color:#f92672">`</span>delta<span style="color:#f92672">`</span> int(<span style="color:#ae81ff">11</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;1&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;每次id增量&#39;</span>,
+  <span style="color:#f92672">`</span>remainder<span style="color:#f92672">`</span> int(<span style="color:#ae81ff">11</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;余数&#39;</span>,
+  <span style="color:#f92672">`</span>create_time<span style="color:#f92672">`</span> <span style="color:#66d9ef">timestamp</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;2010-01-01 00:00:00&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;创建时间&#39;</span>,
+  <span style="color:#f92672">`</span>update_time<span style="color:#f92672">`</span> <span style="color:#66d9ef">timestamp</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;2010-01-01 00:00:00&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;更新时间&#39;</span>,
+  <span style="color:#f92672">`</span><span style="color:#66d9ef">version</span><span style="color:#f92672">`</span> bigint(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;版本号&#39;</span>,
+  <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span> (<span style="color:#f92672">`</span>id<span style="color:#f92672">`</span>),
+  <span style="color:#66d9ef">UNIQUE</span> <span style="color:#66d9ef">KEY</span> <span style="color:#f92672">`</span>uniq_biz_type<span style="color:#f92672">`</span> (<span style="color:#f92672">`</span>biz_type<span style="color:#f92672">`</span>)
+) ENGINE<span style="color:#f92672">=</span>InnoDB AUTO_INCREMENT<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">DEFAULT</span> CHARSET<span style="color:#f92672">=</span>utf8 <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;id信息表&#39;</span>;
+
+<span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#f92672">`</span>tiny_id_token<span style="color:#f92672">`</span> (
+  <span style="color:#f92672">`</span>id<span style="color:#f92672">`</span> int(<span style="color:#ae81ff">11</span>) unsigned <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> AUTO_INCREMENT <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;自增id&#39;</span>,
+  <span style="color:#f92672">`</span>token<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;token&#39;</span>,
+  <span style="color:#f92672">`</span>biz_type<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">63</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;此token可访问的业务类型标识&#39;</span>,
+  <span style="color:#f92672">`</span>remark<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;备注&#39;</span>,
+  <span style="color:#f92672">`</span>create_time<span style="color:#f92672">`</span> <span style="color:#66d9ef">timestamp</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;2010-01-01 00:00:00&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;创建时间&#39;</span>,
+  <span style="color:#f92672">`</span>update_time<span style="color:#f92672">`</span> <span style="color:#66d9ef">timestamp</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;2010-01-01 00:00:00&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;更新时间&#39;</span>,
+  <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span> (<span style="color:#f92672">`</span>id<span style="color:#f92672">`</span>)
+) ENGINE<span style="color:#f92672">=</span>InnoDB AUTO_INCREMENT<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">DEFAULT</span> CHARSET<span style="color:#f92672">=</span>utf8 <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;token信息表&#39;</span>;
+
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#f92672">`</span>tiny_id_info<span style="color:#f92672">`</span> (<span style="color:#f92672">`</span>id<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>biz_type<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>begin_id<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>max_id<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>step<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>delta<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>remainder<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>create_time<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>update_time<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span><span style="color:#66d9ef">version</span><span style="color:#f92672">`</span>)
+<span style="color:#66d9ef">VALUES</span>
+    (<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;test&#39;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">100000</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;2018-07-21 23:52:58&#39;</span>, <span style="color:#e6db74">&#39;2018-07-22 23:19:27&#39;</span>, <span style="color:#ae81ff">1</span>);
+
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#f92672">`</span>tiny_id_info<span style="color:#f92672">`</span> (<span style="color:#f92672">`</span>id<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>biz_type<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>begin_id<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>max_id<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>step<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>delta<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>remainder<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>create_time<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>update_time<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span><span style="color:#66d9ef">version</span><span style="color:#f92672">`</span>)
+<span style="color:#66d9ef">VALUES</span>
+    (<span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;test_odd&#39;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">100000</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;2018-07-21 23:52:58&#39;</span>, <span style="color:#e6db74">&#39;2018-07-23 00:39:24&#39;</span>, <span style="color:#ae81ff">3</span>);
+
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#f92672">`</span>tiny_id_token<span style="color:#f92672">`</span> (<span style="color:#f92672">`</span>id<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>token<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>biz_type<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>remark<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>create_time<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>update_time<span style="color:#f92672">`</span>)
+<span style="color:#66d9ef">VALUES</span>
+    (<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;0f673adf80504e2eaa552f5d791b644c&#39;</span>, <span style="color:#e6db74">&#39;test&#39;</span>, <span style="color:#e6db74">&#39;1&#39;</span>, <span style="color:#e6db74">&#39;2017-12-14 16:36:46&#39;</span>, <span style="color:#e6db74">&#39;2017-12-14 16:36:48&#39;</span>);
+
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#f92672">`</span>tiny_id_token<span style="color:#f92672">`</span> (<span style="color:#f92672">`</span>id<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>token<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>biz_type<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>remark<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>create_time<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>update_time<span style="color:#f92672">`</span>)
+<span style="color:#66d9ef">VALUES</span>
+    (<span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;0f673adf80504e2eaa552f5d791b644c&#39;</span>, <span style="color:#e6db74">&#39;test_odd&#39;</span>, <span style="color:#e6db74">&#39;1&#39;</span>, <span style="color:#e6db74">&#39;2017-12-14 16:36:46&#39;</span>, <span style="color:#e6db74">&#39;2017-12-14 16:36:48&#39;</span>);
+
+</code></pre></div><p>（3）配置数据库：</p>
+<pre tabindex="0"><code>datasource.tinyid.names=primary
+datasource.tinyid.primary.driver-class-name=com.mysql.jdbc.Driver
+datasource.tinyid.primary.url=jdbc:mysql://ip:port/databaseName?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8
+datasource.tinyid.primary.username=root
+datasource.tinyid.primary.password=123456
+</code></pre><p>（4）启动<code>tinyid-server</code>后测试</p>
+<pre tabindex="0"><code>获取分布式自增ID: http://localhost:9999/tinyid/id/nextIdSimple?bizType=test&amp;token=0f673adf80504e2eaa552f5d791b644c'
+返回结果: 3
+
+批量获取分布式自增ID:
+http://localhost:9999/tinyid/id/nextIdSimple?bizType=test&amp;token=0f673adf80504e2eaa552f5d791b644c&amp;batchSize=10'
+返回结果:  4,5,6,7,8,9,10,11,12,13
+</code></pre><h3 id="java客户端方式接入"><strong>Java客户端方式接入</strong><a hidden class="anchor" aria-hidden="true" href="#java客户端方式接入">#</a></h3>
+<p>重复Http方式的（2）（3）操作</p>
+<p>引入依赖</p>
+<pre tabindex="0"><code>       &lt;dependency&gt;
+            &lt;groupId&gt;com.xiaoju.uemc.tinyid&lt;/groupId&gt;
+            &lt;artifactId&gt;tinyid-client&lt;/artifactId&gt;
+            &lt;version&gt;${tinyid.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+</code></pre><p>配置文件</p>
+<pre tabindex="0"><code>tinyid.server =localhost:9999
+tinyid.token =0f673adf80504e2eaa552f5d791b644c
+</code></pre><p><code>test</code> 、<code>tinyid.token</code>是在数据库表中预先插入的数据，<code>test</code> 是具体业务类型，<code>tinyid.token</code>表示可访问的业务类型</p>
+<pre tabindex="0"><code>// 获取单个分布式自增ID
+Long id =  TinyId . nextId( &quot; test &quot; );
+
+// 按需批量分布式自增ID
+List&lt; Long &gt; ids =  TinyId . nextId( &quot; test &quot; , 10 );
+</code></pre>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://nicko-ch.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2022 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

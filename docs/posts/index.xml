@@ -6,14 +6,23 @@
     <description>Recent content in Posts on &gt; $ cd /home</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 02 Sep 2021 10:12:10 +0800</lastBuildDate><atom:link href="https://nicko-ch.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 23 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>First</title>
-      <link>https://nicko-ch.github.io/posts/202109021012/</link>
-      <pubDate>Thu, 02 Sep 2021 10:12:10 +0800</pubDate>
+      <title>Kubernetes基础</title>
+      <link>https://nicko-ch.github.io/posts/202203230000/</link>
+      <pubDate>Wed, 23 Mar 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202109021012/</guid>
-      <description>bit ┌───┐byte │ │└───┘┌───┬───┐short │ │ │└───┴───┘┌───┬───┬───┬───┐int │ │ │ │ │└───┴───┴───┴───┘┌───┬───┬───┬───┬───┬───┬───┬───┐long │ │ │ │ │ │ │ │ │└───┴───┴───┴───┴───┴───┴───┴───┘┌───┬───┬───┬───┐float │ │ │ │ │└───┴───┴───┴───┘┌───┬───┬───┬───┬───┬───┬───┬───┐double │ │ │ │ │ │ │ │ │└───┴───┴───┴───┴───┴───┴───┴───┘┌───┬───┐char │ │ │└───┴───┘/* golang */ package main import ( &amp;#34;fmt&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.com/gin-gonic/gin&amp;#34; ) func hljs() { ch := make(chan float64) ch &amp;lt;- 1.</description>
+      <guid>https://nicko-ch.github.io/posts/202203230000/</guid>
+      <description>1. 控制器类型 1.1 有状态服务 Statefulset  稳定持久化 稳定网络标志(地址) 有序部署 有序收缩(删除)  1.2 无状态服务 RC（ReplicationController） 副本数量与期望值之间的管理
+RS（ReplicaSet） 功能类似于RC，但是多了集合式的标签选择器
+Deployment 支持滚动更新以及回滚
+DaemonSet 单例模式
+确保Node上有且只运行一个同类型pod
+Job 负责批处理任务，即仅执行一次的任务，它可以保证批处理任务一个或者多个Pod成功结束
+Cron Job 周期性执行任务
+2. 网络通讯方式 2.1 同 Pod 间不同容器间 IO
+2.2 不同 Pod 间的通讯 同物理机 Docker0 网桥实现报文转发
+不同物理机 flannel UDP 数据包二次封装</description>
     </item>
     
     <item>
@@ -54,6 +63,29 @@
     </item>
     
     <item>
+      <title>Docker核心原理</title>
+      <link>https://nicko-ch.github.io/posts/202106020000/</link>
+      <pubDate>Wed, 02 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://nicko-ch.github.io/posts/202106020000/</guid>
+      <description>核心原理 Namespace  独立进程，实现容器的 隔离性
+ Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。
+Cgroups  控制进程资源分配，实现容器的 限制性
+ Linux Cgroups 的全称是 Linux Control Group。它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+基于namespace实现的隔离性，只限于容器中的可视范围控制。实际上对于宿主机而言，容器中的进程也是宿主进程中的其中一个，所以理论上，容器进程和宿主进程占用的资源权限是一致的。为了防止某个容器抢占大量的资源导致其他容器乃至宿主机的奔溃，所以docker使用的linux中的cgroups进行进程资源的限制。
+ps：限制某进程使用的CPU核数等
+Rootfs  修改容器进程对于文件系统挂载点的可视范围，实现容器的 一致性
+ 在 Linux 操作系统里，有一个名为 chroot 的命令可以帮助你在 shell 中方便地完成这个工作。顾名思义，它的作用就是帮你“change root file system”，即改变进程的根目录到你指定的位置。
+实际上，Mount Namespace 正是基于对 chroot 的不断改良才被发明出来的，它也是 Linux 操作系统里的第一个 Namespace。它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效。
+而这个挂载在容器根目录上、用来为容器进程提供隔离后执行环境的文件系统，就是所谓的“容器镜像”。它还有一个更为专业的名字，叫作：rootfs（根文件系统）。
+rootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。在 Linux 操作系统中，这两部分是分开存放的，操作系统只有在开机启动时才会加载指定版本的内核镜像。
+由于 rootfs 里打包的不只是应用，而是整个操作系统的文件和目录，也就意味着，应用以及它运行所需要的所有依赖，都被封装在了一起。
+镜像 为了防止容器碎片化，提高容器的复用率。Docker支持用Dockerfile的形式，对于现有容器镜像进行二次开发和定制化。
+Union File System Union File System 也叫 UnionFS，最主要的功能是将多个不同位置的目录联合挂载（union mount）到同一个目录下。比如，我现在有两个目录 A 和 B，它们分别有两个文件：
+$ tree.├── A│ ├── a│ └── x└── B├── b└── x然后，我使用联合挂载的方式，将这两个目录挂载到一个公共的目录 C 上：</description>
+    </item>
+    
+    <item>
       <title>Kafa核心技术与实战</title>
       <link>https://nicko-ch.github.io/posts/202104120000/</link>
       <pubDate>Mon, 12 Apr 2021 00:00:00 +0000</pubDate>
@@ -77,6 +109,26 @@ Topic (主题)：
 主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。
 Partition (分区)：
 为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个 topic 可以分为多个 partition，每个 partition 是一个有序的队列；</description>
+    </item>
+    
+    <item>
+      <title>分布式唯一ID</title>
+      <link>https://nicko-ch.github.io/posts/202104080000/</link>
+      <pubDate>Thu, 08 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://nicko-ch.github.io/posts/202104080000/</guid>
+      <description>1. 为什么要用分布式ID 1.1 什么是分布式ID 拿MySQL数据库举个栗子：
+在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。
+但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有唯一ID做标识。此时一个能够生成全局唯一ID的系统是非常必要的。那么这个全局唯一ID就叫分布式ID。
+1.2 那么分布式ID需要满足那些条件？  全局唯一：必须保证ID是全局性唯一的，基本要求 高性能：高可用低延时，ID生成响应要块，否则反倒会成为业务瓶颈 高可用：100%的可用性是骗人的，但是也要无限接近于100%的可用性 好接入：要秉着拿来即用的设计原则，在系统设计和实现上要尽可能的简单 趋势递增：最好趋势递增，这个要求就得看具体业务场景了，一般不严格要求  2. 分布式ID都有哪些生成方式 2.1 UUID 优点：
+ 生成足够简单，本地生成无网络消耗，具有唯一性  缺点：
+ 无序的字符串，不具备自增特性 没有具体的业务含义 长度较大，不适合作为数据库主键，严重影响查询性能  2.2 数据库自增ID 优点：
+ 实现简单，ID主键，数值类型，带自增特性  缺点：
+ DB单机生成，存在并发宕机风险，无法扛住高并发场景  2.3 数据库集群模式 为了应对单机数据库的并发压力，设计上可以用双主模式集群的方式解决，但是这样也会引入一个新的问题，两个Mysql实例都是自增ID从1开始，会产生重复的ID怎么办？
+解决方案：设置起始值和自增步长
+MySQL_1 配置：
+set @@auto_increment_offset = 1; -- 起始值set @@auto_increment_increment = 2; -- 步长MySQL_2 配置：
+set @@auto_increment_offset = 2; -- 起始值set @@auto_increment_increment = 2; -- 步长这样两个MySQL实例的自增ID分别就是：</description>
     </item>
     
     <item>
@@ -161,6 +213,15 @@ B+树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引）�
     </item>
     
     <item>
+      <title>Go优秀开源项目分享</title>
+      <link>https://nicko-ch.github.io/posts/202012310000/</link>
+      <pubDate>Thu, 31 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://nicko-ch.github.io/posts/202012310000/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Refference - Go高级编程</title>
       <link>https://nicko-ch.github.io/posts/202012210000/</link>
       <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
@@ -188,6 +249,15 @@ var identifier [len]type // var arr [5]int  var arrAge = [5]int{18, 20, 15, 22, 
       
       <guid>https://nicko-ch.github.io/posts/202012160000/</guid>
       <description>Command 命令 git init 初始化仓库 $ git init Initialized empty Git repository in D:/www/git_class/.git/ git config 配置信息  —global [key] [value] 全局配置  $ git config --global user.name &amp;#39;Nicko_Ch&amp;#39; $ git config --global user.email cyn_411@sina.com git add {filename} 将文件添加到暂存区 $ touch README.md $ vim README.md $ git add README.md git status 查看项目的当前状态  -s 精简模式  $ git status On branch master Changes to be committed: (use &amp;#34;git restore --staged &amp;lt;file&amp;gt;.</description>
+    </item>
+    
+    <item>
+      <title>Terms</title>
+      <link>https://nicko-ch.github.io/posts/202012150000/</link>
+      <pubDate>Tue, 15 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://nicko-ch.github.io/posts/202012150000/</guid>
+      <description>Terms     分布式事务方式   bloom filter   Bitmap   nginx平滑重启原理   Linux内核特性之VDSO   NTP UPDATE 和 NTPD   QUICK   Head-of-line blocking   cgroup   Scaling Memcache At Facebook   errorgroup   pipeline   链表   bytegraph   neo4j   发号器   Graph DB   位与操作   网易DDB   sharding   SOA   DDD   Machine line   COW   &amp;ldquo;nginx_pool_t &amp;quot;   tcmalloc   sync.</description>
     </item>
     
     <item>

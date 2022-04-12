@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Terms on &gt; $ cd /home</title>
+    <link>https://nicko-ch.github.io/categories/terms/</link>
+    <description>Recent content in Terms on &gt; $ cd /home</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 15 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/categories/terms/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Terms</title>
+      <link>https://nicko-ch.github.io/posts/202012150000/</link>
+      <pubDate>Tue, 15 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://nicko-ch.github.io/posts/202012150000/</guid>
+      <description>Terms     分布式事务方式   bloom filter   Bitmap   nginx平滑重启原理   Linux内核特性之VDSO   NTP UPDATE 和 NTPD   QUICK   Head-of-line blocking   cgroup   Scaling Memcache At Facebook   errorgroup   pipeline   链表   bytegraph   neo4j   发号器   Graph DB   位与操作   网易DDB   sharding   SOA   DDD   Machine line   COW   &amp;ldquo;nginx_pool_t &amp;quot;   tcmalloc   sync.</description>
+    </item>
+    
+  </channel>
+</rss>

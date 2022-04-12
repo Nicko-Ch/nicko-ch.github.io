@@ -131,6 +131,61 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2>Go高级编程 - GC垃圾回收原理</h2>
+  </header>
+  <section class="entry-content">
+    <p>标记清除法  STW（stop the world）→ 标记对象依赖关系 → 清楚待回收对象 → 结束STW
+ 步骤：
+ 暂停程序业务逻辑, 找出不可达的对象，和可达对象。 开始标记，程序找出它所有可达的对象，并做上标记。 开始清除未标记对象。 停止STW，让程序恢复运行。  缺点：
+ STW严重影响程序的运行效率 标记需要扫描整个heap 清除数据也会导致产生多余的heap碎片  优化：
+ 将步骤3和4互换位置，缩短STW的范围  三色标记法  白色：待回收对象 灰色：待扫描对象 黑色：已扫描对象
+ 目标：处理完所有灰色的对象为止
+  步骤：
+  将所有的对象标记为默认颜色“白色”
+  从根节点（Root Set）出发，遍历将被根节点引用的对象标记为&#34;灰色&#34;
+  遍历灰色集合，将灰色对象引用的白色对象标记为“灰色”，然后将遍历完的灰色对象标记为“黑色”
+  重复步骤3，直到灰色集合中无任何对象
+  最后回收所有白色集合对象
+  缺点（不启动STW保护）：
+有可能造成对象丢失，即过程中黑色对象引用了白色对象，同时白色对象丢失了灰色对象的关系，导致GC把黑色对象引用的白色对象被回收
+需同时满足两条件：
+ 一个白色对象被黑色对象引用（白色被挂载到黑色下） 灰色对象与被挂载的白色对象关系遭到破坏（灰色同时丢失了白色的挂载）  强弱三色不变式 强三色不变式  强制性不允许黑色对象引用白色对象（破坏条件1）
+ 弱三色不变式  允许黑色对象引用白色对象，但白色对象必须存在链路上游有灰色对象保持有引用关系（破坏条件2）...</p>
+  </section>
+  <footer class="entry-footer">January 5, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - GC垃圾回收原理" href="https://nicko-ch.github.io/posts/202101050000/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Go高级编程 - 基础</h2>
+  </header>
+  <section class="entry-content">
+    <p>new() 和 make() 的区别 看起来二者没有什么区别，都在堆上分配内存，但是它们的行为不同，适用于不同的类型。
+ new(T) 为每个新的类型T分配一片内存，初始化为 0 并且返回类型为*T的内存地址：这种方法 返回一个指向类型为 T，值为 0 的地址的指针，它适用于值类型如数组和结构体；它相当于 &amp;T{}。 make(T) 返回一个类型为 T 的初始值，它只适用于3种内建的引用类型：切片、map 和 channel。  换言之，new 函数分配内存，make 函数初始化；下图给出了区别：
+译者注：如何理解new、make、slice、map、channel的关系
+1.slice、map以及channel都是golang内建的一种引用类型，三者在内存中存在多个组成部分， 需要对内存组成部分初始化后才能使用，而make就是对三者进行初始化的一种操作方式
+2. new 获取的是存储指定变量内存地址的一个变量，对于变量内部结构并不会执行相应的初始化操作， 所以slice、map、channel需要make进行初始化并获取对应的内存地址，而非new简单的获取内存地址
+ 编程内存模型  kernel内核区为操作系统专用 函数中局部变量是在stack中存放的 stack中的内存在函数结束后会被释放 函数中new和make声明的变量是在heap中存放的   fmt函数参数说明 基本
+%v	the value in a default formatwhen printing structs, the plus flag (%&#43;v) adds field names%#v	a Go-syntax representation of the value%T	a Go-syntax representation of the type of the value%%	a literal percent sign; consumes no valueThe default format for %v is:...</p>
+  </section>
+  <footer class="entry-footer">January 4, 2021&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - 基础" href="https://nicko-ch.github.io/posts/202101040000/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Go优秀开源项目分享</h2>
+  </header>
+  <section class="entry-content">
+    <p></p>
+  </section>
+  <footer class="entry-footer">December 31, 2020&nbsp;·&nbsp;0 min</footer>
+  <a class="entry-link" aria-label="post link to Go优秀开源项目分享" href="https://nicko-ch.github.io/posts/202012310000/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2>Refference - Go高级编程</h2>
   </header>
   <section class="entry-content">
@@ -163,6 +218,17 @@ var identifier [len]type // var arr [5]int  var arrAge = [5]int{18, 20, 15, 22, 
   </section>
   <footer class="entry-footer">December 16, 2020&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to Git基础语法" href="https://nicko-ch.github.io/posts/202012160000/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Terms</h2>
+  </header>
+  <section class="entry-content">
+    <p>Terms     分布式事务方式   bloom filter   Bitmap   nginx平滑重启原理   Linux内核特性之VDSO   NTP UPDATE 和 NTPD   QUICK   Head-of-line blocking   cgroup   Scaling Memcache At Facebook   errorgroup   pipeline   链表   bytegraph   neo4j   发号器   Graph DB   位与操作   网易DDB   sharding   SOA   DDD   Machine line   COW   “nginx_pool_t &#34;   tcmalloc   sync....</p>
+  </section>
+  <footer class="entry-footer">December 15, 2020&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Terms" href="https://nicko-ch.github.io/posts/202012150000/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -214,24 +280,10 @@ Cmd Markdown 简明语法手册 标签： Cmd-Markdown
   <footer class="entry-footer">October 31, 2018&nbsp;·&nbsp;4 min</footer>
   <a class="entry-link" aria-label="post link to Cmd Markdown 简明语法手册" href="https://nicko-ch.github.io/posts/201810311511/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Hello World</h2>
-  </header>
-  <section class="entry-content">
-    <p>Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick Start Create a new post $ hexo new &#34;My New Post&#34; More info: Writing
-Run server $ hexo server More info: Server
-Generate static files $ hexo generate More info: Generating
-Deploy to remote sites $ hexo deploy More info: Deployment...</p>
-  </section>
-  <footer class="entry-footer">October 23, 2018&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Hello World" href="https://nicko-ch.github.io/posts/201810231554/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="https://nicko-ch.github.io/posts/">« Prev Page</a>
+    <a class="next" href="https://nicko-ch.github.io/posts/page/3/">Next Page »</a>
   </nav>
 </footer>
     </main>

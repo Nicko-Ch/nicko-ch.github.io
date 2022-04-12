@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Docker核心原理 | &gt; $ cd /home</title>
+<meta name="keywords" content="Docker" />
+<meta name="description" content="核心原理 Namespace  独立进程，实现容器的 隔离性
+ Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。
+Cgroups  控制进程资源分配，实现容器的 限制性
+ Linux Cgroups 的全称是 Linux Control Group。它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+基于namespace实现的隔离性，只限于容器中的可视范围控制。实际上对于宿主机而言，容器中的进程也是宿主进程中的其中一个，所以理论上，容器进程和宿主进程占用的资源权限是一致的。为了防止某个容器抢占大量的资源导致其他容器乃至宿主机的奔溃，所以docker使用的linux中的cgroups进行进程资源的限制。
+ps：限制某进程使用的CPU核数等
+Rootfs  修改容器进程对于文件系统挂载点的可视范围，实现容器的 一致性
+ 在 Linux 操作系统里，有一个名为 chroot 的命令可以帮助你在 shell 中方便地完成这个工作。顾名思义，它的作用就是帮你“change root file system”，即改变进程的根目录到你指定的位置。
+实际上，Mount Namespace 正是基于对 chroot 的不断改良才被发明出来的，它也是 Linux 操作系统里的第一个 Namespace。它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效。
+而这个挂载在容器根目录上、用来为容器进程提供隔离后执行环境的文件系统，就是所谓的“容器镜像”。它还有一个更为专业的名字，叫作：rootfs（根文件系统）。
+rootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。在 Linux 操作系统中，这两部分是分开存放的，操作系统只有在开机启动时才会加载指定版本的内核镜像。
+由于 rootfs 里打包的不只是应用，而是整个操作系统的文件和目录，也就意味着，应用以及它运行所需要的所有依赖，都被封装在了一起。
+镜像 为了防止容器碎片化，提高容器的复用率。Docker支持用Dockerfile的形式，对于现有容器镜像进行二次开发和定制化。
+Union File System Union File System 也叫 UnionFS，最主要的功能是将多个不同位置的目录联合挂载（union mount）到同一个目录下。比如，我现在有两个目录 A 和 B，它们分别有两个文件：
+$ tree.├── A│ ├── a│ └── x└── B├── b└── x然后，我使用联合挂载的方式，将这两个目录挂载到一个公共的目录 C 上：">
+<meta name="author" content="">
+<link rel="canonical" href="https://nicko-ch.github.io/posts/202106020000/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0459a4ebf56f381ae411e97a494635ba7ce9db741ff9a2cfbf7e12366bf1e73d.css" integrity="sha256-BFmk6/VvOBrkEel6SUY1unzp23Qf&#43;aLPv34SNmvx5z0=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.6f62d19b78590241c3e007a10f91f45f95ce2528ca8f3e33c542e95f8ed5691f.js" integrity="sha256-b2LRm3hZAkHD4AehD5H0X5XOJSjKjz4zxULpX47VaR8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nicko-ch.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://nicko-ch.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://nicko-ch.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.88.0" />
+<meta property="og:title" content="Docker核心原理" />
+<meta property="og:description" content="核心原理 Namespace  独立进程，实现容器的 隔离性
+ Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。
+Cgroups  控制进程资源分配，实现容器的 限制性
+ Linux Cgroups 的全称是 Linux Control Group。它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+基于namespace实现的隔离性，只限于容器中的可视范围控制。实际上对于宿主机而言，容器中的进程也是宿主进程中的其中一个，所以理论上，容器进程和宿主进程占用的资源权限是一致的。为了防止某个容器抢占大量的资源导致其他容器乃至宿主机的奔溃，所以docker使用的linux中的cgroups进行进程资源的限制。
+ps：限制某进程使用的CPU核数等
+Rootfs  修改容器进程对于文件系统挂载点的可视范围，实现容器的 一致性
+ 在 Linux 操作系统里，有一个名为 chroot 的命令可以帮助你在 shell 中方便地完成这个工作。顾名思义，它的作用就是帮你“change root file system”，即改变进程的根目录到你指定的位置。
+实际上，Mount Namespace 正是基于对 chroot 的不断改良才被发明出来的，它也是 Linux 操作系统里的第一个 Namespace。它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效。
+而这个挂载在容器根目录上、用来为容器进程提供隔离后执行环境的文件系统，就是所谓的“容器镜像”。它还有一个更为专业的名字，叫作：rootfs（根文件系统）。
+rootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。在 Linux 操作系统中，这两部分是分开存放的，操作系统只有在开机启动时才会加载指定版本的内核镜像。
+由于 rootfs 里打包的不只是应用，而是整个操作系统的文件和目录，也就意味着，应用以及它运行所需要的所有依赖，都被封装在了一起。
+镜像 为了防止容器碎片化，提高容器的复用率。Docker支持用Dockerfile的形式，对于现有容器镜像进行二次开发和定制化。
+Union File System Union File System 也叫 UnionFS，最主要的功能是将多个不同位置的目录联合挂载（union mount）到同一个目录下。比如，我现在有两个目录 A 和 B，它们分别有两个文件：
+$ tree.├── A│ ├── a│ └── x└── B├── b└── x然后，我使用联合挂载的方式，将这两个目录挂载到一个公共的目录 C 上：" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://nicko-ch.github.io/posts/202106020000/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-06-02T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-06-02T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Docker核心原理"/>
+<meta name="twitter:description" content="核心原理 Namespace  独立进程，实现容器的 隔离性
+ Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。
+Cgroups  控制进程资源分配，实现容器的 限制性
+ Linux Cgroups 的全称是 Linux Control Group。它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+基于namespace实现的隔离性，只限于容器中的可视范围控制。实际上对于宿主机而言，容器中的进程也是宿主进程中的其中一个，所以理论上，容器进程和宿主进程占用的资源权限是一致的。为了防止某个容器抢占大量的资源导致其他容器乃至宿主机的奔溃，所以docker使用的linux中的cgroups进行进程资源的限制。
+ps：限制某进程使用的CPU核数等
+Rootfs  修改容器进程对于文件系统挂载点的可视范围，实现容器的 一致性
+ 在 Linux 操作系统里，有一个名为 chroot 的命令可以帮助你在 shell 中方便地完成这个工作。顾名思义，它的作用就是帮你“change root file system”，即改变进程的根目录到你指定的位置。
+实际上，Mount Namespace 正是基于对 chroot 的不断改良才被发明出来的，它也是 Linux 操作系统里的第一个 Namespace。它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效。
+而这个挂载在容器根目录上、用来为容器进程提供隔离后执行环境的文件系统，就是所谓的“容器镜像”。它还有一个更为专业的名字，叫作：rootfs（根文件系统）。
+rootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。在 Linux 操作系统中，这两部分是分开存放的，操作系统只有在开机启动时才会加载指定版本的内核镜像。
+由于 rootfs 里打包的不只是应用，而是整个操作系统的文件和目录，也就意味着，应用以及它运行所需要的所有依赖，都被封装在了一起。
+镜像 为了防止容器碎片化，提高容器的复用率。Docker支持用Dockerfile的形式，对于现有容器镜像进行二次开发和定制化。
+Union File System Union File System 也叫 UnionFS，最主要的功能是将多个不同位置的目录联合挂载（union mount）到同一个目录下。比如，我现在有两个目录 A 和 B，它们分别有两个文件：
+$ tree.├── A│ ├── a│ └── x└── B├── b└── x然后，我使用联合挂载的方式，将这两个目录挂载到一个公共的目录 C 上："/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://nicko-ch.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Docker核心原理",
+      "item": "https://nicko-ch.github.io/posts/202106020000/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Docker核心原理",
+  "name": "Docker核心原理",
+  "description": "核心原理 Namespace  独立进程，实现容器的 隔离性\n Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。\nCgroups  控制进程资源分配，实现容器的 限制性\n Linux Cgroups 的全称是 Linux Control Group。它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。\n基于namespace实现的隔离性，只限于容器中的可视范围控制。实际上对于宿主机而言，容器中的进程也是宿主进程中的其中一个，所以理论上，容器进程和宿主进程占用的资源权限是一致的。为了防止某个容器抢占大量的资源导致其他容器乃至宿主机的奔溃，所以docker使用的linux中的cgroups进行进程资源的限制。\nps：限制某进程使用的CPU核数等\nRootfs  修改容器进程对于文件系统挂载点的可视范围，实现容器的 一致性\n 在 Linux 操作系统里，有一个名为 chroot 的命令可以帮助你在 shell 中方便地完成这个工作。顾名思义，它的作用就是帮你“change root file system”，即改变进程的根目录到你指定的位置。\n实际上，Mount Namespace 正是基于对 chroot 的不断改良才被发明出来的，它也是 Linux 操作系统里的第一个 Namespace。它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效。\n而这个挂载在容器根目录上、用来为容器进程提供隔离后执行环境的文件系统，就是所谓的“容器镜像”。它还有一个更为专业的名字，叫作：rootfs（根文件系统）。\nrootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。在 Linux 操作系统中，这两部分是分开存放的，操作系统只有在开机启动时才会加载指定版本的内核镜像。\n由于 rootfs 里打包的不只是应用，而是整个操作系统的文件和目录，也就意味着，应用以及它运行所需要的所有依赖，都被封装在了一起。\n镜像 为了防止容器碎片化，提高容器的复用率。Docker支持用Dockerfile的形式，对于现有容器镜像进行二次开发和定制化。\nUnion File System Union File System 也叫 UnionFS，最主要的功能是将多个不同位置的目录联合挂载（union mount）到同一个目录下。比如，我现在有两个目录 A 和 B，它们分别有两个文件：\n$ tree\r.\r├── A\r│ ├── a\r│ └── x\r└── B\r├── b\r└── x\r然后，我使用联合挂载的方式，将这两个目录挂载到一个公共的目录 C 上：",
+  "keywords": [
+    "Docker"
+  ],
+  "articleBody": "核心原理 Namespace  独立进程，实现容器的 隔离性\n Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。\nCgroups  控制进程资源分配，实现容器的 限制性\n Linux Cgroups 的全称是 Linux Control Group。它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。\n基于namespace实现的隔离性，只限于容器中的可视范围控制。实际上对于宿主机而言，容器中的进程也是宿主进程中的其中一个，所以理论上，容器进程和宿主进程占用的资源权限是一致的。为了防止某个容器抢占大量的资源导致其他容器乃至宿主机的奔溃，所以docker使用的linux中的cgroups进行进程资源的限制。\nps：限制某进程使用的CPU核数等\nRootfs  修改容器进程对于文件系统挂载点的可视范围，实现容器的 一致性\n 在 Linux 操作系统里，有一个名为 chroot 的命令可以帮助你在 shell 中方便地完成这个工作。顾名思义，它的作用就是帮你“change root file system”，即改变进程的根目录到你指定的位置。\n实际上，Mount Namespace 正是基于对 chroot 的不断改良才被发明出来的，它也是 Linux 操作系统里的第一个 Namespace。它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效。\n而这个挂载在容器根目录上、用来为容器进程提供隔离后执行环境的文件系统，就是所谓的“容器镜像”。它还有一个更为专业的名字，叫作：rootfs（根文件系统）。\nrootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。在 Linux 操作系统中，这两部分是分开存放的，操作系统只有在开机启动时才会加载指定版本的内核镜像。\n由于 rootfs 里打包的不只是应用，而是整个操作系统的文件和目录，也就意味着，应用以及它运行所需要的所有依赖，都被封装在了一起。\n镜像 为了防止容器碎片化，提高容器的复用率。Docker支持用Dockerfile的形式，对于现有容器镜像进行二次开发和定制化。\nUnion File System Union File System 也叫 UnionFS，最主要的功能是将多个不同位置的目录联合挂载（union mount）到同一个目录下。比如，我现在有两个目录 A 和 B，它们分别有两个文件：\n$ tree\r.\r├── A\r│ ├── a\r│ └── x\r└── B\r├── b\r└── x\r然后，我使用联合挂载的方式，将这两个目录挂载到一个公共的目录 C 上：\n$ mkdir C\r$ mount -t aufs -o dirs=./A:./B none ./C\r这时，我再查看目录 C 的内容，就能看到目录 A 和 B 下的文件被合并到了一起：\n$ tree ./C\r./C\r├── a\r├── b\r└── x\rLayer Docker 在镜像的设计中，引入了层（layer）的概念。也就是说，用户制作镜像的每一步操作，都会生成一个层，也就是一个增量 rootfs。\n1. 只读层 它是这个容器的 rootfs 最下面的五层，对应的正是 ubuntu:latest 镜像的五层。可以看到，它们的挂载方式都是只读的（ro+wh，即 readonly+whiteout）。\n这时，我们可以分别查看一下这些层的内容：\n$ ls /var/lib/docker/aufs/diff/72b0744e06247c7d0...\retc sbin usr var\r$ ls /var/lib/docker/aufs/diff/32e8e20064858c0f2...\rrun\r$ ls /var/lib/docker/aufs/diff/a524a729adadedb900...\rbin boot dev etc home lib lib64 media mnt opt proc root run sbin srv sys tmp usr var\r可以看到，这些层，都以增量的方式分别包含了 Ubuntu 操作系统的一部分。\n2. 可读写层 最上层的可读写层，挂载方式为：rw，即read write，Dockfile的操作将会让内容以文件的形式增量出现在这层。\n所以，最上面这个可读写层的作用，就是专门用来存放你修改 rootfs 后产生的增量，无论是增、删、改，都发生在这里。而当我们使用完了这个被修改过的容器之后，还可以使用 docker commit 和 push 指令，保存这个被修改过的可读写层，并上传到 Docker Hub 上，供其他人使用；而与此同时，原先的只读层里的内容则不会有任何变化。这，就是增量 rootfs 的好处。\n3. Init层 它是一个以“-init”结尾的层，夹在只读层和读写层之间。Init 层是 Docker 项目单独生成的一个内部层，专门用来存放 /etc/hosts、/etc/resolv.conf 等信息。\n需要这样一层的原因是，这些文件本来属于只读的 Ubuntu 镜像的一部分，但是用户往往需要在启动容器时写入一些指定的值比如 hostname，所以就需要在可读写层对它们进行修改。\n可是，这些修改往往只对当前的容器有效，我们并不希望执行 docker commit 时，把这些信息连同可读写层一起提交掉。\n所以，Docker 做法是，在修改了这些文件之后，以一个单独的层挂载了出来。而用户执行 docker commit 只会提交可读写层，所以是不包含这些内容的。\n机制 Docker Exec $ docker exec -it 4ddf4638572d /bin/sh exec命令底层是调用了linux的setns()系统调用，作用是修改某进程内的namespace文件，将新的进程加入到指定的namespace中去。这样就实现了，讲宿主机的进程内嵌到指定的容器，并且访问视图namespace还是跟容器的一致。\nVolume  Volume 机制，允许你将宿主机上指定的目录或者文件，挂载到容器里面进行读取和修改操作。\n Linux 的绑定挂载（bind mount）机制。它的主要作用就是，允许你将一个目录或者文件，而不是整个设备，挂载到一个指定的目录上。并且，这时你在该挂载点上进行的任何操作，只是发生在被挂载的目录或者文件上，而原挂载点的内容则会被隐藏起来且不受影响。\n",
+  "wordCount" : "212",
+  "inLanguage": "en",
+  "datePublished": "2021-06-02T00:00:00Z",
+  "dateModified": "2021-06-02T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://nicko-ch.github.io/posts/202106020000/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\u003e $ cd /home",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://nicko-ch.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://nicko-ch.github.io/" accesskey="h" title="&gt; $ cd /home (Alt + H)">&gt; $ cd /home</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://nicko-ch.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://nicko-ch.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://nicko-ch.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Docker核心原理
+    </h1>
+    <div class="post-meta">June 2, 2021&nbsp;·&nbsp;1 min
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <div class="details">Table of Contents</div>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e6%a0%b8%e5%bf%83%e5%8e%9f%e7%90%86" aria-label="核心原理">核心原理</a><ul>
+                        
+                <li>
+                    <a href="#namespace" aria-label="Namespace">Namespace</a></li>
+                <li>
+                    <a href="#cgroups" aria-label="Cgroups">Cgroups</a></li>
+                <li>
+                    <a href="#rootfs" aria-label="Rootfs">Rootfs</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e9%95%9c%e5%83%8f" aria-label="镜像">镜像</a><ul>
+                        
+                <li>
+                    <a href="#union-file-system" aria-label="Union File System">Union File System</a></li>
+                <li>
+                    <a href="#layer" aria-label="Layer">Layer</a><ul>
+                        
+                <li>
+                    <a href="#1-%e5%8f%aa%e8%af%bb%e5%b1%82" aria-label="1. 只读层">1. 只读层</a></li>
+                <li>
+                    <a href="#2-%e5%8f%af%e8%af%bb%e5%86%99%e5%b1%82" aria-label="2. 可读写层">2. 可读写层</a></li>
+                <li>
+                    <a href="#3-init%e5%b1%82" aria-label="3. Init层">3. Init层</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%9c%ba%e5%88%b6" aria-label="机制">机制</a><ul>
+                        
+                <li>
+                    <a href="#docker-exec" aria-label="Docker Exec">Docker Exec</a></li>
+                <li>
+                    <a href="#volume" aria-label="Volume">Volume</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="核心原理">核心原理<a hidden class="anchor" aria-hidden="true" href="#核心原理">#</a></h1>
+<h2 id="namespace">Namespace<a hidden class="anchor" aria-hidden="true" href="#namespace">#</a></h2>
+<blockquote>
+<p>独立进程，实现容器的 <strong>隔离性</strong></p>
+</blockquote>
+<p>Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。</p>
+<p><img loading="lazy" src="/../static/images/202106020000/Untitled.png" alt="../static/images/202106020000/Untitled.png"  />
+</p>
+<h2 id="cgroups">Cgroups<a hidden class="anchor" aria-hidden="true" href="#cgroups">#</a></h2>
+<blockquote>
+<p>控制进程资源分配，实现容器的 <strong>限制性</strong></p>
+</blockquote>
+<p>Linux Cgroups 的全称是 Linux Control Group。它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。</p>
+<p>基于namespace实现的隔离性，只限于容器中的可视范围控制。实际上对于宿主机而言，容器中的进程也是宿主进程中的其中一个，所以理论上，容器进程和宿主进程占用的资源权限是一致的。为了防止某个容器抢占大量的资源导致其他容器乃至宿主机的奔溃，所以docker使用的linux中的cgroups进行进程资源的限制。</p>
+<p>ps：限制某进程使用的CPU核数等</p>
+<h2 id="rootfs">Rootfs<a hidden class="anchor" aria-hidden="true" href="#rootfs">#</a></h2>
+<blockquote>
+<p>修改容器进程对于文件系统挂载点的可视范围，实现容器的 <strong>一致性</strong></p>
+</blockquote>
+<p>在 Linux 操作系统里，有一个名为 chroot 的命令可以帮助你在 shell 中方便地完成这个工作。顾名思义，它的作用就是帮你“change root file system”，即改变进程的根目录到你指定的位置。</p>
+<p>实际上，Mount Namespace 正是基于对 chroot 的不断改良才被发明出来的，它也是 Linux 操作系统里的第一个 Namespace。它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效。</p>
+<p>而这个挂载在容器根目录上、用来为容器进程提供隔离后执行环境的文件系统，就是所谓的“容器镜像”。它还有一个更为专业的名字，叫作：<strong>rootfs</strong>（根文件系统）。</p>
+<p>rootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。在 Linux 操作系统中，这两部分是分开存放的，操作系统只有在开机启动时才会加载指定版本的内核镜像。</p>
+<p>由于 rootfs 里打包的不只是应用，而是整个操作系统的文件和目录，也就意味着，应用以及它运行所需要的所有依赖，都被封装在了一起。</p>
+<h1 id="镜像">镜像<a hidden class="anchor" aria-hidden="true" href="#镜像">#</a></h1>
+<p>为了防止容器碎片化，提高容器的复用率。Docker支持用Dockerfile的形式，对于现有容器镜像进行二次开发和定制化。</p>
+<h2 id="union-file-system">Union File System<a hidden class="anchor" aria-hidden="true" href="#union-file-system">#</a></h2>
+<p>Union File System 也叫 UnionFS，最主要的功能是将多个不同位置的目录联合挂载（union mount）到同一个目录下。比如，我现在有两个目录 A 和 B，它们分别有两个文件：</p>
+<pre tabindex="0"><code>$ tree
+.
+├── A
+│  ├── a
+│  └── x
+└── B
+  ├── b
+  └── x
+</code></pre><p>然后，我使用联合挂载的方式，将这两个目录挂载到一个公共的目录 C 上：</p>
+<pre tabindex="0"><code>$ mkdir C
+$ mount -t aufs -o dirs=./A:./B none ./C
+</code></pre><p>这时，我再查看目录 C 的内容，就能看到目录 A 和 B 下的文件被合并到了一起：</p>
+<pre tabindex="0"><code>$ tree ./C
+./C
+├── a
+├── b
+└── x
+</code></pre><h2 id="layer">Layer<a hidden class="anchor" aria-hidden="true" href="#layer">#</a></h2>
+<p>Docker 在镜像的设计中，引入了层（layer）的概念。也就是说，用户制作镜像的每一步操作，都会生成一个层，也就是一个增量 rootfs。</p>
+<p><img loading="lazy" src="/../static/images/202106020000/Untitled%201.png" alt="../static/images/202106020000/Untitled%201.png"  />
+</p>
+<h3 id="1-只读层">1. 只读层<a hidden class="anchor" aria-hidden="true" href="#1-只读层">#</a></h3>
+<p>它是这个容器的 rootfs 最下面的五层，对应的正是 ubuntu:latest 镜像的五层。可以看到，它们的挂载方式都是只读的（ro+wh，即 readonly+whiteout）。</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>这时，我们可以分别查看一下这些层的内容：</p>
+<pre tabindex="0"><code>$ ls /var/lib/docker/aufs/diff/72b0744e06247c7d0...
+etc sbin usr var
+$ ls /var/lib/docker/aufs/diff/32e8e20064858c0f2...
+run
+$ ls /var/lib/docker/aufs/diff/a524a729adadedb900...
+bin boot dev etc home lib lib64 media mnt opt proc root run sbin srv sys tmp usr var
+</code></pre><p>可以看到，这些层，都以增量的方式分别包含了 Ubuntu 操作系统的一部分。</p>
+<h3 id="2-可读写层">2. 可读写层<a hidden class="anchor" aria-hidden="true" href="#2-可读写层">#</a></h3>
+<p>最上层的可读写层，挂载方式为：rw，即read write，Dockfile的操作将会让内容以文件的形式增量出现在这层。</p>
+<p>所以，最上面这个可读写层的作用，就是专门用来存放你修改 rootfs 后产生的增量，无论是增、删、改，都发生在这里。而当我们使用完了这个被修改过的容器之后，还可以使用 docker commit 和 push 指令，保存这个被修改过的可读写层，并上传到 Docker Hub 上，供其他人使用；而与此同时，原先的只读层里的内容则不会有任何变化。这，就是增量 rootfs 的好处。</p>
+<h3 id="3-init层">3. Init层<a hidden class="anchor" aria-hidden="true" href="#3-init层">#</a></h3>
+<p>它是一个以“-init”结尾的层，夹在只读层和读写层之间。Init 层是 Docker 项目单独生成的一个内部层，专门用来存放 /etc/hosts、/etc/resolv.conf 等信息。</p>
+<p>需要这样一层的原因是，这些文件本来属于只读的 Ubuntu 镜像的一部分，但是用户往往需要在启动容器时写入一些指定的值比如 hostname，所以就需要在可读写层对它们进行修改。</p>
+<p>可是，这些修改往往只对当前的容器有效，我们并不希望执行 docker commit 时，把这些信息连同可读写层一起提交掉。</p>
+<p>所以，Docker 做法是，在修改了这些文件之后，以一个单独的层挂载了出来。而用户执行 docker commit 只会提交可读写层，所以是不包含这些内容的。</p>
+<h1 id="机制">机制<a hidden class="anchor" aria-hidden="true" href="#机制">#</a></h1>
+<h2 id="docker-exec">Docker Exec<a hidden class="anchor" aria-hidden="true" href="#docker-exec">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#960050;background-color:#1e0010">$</span> docker <span style="color:#66d9ef">exec</span> <span style="color:#f92672">-</span>it <span style="color:#ae81ff">4</span>ddf4638572d <span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>sh
+</code></pre></div><p>exec命令底层是调用了linux的setns()系统调用，作用是修改某进程内的namespace文件，将新的进程加入到指定的namespace中去。这样就实现了，讲宿主机的进程内嵌到指定的容器，并且访问视图namespace还是跟容器的一致。</p>
+<h2 id="volume">Volume<a hidden class="anchor" aria-hidden="true" href="#volume">#</a></h2>
+<blockquote>
+<p>Volume 机制，允许你将宿主机上指定的目录或者文件，挂载到容器里面进行读取和修改操作。</p>
+</blockquote>
+<p>Linux 的绑定挂载（bind mount）机制。它的主要作用就是，允许你将一个目录或者文件，而不是整个设备，挂载到一个指定的目录上。并且，这时你在该挂载点上进行的任何操作，只是发生在被挂载的目录或者文件上，而原挂载点的内容则会被隐藏起来且不受影响。</p>
+<p><img loading="lazy" src="/../static/images/202106020000/Untitled%202.png" alt="../static/images/202106020000/Untitled%202.png"  />
+</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p><img loading="lazy" src="/../static/images/202106020000/Untitled%203.png" alt="../static/images/202106020000/Untitled%203.png"  />
+</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://nicko-ch.github.io/tags/docker/">Docker</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2022 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

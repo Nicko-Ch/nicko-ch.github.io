@@ -131,13 +131,22 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2>First</h2>
+    <h2>Kubernetes基础</h2>
   </header>
   <section class="entry-content">
-    <p>bit ┌───┐byte │ │└───┘┌───┬───┐short │ │ │└───┴───┘┌───┬───┬───┬───┐int │ │ │ │ │└───┴───┴───┴───┘┌───┬───┬───┬───┬───┬───┬───┬───┐long │ │ │ │ │ │ │ │ │└───┴───┴───┴───┴───┴───┴───┴───┘┌───┬───┬───┬───┐float │ │ │ │ │└───┴───┴───┴───┘┌───┬───┬───┬───┬───┬───┬───┬───┐double │ │ │ │ │ │ │ │ │└───┴───┴───┴───┴───┴───┴───┴───┘┌───┬───┐char │ │ │└───┴───┘/* golang */ package main import ( &#34;fmt&#34; &#34;time&#34; &#34;github.com/gin-gonic/gin&#34; ) func hljs() { ch := make(chan float64) ch &lt;- 1....</p>
+    <p>1. 控制器类型 1.1 有状态服务 Statefulset  稳定持久化 稳定网络标志(地址) 有序部署 有序收缩(删除)  1.2 无状态服务 RC（ReplicationController） 副本数量与期望值之间的管理
+RS（ReplicaSet） 功能类似于RC，但是多了集合式的标签选择器
+Deployment 支持滚动更新以及回滚
+DaemonSet 单例模式
+确保Node上有且只运行一个同类型pod
+Job 负责批处理任务，即仅执行一次的任务，它可以保证批处理任务一个或者多个Pod成功结束
+Cron Job 周期性执行任务
+2. 网络通讯方式 2.1 同 Pod 间不同容器间 IO
+2.2 不同 Pod 间的通讯 同物理机 Docker0 网桥实现报文转发
+不同物理机 flannel UDP 数据包二次封装</p>
   </section>
-  <footer class="entry-footer">September 2, 2021&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to First" href="https://nicko-ch.github.io/posts/202109021012/"></a>
+  <footer class="entry-footer">March 23, 2022&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Kubernetes基础" href="https://nicko-ch.github.io/posts/202203230000/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -185,6 +194,31 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2>Docker核心原理</h2>
+  </header>
+  <section class="entry-content">
+    <p>核心原理 Namespace  独立进程，实现容器的 隔离性
+ Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。
+Cgroups  控制进程资源分配，实现容器的 限制性
+ Linux Cgroups 的全称是 Linux Control Group。它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+基于namespace实现的隔离性，只限于容器中的可视范围控制。实际上对于宿主机而言，容器中的进程也是宿主进程中的其中一个，所以理论上，容器进程和宿主进程占用的资源权限是一致的。为了防止某个容器抢占大量的资源导致其他容器乃至宿主机的奔溃，所以docker使用的linux中的cgroups进行进程资源的限制。
+ps：限制某进程使用的CPU核数等
+Rootfs  修改容器进程对于文件系统挂载点的可视范围，实现容器的 一致性
+ 在 Linux 操作系统里，有一个名为 chroot 的命令可以帮助你在 shell 中方便地完成这个工作。顾名思义，它的作用就是帮你“change root file system”，即改变进程的根目录到你指定的位置。
+实际上，Mount Namespace 正是基于对 chroot 的不断改良才被发明出来的，它也是 Linux 操作系统里的第一个 Namespace。它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效。
+而这个挂载在容器根目录上、用来为容器进程提供隔离后执行环境的文件系统，就是所谓的“容器镜像”。它还有一个更为专业的名字，叫作：rootfs（根文件系统）。
+rootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。在 Linux 操作系统中，这两部分是分开存放的，操作系统只有在开机启动时才会加载指定版本的内核镜像。
+由于 rootfs 里打包的不只是应用，而是整个操作系统的文件和目录，也就意味着，应用以及它运行所需要的所有依赖，都被封装在了一起。
+镜像 为了防止容器碎片化，提高容器的复用率。Docker支持用Dockerfile的形式，对于现有容器镜像进行二次开发和定制化。
+Union File System Union File System 也叫 UnionFS，最主要的功能是将多个不同位置的目录联合挂载（union mount）到同一个目录下。比如，我现在有两个目录 A 和 B，它们分别有两个文件：
+$ tree.├── A│ ├── a│ └── x└── B├── b└── x然后，我使用联合挂载的方式，将这两个目录挂载到一个公共的目录 C 上：...</p>
+  </section>
+  <footer class="entry-footer">June 2, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Docker核心原理" href="https://nicko-ch.github.io/posts/202106020000/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2>Kafa核心技术与实战</h2>
   </header>
   <section class="entry-content">
@@ -209,6 +243,28 @@ Partition (分区)：
   </section>
   <footer class="entry-footer">April 12, 2021&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Kafa核心技术与实战" href="https://nicko-ch.github.io/posts/202104120000/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>分布式唯一ID</h2>
+  </header>
+  <section class="entry-content">
+    <p>1. 为什么要用分布式ID 1.1 什么是分布式ID 拿MySQL数据库举个栗子：
+在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。
+但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有唯一ID做标识。此时一个能够生成全局唯一ID的系统是非常必要的。那么这个全局唯一ID就叫分布式ID。
+1.2 那么分布式ID需要满足那些条件？  全局唯一：必须保证ID是全局性唯一的，基本要求 高性能：高可用低延时，ID生成响应要块，否则反倒会成为业务瓶颈 高可用：100%的可用性是骗人的，但是也要无限接近于100%的可用性 好接入：要秉着拿来即用的设计原则，在系统设计和实现上要尽可能的简单 趋势递增：最好趋势递增，这个要求就得看具体业务场景了，一般不严格要求  2. 分布式ID都有哪些生成方式 2.1 UUID 优点：
+ 生成足够简单，本地生成无网络消耗，具有唯一性  缺点：
+ 无序的字符串，不具备自增特性 没有具体的业务含义 长度较大，不适合作为数据库主键，严重影响查询性能  2.2 数据库自增ID 优点：
+ 实现简单，ID主键，数值类型，带自增特性  缺点：
+ DB单机生成，存在并发宕机风险，无法扛住高并发场景  2.3 数据库集群模式 为了应对单机数据库的并发压力，设计上可以用双主模式集群的方式解决，但是这样也会引入一个新的问题，两个Mysql实例都是自增ID从1开始，会产生重复的ID怎么办？
+解决方案：设置起始值和自增步长
+MySQL_1 配置：
+set @@auto_increment_offset = 1; -- 起始值set @@auto_increment_increment = 2; -- 步长MySQL_2 配置：
+set @@auto_increment_offset = 2; -- 起始值set @@auto_increment_increment = 2; -- 步长这样两个MySQL实例的自增ID分别就是：...</p>
+  </section>
+  <footer class="entry-footer">April 8, 2021&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to 分布式唯一ID" href="https://nicko-ch.github.io/posts/202104080000/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -256,50 +312,6 @@ B&#43;树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引
   </section>
   <footer class="entry-footer">January 7, 2021&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Go高级编程 - GMP并发模型" href="https://nicko-ch.github.io/posts/202102070000/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Go高级编程 - GC垃圾回收原理</h2>
-  </header>
-  <section class="entry-content">
-    <p>标记清除法  STW（stop the world）→ 标记对象依赖关系 → 清楚待回收对象 → 结束STW
- 步骤：
- 暂停程序业务逻辑, 找出不可达的对象，和可达对象。 开始标记，程序找出它所有可达的对象，并做上标记。 开始清除未标记对象。 停止STW，让程序恢复运行。  缺点：
- STW严重影响程序的运行效率 标记需要扫描整个heap 清除数据也会导致产生多余的heap碎片  优化：
- 将步骤3和4互换位置，缩短STW的范围  三色标记法  白色：待回收对象 灰色：待扫描对象 黑色：已扫描对象
- 目标：处理完所有灰色的对象为止
-  步骤：
-  将所有的对象标记为默认颜色“白色”
-  从根节点（Root Set）出发，遍历将被根节点引用的对象标记为&#34;灰色&#34;
-  遍历灰色集合，将灰色对象引用的白色对象标记为“灰色”，然后将遍历完的灰色对象标记为“黑色”
-  重复步骤3，直到灰色集合中无任何对象
-  最后回收所有白色集合对象
-  缺点（不启动STW保护）：
-有可能造成对象丢失，即过程中黑色对象引用了白色对象，同时白色对象丢失了灰色对象的关系，导致GC把黑色对象引用的白色对象被回收
-需同时满足两条件：
- 一个白色对象被黑色对象引用（白色被挂载到黑色下） 灰色对象与被挂载的白色对象关系遭到破坏（灰色同时丢失了白色的挂载）  强弱三色不变式 强三色不变式  强制性不允许黑色对象引用白色对象（破坏条件1）
- 弱三色不变式  允许黑色对象引用白色对象，但白色对象必须存在链路上游有灰色对象保持有引用关系（破坏条件2）...</p>
-  </section>
-  <footer class="entry-footer">January 5, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - GC垃圾回收原理" href="https://nicko-ch.github.io/posts/202101050000/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Go高级编程 - 基础</h2>
-  </header>
-  <section class="entry-content">
-    <p>new() 和 make() 的区别 看起来二者没有什么区别，都在堆上分配内存，但是它们的行为不同，适用于不同的类型。
- new(T) 为每个新的类型T分配一片内存，初始化为 0 并且返回类型为*T的内存地址：这种方法 返回一个指向类型为 T，值为 0 的地址的指针，它适用于值类型如数组和结构体；它相当于 &amp;T{}。 make(T) 返回一个类型为 T 的初始值，它只适用于3种内建的引用类型：切片、map 和 channel。  换言之，new 函数分配内存，make 函数初始化；下图给出了区别：
-译者注：如何理解new、make、slice、map、channel的关系
-1.slice、map以及channel都是golang内建的一种引用类型，三者在内存中存在多个组成部分， 需要对内存组成部分初始化后才能使用，而make就是对三者进行初始化的一种操作方式
-2. new 获取的是存储指定变量内存地址的一个变量，对于变量内部结构并不会执行相应的初始化操作， 所以slice、map、channel需要make进行初始化并获取对应的内存地址，而非new简单的获取内存地址
- 编程内存模型  kernel内核区为操作系统专用 函数中局部变量是在stack中存放的 stack中的内存在函数结束后会被释放 函数中new和make声明的变量是在heap中存放的   fmt函数参数说明 基本
-%v	the value in a default formatwhen printing structs, the plus flag (%&#43;v) adds field names%#v	a Go-syntax representation of the value%T	a Go-syntax representation of the type of the value%%	a literal percent sign; consumes no valueThe default format for %v is:...</p>
-  </section>
-  <footer class="entry-footer">January 4, 2021&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - 基础" href="https://nicko-ch.github.io/posts/202101040000/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
