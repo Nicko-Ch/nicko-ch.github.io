@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Golang | &gt; $ cd /home</title>
+<meta name="keywords" content="" />
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="https://nicko-ch.github.io/tags/golang/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0459a4ebf56f381ae411e97a494635ba7ce9db741ff9a2cfbf7e12366bf1e73d.css" integrity="sha256-BFmk6/VvOBrkEel6SUY1unzp23Qf&#43;aLPv34SNmvx5z0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nicko-ch.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://nicko-ch.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://nicko-ch.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.88.0" />
+<link rel="alternate" type="application/rss+xml" href="https://nicko-ch.github.io/tags/golang/index.xml">
+<meta property="og:title" content="Golang" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://nicko-ch.github.io/tags/golang/" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Golang"/>
+<meta name="twitter:description" content=""/>
+
+</head>
+
+<body class="list" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://nicko-ch.github.io/" accesskey="h" title="&gt; $ cd /home (Alt + H)">&gt; $ cd /home</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://nicko-ch.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header"><div class="breadcrumbs"><a href="https://nicko-ch.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://nicko-ch.github.io/tags/">Tags</a></div>
+  <h1>Golang</h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>Go高级编程 - Benchmark</h2>
+  </header>
+  <section class="entry-content">
+    <p>基础用法  benchmark和普通单元测试用例一样，文件命名都为 _test.go 函数名以 Benchmark 开头，参数是 b *testing.B。 对比普通的单元测试用例： 函数名以 Test 开头，参数是 t *testing.T。  运行用例 基础用例  运行当前 package 内的用例：go test example 或 go test . 运行子 package 内的用例： go test example/&lt;package name&gt; 或 go test ./&lt;package name&gt; 如果想递归测试当前目录下的所有的 package：go test ./... 或 go test example/...。  $ go test -bench . goos: darwin goarch: amd64 pkg: example BenchmarkFib-8 200 5865240 ns/op PASS ok example 1.782s  正则匹配，例：只运行以 Fib 结尾的benchmark用例  $ go test -bench=&#39;Fib$&#39; ....</p>
+  </section>
+  <footer class="entry-footer">March 1, 2021&nbsp;·&nbsp;4 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - Benchmark" href="https://nicko-ch.github.io/posts/202103010000/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>Go高级编程 - GMP并发模型</h2>
+  </header>
+  <section class="entry-content">
+    <p>Golang&#34;调度器&#34;由来 单进程时代  单一执行流程，CPU只能顺序的执行任务队列 进程阻塞导致CPU占用，浪费硬件资源，影响执行效率  多进程、多线程时代  设计变得复杂  进程/线程的数量越多，切换CPU执行时间片成本越大 多线程随着同步竞争（如 锁、竞争资源冲突等）   缺点  高内存占用 （进程：虚拟内存4G；线程：约4MB） 高CPU调度消耗    协程（co-routine）  N:1  无法利用多个CPU 出现阻塞的瓶颈   1:1  跟多线程/多进程模型无异 协程切换成本高   M:N  能够利用多核 过于依赖协程调度器的优化和算法    调度器的优化  早期Go调度器  基本的全局Go队列和比较传统的轮询利用多个thread去调度 弊端  创建、销毁、调度G都需要每个M获取锁，形成了激烈的锁竞争 M转移G会造成延迟和额外的系统负载 系统调用（CPU在M之间的切换）导致频繁的线程阻塞和取消阻塞的操作增加了系统的开销     Goroutine优化  内存占用低（几KB，大量开辟） 灵活调度，切换成本低    GMP模型的设计思想 GMP模型简介 GMP
+ G：goroutine 携程 P：processor 处理器 M：thread 内核线程...</p>
+  </section>
+  <footer class="entry-footer">January 7, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - GMP并发模型" href="https://nicko-ch.github.io/posts/202102070000/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>Go高级编程 - GC垃圾回收原理</h2>
+  </header>
+  <section class="entry-content">
+    <p>标记清除法  STW（stop the world）→ 标记对象依赖关系 → 清楚待回收对象 → 结束STW
+ 步骤：
+ 暂停程序业务逻辑, 找出不可达的对象，和可达对象。 开始标记，程序找出它所有可达的对象，并做上标记。 开始清除未标记对象。 停止STW，让程序恢复运行。  缺点：
+ STW严重影响程序的运行效率 标记需要扫描整个heap 清除数据也会导致产生多余的heap碎片  优化：
+ 将步骤3和4互换位置，缩短STW的范围  三色标记法  白色：待回收对象 灰色：待扫描对象 黑色：已扫描对象
+ 目标：处理完所有灰色的对象为止
+  步骤：
+  将所有的对象标记为默认颜色“白色”
+  从根节点（Root Set）出发，遍历将被根节点引用的对象标记为&#34;灰色&#34;
+  遍历灰色集合，将灰色对象引用的白色对象标记为“灰色”，然后将遍历完的灰色对象标记为“黑色”
+  重复步骤3，直到灰色集合中无任何对象
+  最后回收所有白色集合对象
+  缺点（不启动STW保护）：
+有可能造成对象丢失，即过程中黑色对象引用了白色对象，同时白色对象丢失了灰色对象的关系，导致GC把黑色对象引用的白色对象被回收
+需同时满足两条件：
+ 一个白色对象被黑色对象引用（白色被挂载到黑色下） 灰色对象与被挂载的白色对象关系遭到破坏（灰色同时丢失了白色的挂载）  强弱三色不变式 强三色不变式  强制性不允许黑色对象引用白色对象（破坏条件1）
+ 弱三色不变式  允许黑色对象引用白色对象，但白色对象必须存在链路上游有灰色对象保持有引用关系（破坏条件2）...</p>
+  </section>
+  <footer class="entry-footer">January 5, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - GC垃圾回收原理" href="https://nicko-ch.github.io/posts/202101050000/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>Go高级编程 - 基础</h2>
+  </header>
+  <section class="entry-content">
+    <p>new() 和 make() 的区别 看起来二者没有什么区别，都在堆上分配内存，但是它们的行为不同，适用于不同的类型。
+ new(T) 为每个新的类型T分配一片内存，初始化为 0 并且返回类型为*T的内存地址：这种方法 返回一个指向类型为 T，值为 0 的地址的指针，它适用于值类型如数组和结构体；它相当于 &amp;T{}。 make(T) 返回一个类型为 T 的初始值，它只适用于3种内建的引用类型：切片、map 和 channel。  换言之，new 函数分配内存，make 函数初始化；下图给出了区别：
+译者注：如何理解new、make、slice、map、channel的关系
+1.slice、map以及channel都是golang内建的一种引用类型，三者在内存中存在多个组成部分， 需要对内存组成部分初始化后才能使用，而make就是对三者进行初始化的一种操作方式
+2. new 获取的是存储指定变量内存地址的一个变量，对于变量内部结构并不会执行相应的初始化操作， 所以slice、map、channel需要make进行初始化并获取对应的内存地址，而非new简单的获取内存地址
+ 编程内存模型  kernel内核区为操作系统专用 函数中局部变量是在stack中存放的 stack中的内存在函数结束后会被释放 函数中new和make声明的变量是在heap中存放的   fmt函数参数说明 基本
+%v	the value in a default formatwhen printing structs, the plus flag (%&#43;v) adds field names%#v	a Go-syntax representation of the value%T	a Go-syntax representation of the type of the value%%	a literal percent sign; consumes no valueThe default format for %v is:...</p>
+  </section>
+  <footer class="entry-footer">January 4, 2021&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - 基础" href="https://nicko-ch.github.io/posts/202101040000/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>Refference - Go高级编程</h2>
+  </header>
+  <section class="entry-content">
+    <p>Title Link Description     Golang深入理解GPM模型 https://www.bilibili.com/video/BV19r4y1w7Nx    Golang中GC回收机制三色标记与混合写屏障 https://www.bilibili.com/video/BV1wz4y1y7Kd    Golang修养之路 https://www.kancloud.cn/aceld/golang/1858955    Go语言规范 https://golang.google.cn/ref/spec    GO 命令教程 https://github.com/hyper0x/go_command_tutorial    Go 语言性能优化 https://cch123.github.io/perf_opt/    图解 Go pprof 收集数据的工作流 https://mp.weixin.qq.com/s/HQzz2NQ2lSg_LLsNB7C-mw    7天用Go从零实现Web框架Gee教程 https://geektutu.com/post/gee.html    build-web-application-with-golang https://github.com/astaxie/build-web-application-with-golang    B站最深度的Golang学习到实战 up主强力推荐 https://www.bilibili.com/video/BV1TK4y1a7ex    Go contributor 解答：关于 Go GC 的 20 个核心问题 https://blog....</p>
+  </section>
+  <footer class="entry-footer">December 21, 2020&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Refference - Go高级编程" href="https://nicko-ch.github.io/posts/202012210000/"></a>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2022 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

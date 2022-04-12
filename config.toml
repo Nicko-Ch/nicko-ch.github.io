@@ -41,15 +41,15 @@ name = "github"
 title = "Github"
 url = "https://github.com/Nicko-Ch"
 [[params.socialIcons]]
+name = "wechat"
+title = "NicKo_Ch"
+[[params.socialIcons]]
 name = "email"
-url = "mailto:cyn_411@sina.com"
+url = "mailto:cyn_411#sina.com"
 [[params.socialIcons]]
 name = "weibo"
 title = "Sina Weibo"
 url = "https://weibo.com/cyn411/home"
-[[params.socialIcons]]
-name = "wechat"
-title = "NicKo_Ch"
 
 [menu]
 [[menu.main]]
@@ -76,3 +76,6 @@ url = "/search/"
 identifier = "Archives"
 name = "Archives"
 url = "/archives/"
+
+[outputs]
+home = [ "HTML", "RSS", "JSON" ]

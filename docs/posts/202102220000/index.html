@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Mysql实战45讲 - 丁奇 | &gt; $ cd /home</title>
+<meta name="keywords" content="Mysql" />
+<meta name="description" content="基础篇 01丨基础架构：一条SQL查询语句是如何执行的？ 02丨日志系统：一条SQL更新语句是如何执行的？ 03丨事务隔离：为什么你改了我还看不见？  ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）
+  读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。 读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。 可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。 串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  04丨深入浅出索引（上） 哈希表 适用于只有等值查询的场景，效率高，但无法范围查询
+有序数组 等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移
+二叉树（BST） 各方面都非常优秀，但是极端情况下可能会发展为链表
+平衡二叉树（AVL） 二叉树的变异体，会根据情况自动左右旋转，维持子节点的平衡，但是树高无法维护
+红黑树（RBT） 相比较平衡二叉树，平衡条件宽松，只需保证左右深度差一倍，使写的操作变化减少，提高写的性能
+B树 可以拥有多节点，解决平衡二叉树存在的树层级太高，降低查询复杂度
+B&#43;树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引），叶子节点会保存前后的指针地址
+05丨深入浅出索引（下） 覆盖索引 由于非主键索引存在回表的情况，所以select时选择主键字段，可以防止回表从而提高查询效率
+最左前缀原则 实践篇 09丨普通索引和唯一索引，应该怎么选择？ 查询过程  对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。 对于唯一索引来说，由于索引定义了唯一性，查找到第一个满足条件的记录后，就会停止继续检索。   结论：性能上微乎其微，业务看具体场景
+ 理论上唯一索引的性能会比普通索引快，但是引擎是按页进行读写的，所以查询key行数据时候，去取出的data page大概率会有下一行的记录，所以只需要在内存级别再判断一次下一行的记录是否符合条件。
+即使复杂情况，key行在data page最后一行，必须读取下一页。这种情况换做整型的索引，但个data page可以存放上千个key，出现这种概率的情况也是极小的。
+更新过程 了解新概念change buffer
+ 当需要更新数据时候，在不影响一致性的情况下，innoDB会将这部分操作直接写到change buffer中。这样就不需要从磁盘中读取data page了。 将change buffer写入data page的过程称为merge，访问数据也则会触发，系统也会定期执行。 读取data page会占用buffer pool，这种方式可以提高内存利用率。  实际对比">
+<meta name="author" content="">
+<link rel="canonical" href="https://nicko-ch.github.io/posts/202102220000/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0459a4ebf56f381ae411e97a494635ba7ce9db741ff9a2cfbf7e12366bf1e73d.css" integrity="sha256-BFmk6/VvOBrkEel6SUY1unzp23Qf&#43;aLPv34SNmvx5z0=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.6f62d19b78590241c3e007a10f91f45f95ce2528ca8f3e33c542e95f8ed5691f.js" integrity="sha256-b2LRm3hZAkHD4AehD5H0X5XOJSjKjz4zxULpX47VaR8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nicko-ch.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://nicko-ch.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://nicko-ch.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.88.0" />
+<meta property="og:title" content="Mysql实战45讲 - 丁奇" />
+<meta property="og:description" content="基础篇 01丨基础架构：一条SQL查询语句是如何执行的？ 02丨日志系统：一条SQL更新语句是如何执行的？ 03丨事务隔离：为什么你改了我还看不见？  ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）
+  读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。 读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。 可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。 串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  04丨深入浅出索引（上） 哈希表 适用于只有等值查询的场景，效率高，但无法范围查询
+有序数组 等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移
+二叉树（BST） 各方面都非常优秀，但是极端情况下可能会发展为链表
+平衡二叉树（AVL） 二叉树的变异体，会根据情况自动左右旋转，维持子节点的平衡，但是树高无法维护
+红黑树（RBT） 相比较平衡二叉树，平衡条件宽松，只需保证左右深度差一倍，使写的操作变化减少，提高写的性能
+B树 可以拥有多节点，解决平衡二叉树存在的树层级太高，降低查询复杂度
+B&#43;树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引），叶子节点会保存前后的指针地址
+05丨深入浅出索引（下） 覆盖索引 由于非主键索引存在回表的情况，所以select时选择主键字段，可以防止回表从而提高查询效率
+最左前缀原则 实践篇 09丨普通索引和唯一索引，应该怎么选择？ 查询过程  对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。 对于唯一索引来说，由于索引定义了唯一性，查找到第一个满足条件的记录后，就会停止继续检索。   结论：性能上微乎其微，业务看具体场景
+ 理论上唯一索引的性能会比普通索引快，但是引擎是按页进行读写的，所以查询key行数据时候，去取出的data page大概率会有下一行的记录，所以只需要在内存级别再判断一次下一行的记录是否符合条件。
+即使复杂情况，key行在data page最后一行，必须读取下一页。这种情况换做整型的索引，但个data page可以存放上千个key，出现这种概率的情况也是极小的。
+更新过程 了解新概念change buffer
+ 当需要更新数据时候，在不影响一致性的情况下，innoDB会将这部分操作直接写到change buffer中。这样就不需要从磁盘中读取data page了。 将change buffer写入data page的过程称为merge，访问数据也则会触发，系统也会定期执行。 读取data page会占用buffer pool，这种方式可以提高内存利用率。  实际对比" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://nicko-ch.github.io/posts/202102220000/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-02-22T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-02-22T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mysql实战45讲 - 丁奇"/>
+<meta name="twitter:description" content="基础篇 01丨基础架构：一条SQL查询语句是如何执行的？ 02丨日志系统：一条SQL更新语句是如何执行的？ 03丨事务隔离：为什么你改了我还看不见？  ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）
+  读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。 读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。 可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。 串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  04丨深入浅出索引（上） 哈希表 适用于只有等值查询的场景，效率高，但无法范围查询
+有序数组 等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移
+二叉树（BST） 各方面都非常优秀，但是极端情况下可能会发展为链表
+平衡二叉树（AVL） 二叉树的变异体，会根据情况自动左右旋转，维持子节点的平衡，但是树高无法维护
+红黑树（RBT） 相比较平衡二叉树，平衡条件宽松，只需保证左右深度差一倍，使写的操作变化减少，提高写的性能
+B树 可以拥有多节点，解决平衡二叉树存在的树层级太高，降低查询复杂度
+B&#43;树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引），叶子节点会保存前后的指针地址
+05丨深入浅出索引（下） 覆盖索引 由于非主键索引存在回表的情况，所以select时选择主键字段，可以防止回表从而提高查询效率
+最左前缀原则 实践篇 09丨普通索引和唯一索引，应该怎么选择？ 查询过程  对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。 对于唯一索引来说，由于索引定义了唯一性，查找到第一个满足条件的记录后，就会停止继续检索。   结论：性能上微乎其微，业务看具体场景
+ 理论上唯一索引的性能会比普通索引快，但是引擎是按页进行读写的，所以查询key行数据时候，去取出的data page大概率会有下一行的记录，所以只需要在内存级别再判断一次下一行的记录是否符合条件。
+即使复杂情况，key行在data page最后一行，必须读取下一页。这种情况换做整型的索引，但个data page可以存放上千个key，出现这种概率的情况也是极小的。
+更新过程 了解新概念change buffer
+ 当需要更新数据时候，在不影响一致性的情况下，innoDB会将这部分操作直接写到change buffer中。这样就不需要从磁盘中读取data page了。 将change buffer写入data page的过程称为merge，访问数据也则会触发，系统也会定期执行。 读取data page会占用buffer pool，这种方式可以提高内存利用率。  实际对比"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://nicko-ch.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Mysql实战45讲 - 丁奇",
+      "item": "https://nicko-ch.github.io/posts/202102220000/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Mysql实战45讲 - 丁奇",
+  "name": "Mysql实战45讲 - 丁奇",
+  "description": "基础篇 01丨基础架构：一条SQL查询语句是如何执行的？ 02丨日志系统：一条SQL更新语句是如何执行的？ 03丨事务隔离：为什么你改了我还看不见？  ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）\n  读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。 读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。 可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。 串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  04丨深入浅出索引（上） 哈希表 适用于只有等值查询的场景，效率高，但无法范围查询\n有序数组 等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移\n二叉树（BST） 各方面都非常优秀，但是极端情况下可能会发展为链表\n平衡二叉树（AVL） 二叉树的变异体，会根据情况自动左右旋转，维持子节点的平衡，但是树高无法维护\n红黑树（RBT） 相比较平衡二叉树，平衡条件宽松，只需保证左右深度差一倍，使写的操作变化减少，提高写的性能\nB树 可以拥有多节点，解决平衡二叉树存在的树层级太高，降低查询复杂度\nB+树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引），叶子节点会保存前后的指针地址\n05丨深入浅出索引（下） 覆盖索引 由于非主键索引存在回表的情况，所以select时选择主键字段，可以防止回表从而提高查询效率\n最左前缀原则 实践篇 09丨普通索引和唯一索引，应该怎么选择？ 查询过程  对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。 对于唯一索引来说，由于索引定义了唯一性，查找到第一个满足条件的记录后，就会停止继续检索。   结论：性能上微乎其微，业务看具体场景\n 理论上唯一索引的性能会比普通索引快，但是引擎是按页进行读写的，所以查询key行数据时候，去取出的data page大概率会有下一行的记录，所以只需要在内存级别再判断一次下一行的记录是否符合条件。\n即使复杂情况，key行在data page最后一行，必须读取下一页。这种情况换做整型的索引，但个data page可以存放上千个key，出现这种概率的情况也是极小的。\n更新过程 了解新概念change buffer\n 当需要更新数据时候，在不影响一致性的情况下，innoDB会将这部分操作直接写到change buffer中。这样就不需要从磁盘中读取data page了。 将change buffer写入data page的过程称为merge，访问数据也则会触发，系统也会定期执行。 读取data page会占用buffer pool，这种方式可以提高内存利用率。  实际对比",
+  "keywords": [
+    "Mysql"
+  ],
+  "articleBody": "基础篇 01丨基础架构：一条SQL查询语句是如何执行的？ 02丨日志系统：一条SQL更新语句是如何执行的？ 03丨事务隔离：为什么你改了我还看不见？  ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）\n  读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。 读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。 可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。 串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  04丨深入浅出索引（上） 哈希表 适用于只有等值查询的场景，效率高，但无法范围查询\n有序数组 等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移\n二叉树（BST） 各方面都非常优秀，但是极端情况下可能会发展为链表\n平衡二叉树（AVL） 二叉树的变异体，会根据情况自动左右旋转，维持子节点的平衡，但是树高无法维护\n红黑树（RBT） 相比较平衡二叉树，平衡条件宽松，只需保证左右深度差一倍，使写的操作变化减少，提高写的性能\nB树 可以拥有多节点，解决平衡二叉树存在的树层级太高，降低查询复杂度\nB+树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引），叶子节点会保存前后的指针地址\n05丨深入浅出索引（下） 覆盖索引 由于非主键索引存在回表的情况，所以select时选择主键字段，可以防止回表从而提高查询效率\n最左前缀原则 实践篇 09丨普通索引和唯一索引，应该怎么选择？ 查询过程  对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。 对于唯一索引来说，由于索引定义了唯一性，查找到第一个满足条件的记录后，就会停止继续检索。   结论：性能上微乎其微，业务看具体场景\n 理论上唯一索引的性能会比普通索引快，但是引擎是按页进行读写的，所以查询key行数据时候，去取出的data page大概率会有下一行的记录，所以只需要在内存级别再判断一次下一行的记录是否符合条件。\n即使复杂情况，key行在data page最后一行，必须读取下一页。这种情况换做整型的索引，但个data page可以存放上千个key，出现这种概率的情况也是极小的。\n更新过程 了解新概念change buffer\n 当需要更新数据时候，在不影响一致性的情况下，innoDB会将这部分操作直接写到change buffer中。这样就不需要从磁盘中读取data page了。 将change buffer写入data page的过程称为merge，访问数据也则会触发，系统也会定期执行。 读取data page会占用buffer pool，这种方式可以提高内存利用率。  实际对比\n唯一索引需要将data page读入内存，判断是否存在该值，所以无法使用change buffer\n普通索引则只需要更新记录到change buffer即可结束\n 结论：读多写少的情况建议用普通索引，强业务一致性则用唯一索引\n redo log 和 change buffer 区别  redo log 主要节省的是随机写磁盘的 IO 消耗（转成顺序写），而 change buffer 主要节省的则是随机读磁盘的 IO 消耗。  10丨MySQL为什么有时候会选错索引？ 出现场景 优化器会根据不同情况选择对应的最有索引进行查询，当表数据中抽样统计的预估行数等信息出现误差时，导致优化器选择了非最优查询方式。\n执行流程 处理方法   使用analyze table命令刷新抽样统计\n  使用force index(i1)强制依赖某索引\nselect * from t force index(a) where a between 10000 and 20000;   11丨怎么给字符串字段加索引？ 完整索引 直接创建完整索引，查询次数少，但是比较占用空间\n前缀索引 节省空间，但是匹配精度降低，会增加查询扫描次数，并且无法使用覆盖索引\n倒序存储 基于前缀索引，倒序存储数据，增加数据区分度\nhash字段 创建hash字段索引，查询性能稳定，但是有额外的存储开销，并且不支持范围查询\n12丨为什么我的MySQL会“抖”一下？ 当内存数据页跟磁盘数据页内容不一致的时候，我们称这个内存页为“脏页”。内存数据写入到磁盘后，内存和磁盘上的数据页的内容就一致了，称为“干净页”。\n 执行某sql时，可能存在redo log刷新数据到到磁盘的情况，而刷新的情况可能会比较多，导致延迟比较长\n  **场景1：**redo log写满时，需要暂停所有更新操作，把数据刷入磁盘并且往前移checkpoint **场景2：**内存满了，会淘汰某些数据页，假如为“脏页”，就要先将数据刷入磁盘 **场景3：**空闲时间，应用会自动将脏页数据刷入磁盘 **场景4：**mysql关闭的话，也会将脏页数据刷入磁盘  13丨为什么表数据删掉一半，表文件大小不变？ **原因：**表数据的删除，只是讲行标记为可复用状态，但实际上还是占用内存磁盘空间的。\n**解决：**1. 重建表 alter table A engine=InnoDB\nOnline DDL（Mysql 5.6开始引入） 优化表重建过程中，有新的更新语句执行时不会阻塞整个流程\n重建表流程：\n 建立一个临时文件，扫描表 A 主键的所有数据页； 用数据页中表 A 的记录生成 B+ 树，存储到临时文件中； 生成临时文件的过程中，将所有对 A 的操作记录在一个日志文件（row log）中，对应的是图中 state2 的状态； 临时文件生成后，将日志文件中的操作应用到临时文件，得到一个逻辑数据上与表 A 相同的数据文件，对应的就是图中 state3 的状态； 用临时文件替换表 A 的数据文件。  14丨count这么慢，我该怎么办？  MyISAM 表虽然 count(*) 很快，但是不支持事务； show table status 命令虽然返回很快，但是不准确； InnoDB 表直接 count(*) 会遍历全表，虽然结果准确，但会导致性能问题。  对于 count(主键 id) 来说，InnoDB 引擎会遍历整张表，把每一行的 id 值都取出来，返回给 server 层。server 层拿到 id 后，判断是不可能为空的，就按行累加。\n对于 count(1) 来说，InnoDB 引擎遍历整张表，但不取值。server 层对于返回的每一行，放一个数字“1”进去，判断是不可能为空的，按行累加。\n对于 count(字段) 来说：\n 如果这个“字段”是定义为 not null 的话，一行行地从记录里面读出这个字段，判断不能为 null，按行累加； 如果这个“字段”定义允许为 null，那么执行的时候，判断到有可能是 null，还要把值取出来再判断一下，不是 null 才累加。  但是 count(*)是例外，并不会把全部字段取出来，而是专门做了优化，不取值。count(*) 肯定不是 null，按行累加。\n 结论：按照效率排序的话，count(字段))，所以我建议你，尽量使用 count()\n 16丨“orderby”是怎么工作的？ 全字段排序流程  初始化 sort_buffer，确定放入 name、city、age 这三个字段； 从索引 city 找到第一个满足 city=‘杭州’条件的主键 id，也就是图中的 ID_X； 到主键 id 索引取出整行，取 name、city、age 三个字段的值，存入 sort_buffer 中； 从索引 city 取下一个记录的主键 id； 重复步骤 3、4 直到 city 的值不满足查询条件为止，对应的主键 id 也就是图中的 ID_Y； 对 sort_buffer 中的数据按照字段 name 做快速排序； 按照排序结果取前 1000 行返回给客户端。  rowid排序流程  初始化 sort_buffer，确定放入两个字段，即 name 和 id； 从索引 city 找到第一个满足 city=‘杭州’条件的主键 id，也就是图中的 ID_X； 到主键 id 索引取出整行，取 name、id 这两个字段，存入 sort_buffer 中； 从索引 city 取下一个记录的主键 id； 重复步骤 3、4 直到不满足 city=‘杭州’条件为止，也就是图中的 ID_Y； 对 sort_buffer 中的数据按照字段 name 进行排序； 遍历排序结果，取前 1000 行，并按照 id 的值回到原表中取出 city、name 和 age 三个字段返回给客户端。  优化  可将常需要排序的字段做联合索引 使用覆盖索引优化回表逻辑  普通排序：\n联合索引优化：\n结果Extra字段去除了Using filesort字眼，表示排序去除了文件排序方式\nalter table t add index city_user(city, name); 覆盖索引优化：\n结果Extra字段为Using index表示使用了覆盖索引，性能会更高\n17丨如何正确地显示随机消息？ 小结\n今天这篇文章，我是借着随机排序的需求，跟你介绍了 MySQL 对临时表排序的执行过程。\n如果你直接使用 order by rand()，这个语句需要 Using temporary 和 Using filesort，查询的执行代价往往是比较大的。所以，在设计的时候你要量避开这种写法。\n今天的例子里面，我们不是仅仅在数据库内部解决问题，还会让应用代码配合拼接 SQL 语句。在实际应用的过程中，比较规范的用法就是：尽量将业务逻辑写在业务代码中，让数据库只做“读写数据”的事情。因此，这类方法的应用还是比较广泛的。\n18丨为什么这些SQL语句逻辑相同，性能却差异巨大？ 小结\n今天我给你举了三个例子，其实是在说同一件事儿，即：对索引字段做函数操作，可能会破坏索引值的有序性，因此优化器就决定放弃走树搜索功能。\n第二个例子是隐式类型转换，第三个例子是隐式字符编码转换，它们都跟第一个例子一样，因为要求在索引字段上做函数操作而导致了全索引扫描。\nMySQL 的优化器确实有“偷懒”的嫌疑，即使简单地把 where id+1=1000 改写成 where id=1000-1 就能够用上索引快速查找，也不会主动做这个语句重写。\n因此，每次你的业务代码升级时，把可能出现的、新的 SQL 语句 explain 一下，是一个很好的习惯。\n19丨为什么我只查一行的语句，也执行这么慢？ ",
+  "wordCount" : "339",
+  "inLanguage": "en",
+  "datePublished": "2021-02-22T00:00:00Z",
+  "dateModified": "2021-02-22T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://nicko-ch.github.io/posts/202102220000/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\u003e $ cd /home",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://nicko-ch.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://nicko-ch.github.io/" accesskey="h" title="&gt; $ cd /home (Alt + H)">&gt; $ cd /home</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://nicko-ch.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://nicko-ch.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://nicko-ch.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Mysql实战45讲 - 丁奇
+    </h1>
+    <div class="post-meta">February 22, 2021&nbsp;·&nbsp;2 min
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <div class="details">Table of Contents</div>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%9f%ba%e7%a1%80%e7%af%87" aria-label="基础篇">基础篇</a><ul>
+                        
+                <li>
+                    <a href="#01%e4%b8%a8%e5%9f%ba%e7%a1%80%e6%9e%b6%e6%9e%84%e4%b8%80%e6%9d%a1sql%e6%9f%a5%e8%af%a2%e8%af%ad%e5%8f%a5%e6%98%af%e5%a6%82%e4%bd%95%e6%89%a7%e8%a1%8c%e7%9a%84" aria-label="01丨基础架构：一条SQL查询语句是如何执行的？">01丨基础架构：一条SQL查询语句是如何执行的？</a></li>
+                <li>
+                    <a href="#02%e4%b8%a8%e6%97%a5%e5%bf%97%e7%b3%bb%e7%bb%9f%e4%b8%80%e6%9d%a1sql%e6%9b%b4%e6%96%b0%e8%af%ad%e5%8f%a5%e6%98%af%e5%a6%82%e4%bd%95%e6%89%a7%e8%a1%8c%e7%9a%84" aria-label="02丨日志系统：一条SQL更新语句是如何执行的？">02丨日志系统：一条SQL更新语句是如何执行的？</a></li>
+                <li>
+                    <a href="#03%e4%b8%a8%e4%ba%8b%e5%8a%a1%e9%9a%94%e7%a6%bb%e4%b8%ba%e4%bb%80%e4%b9%88%e4%bd%a0%e6%94%b9%e4%ba%86%e6%88%91%e8%bf%98%e7%9c%8b%e4%b8%8d%e8%a7%81" aria-label="03丨事务隔离：为什么你改了我还看不见？">03丨事务隔离：为什么你改了我还看不见？</a></li>
+                <li>
+                    <a href="#04%e4%b8%a8%e6%b7%b1%e5%85%a5%e6%b5%85%e5%87%ba%e7%b4%a2%e5%bc%95%e4%b8%8a" aria-label="04丨深入浅出索引（上）">04丨深入浅出索引（上）</a><ul>
+                        
+                <li>
+                    <a href="#%e5%93%88%e5%b8%8c%e8%a1%a8" aria-label="哈希表">哈希表</a></li>
+                <li>
+                    <a href="#%e6%9c%89%e5%ba%8f%e6%95%b0%e7%bb%84" aria-label="有序数组">有序数组</a></li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%8f%89%e6%a0%91bst" aria-label="二叉树（BST）">二叉树（BST）</a></li>
+                <li>
+                    <a href="#%e5%b9%b3%e8%a1%a1%e4%ba%8c%e5%8f%89%e6%a0%91avl" aria-label="平衡二叉树（AVL）">平衡二叉树（AVL）</a></li>
+                <li>
+                    <a href="#%e7%ba%a2%e9%bb%91%e6%a0%91rbt" aria-label="红黑树（RBT）">红黑树（RBT）</a></li>
+                <li>
+                    <a href="#b%e6%a0%91" aria-label="B树">B树</a></li>
+                <li>
+                    <a href="#b%e6%a0%91-1" aria-label="B&#43;树">B+树</a></li></ul>
+                </li>
+                <li>
+                    <a href="#05%e4%b8%a8%e6%b7%b1%e5%85%a5%e6%b5%85%e5%87%ba%e7%b4%a2%e5%bc%95%e4%b8%8b" aria-label="05丨深入浅出索引（下）">05丨深入浅出索引（下）</a><ul>
+                        
+                <li>
+                    <a href="#%e8%a6%86%e7%9b%96%e7%b4%a2%e5%bc%95" aria-label="覆盖索引">覆盖索引</a></li>
+                <li>
+                    <a href="#%e6%9c%80%e5%b7%a6%e5%89%8d%e7%bc%80%e5%8e%9f%e5%88%99" aria-label="最左前缀原则">最左前缀原则</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%ae%9e%e8%b7%b5%e7%af%87" aria-label="实践篇">实践篇</a><ul>
+                        
+                <li>
+                    <a href="#09%e4%b8%a8%e6%99%ae%e9%80%9a%e7%b4%a2%e5%bc%95%e5%92%8c%e5%94%af%e4%b8%80%e7%b4%a2%e5%bc%95%e5%ba%94%e8%af%a5%e6%80%8e%e4%b9%88%e9%80%89%e6%8b%a9" aria-label="09丨普通索引和唯一索引，应该怎么选择？">09丨普通索引和唯一索引，应该怎么选择？</a><ul>
+                        
+                <li>
+                    <a href="#%e6%9f%a5%e8%af%a2%e8%bf%87%e7%a8%8b" aria-label="查询过程">查询过程</a></li>
+                <li>
+                    <a href="#%e6%9b%b4%e6%96%b0%e8%bf%87%e7%a8%8b" aria-label="更新过程">更新过程</a></li>
+                <li>
+                    <a href="#redo-log-%e5%92%8c-change-buffer-%e5%8c%ba%e5%88%ab" aria-label="redo log 和 change buffer 区别">redo log 和 change buffer 区别</a></li></ul>
+                </li>
+                <li>
+                    <a href="#10%e4%b8%a8mysql%e4%b8%ba%e4%bb%80%e4%b9%88%e6%9c%89%e6%97%b6%e5%80%99%e4%bc%9a%e9%80%89%e9%94%99%e7%b4%a2%e5%bc%95" aria-label="10丨MySQL为什么有时候会选错索引？">10丨MySQL为什么有时候会选错索引？</a><ul>
+                        
+                <li>
+                    <a href="#%e5%87%ba%e7%8e%b0%e5%9c%ba%e6%99%af" aria-label="出现场景">出现场景</a></li>
+                <li>
+                    <a href="#%e6%89%a7%e8%a1%8c%e6%b5%81%e7%a8%8b" aria-label="执行流程">执行流程</a></li>
+                <li>
+                    <a href="#%e5%a4%84%e7%90%86%e6%96%b9%e6%b3%95" aria-label="处理方法">处理方法</a></li></ul>
+                </li>
+                <li>
+                    <a href="#11%e4%b8%a8%e6%80%8e%e4%b9%88%e7%bb%99%e5%ad%97%e7%ac%a6%e4%b8%b2%e5%ad%97%e6%ae%b5%e5%8a%a0%e7%b4%a2%e5%bc%95" aria-label="11丨怎么给字符串字段加索引？">11丨怎么给字符串字段加索引？</a><ul>
+                        
+                <li>
+                    <a href="#%e5%ae%8c%e6%95%b4%e7%b4%a2%e5%bc%95" aria-label="完整索引">完整索引</a></li>
+                <li>
+                    <a href="#%e5%89%8d%e7%bc%80%e7%b4%a2%e5%bc%95" aria-label="前缀索引">前缀索引</a></li>
+                <li>
+                    <a href="#%e5%80%92%e5%ba%8f%e5%ad%98%e5%82%a8" aria-label="倒序存储">倒序存储</a></li>
+                <li>
+                    <a href="#hash%e5%ad%97%e6%ae%b5" aria-label="hash字段">hash字段</a></li></ul>
+                </li>
+                <li>
+                    <a href="#12%e4%b8%a8%e4%b8%ba%e4%bb%80%e4%b9%88%e6%88%91%e7%9a%84mysql%e4%bc%9a%e6%8a%96%e4%b8%80%e4%b8%8b" aria-label="12丨为什么我的MySQL会“抖”一下？">12丨为什么我的MySQL会“抖”一下？</a></li>
+                <li>
+                    <a href="#13%e4%b8%a8%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a1%a8%e6%95%b0%e6%8d%ae%e5%88%a0%e6%8e%89%e4%b8%80%e5%8d%8a%e8%a1%a8%e6%96%87%e4%bb%b6%e5%a4%a7%e5%b0%8f%e4%b8%8d%e5%8f%98" aria-label="13丨为什么表数据删掉一半，表文件大小不变？">13丨为什么表数据删掉一半，表文件大小不变？</a><ul>
+                        
+                <li>
+                    <a href="#online-ddlmysql-56%e5%bc%80%e5%a7%8b%e5%bc%95%e5%85%a5" aria-label="Online DDL（Mysql 5.6开始引入）">Online DDL（Mysql 5.6开始引入）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#14%e4%b8%a8count%e8%bf%99%e4%b9%88%e6%85%a2%e6%88%91%e8%af%a5%e6%80%8e%e4%b9%88%e5%8a%9e" aria-label="14丨count这么慢，我该怎么办？">14丨count这么慢，我该怎么办？</a></li>
+                <li>
+                    <a href="#16%e4%b8%a8orderby%e6%98%af%e6%80%8e%e4%b9%88%e5%b7%a5%e4%bd%9c%e7%9a%84" aria-label="16丨“orderby”是怎么工作的？">16丨“orderby”是怎么工作的？</a><ul>
+                        
+                <li>
+                    <a href="#%e5%85%a8%e5%ad%97%e6%ae%b5%e6%8e%92%e5%ba%8f%e6%b5%81%e7%a8%8b" aria-label="全字段排序流程">全字段排序流程</a></li>
+                <li>
+                    <a href="#rowid%e6%8e%92%e5%ba%8f%e6%b5%81%e7%a8%8b" aria-label="rowid排序流程">rowid排序流程</a></li>
+                <li>
+                    <a href="#%e4%bc%98%e5%8c%96" aria-label="优化">优化</a></li></ul>
+                </li>
+                <li>
+                    <a href="#17%e4%b8%a8%e5%a6%82%e4%bd%95%e6%ad%a3%e7%a1%ae%e5%9c%b0%e6%98%be%e7%a4%ba%e9%9a%8f%e6%9c%ba%e6%b6%88%e6%81%af" aria-label="17丨如何正确地显示随机消息？">17丨如何正确地显示随机消息？</a></li>
+                <li>
+                    <a href="#18%e4%b8%a8%e4%b8%ba%e4%bb%80%e4%b9%88%e8%bf%99%e4%ba%9bsql%e8%af%ad%e5%8f%a5%e9%80%bb%e8%be%91%e7%9b%b8%e5%90%8c%e6%80%a7%e8%83%bd%e5%8d%b4%e5%b7%ae%e5%bc%82%e5%b7%a8%e5%a4%a7" aria-label="18丨为什么这些SQL语句逻辑相同，性能却差异巨大？">18丨为什么这些SQL语句逻辑相同，性能却差异巨大？</a></li>
+                <li>
+                    <a href="#19%e4%b8%a8%e4%b8%ba%e4%bb%80%e4%b9%88%e6%88%91%e5%8f%aa%e6%9f%a5%e4%b8%80%e8%a1%8c%e7%9a%84%e8%af%ad%e5%8f%a5%e4%b9%9f%e6%89%a7%e8%a1%8c%e8%bf%99%e4%b9%88%e6%85%a2" aria-label="19丨为什么我只查一行的语句，也执行这么慢？">19丨为什么我只查一行的语句，也执行这么慢？</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="基础篇">基础篇<a hidden class="anchor" aria-hidden="true" href="#基础篇">#</a></h1>
+<h2 id="01丨基础架构一条sql查询语句是如何执行的">01丨基础架构：一条SQL查询语句是如何执行的？<a hidden class="anchor" aria-hidden="true" href="#01丨基础架构一条sql查询语句是如何执行的">#</a></h2>
+<p><img loading="lazy" src="/../static/images/202102220000/Untitled.png" alt="../static/images/202102220000/Untitled.png"  />
+</p>
+<h2 id="02丨日志系统一条sql更新语句是如何执行的">02丨日志系统：一条SQL更新语句是如何执行的？<a hidden class="anchor" aria-hidden="true" href="#02丨日志系统一条sql更新语句是如何执行的">#</a></h2>
+<p><img loading="lazy" src="/../static/images/202102220000/Untitled%201.png" alt="../static/images/202102220000/Untitled%201.png"  />
+</p>
+<h2 id="03丨事务隔离为什么你改了我还看不见">03丨事务隔离：为什么你改了我还看不见？<a hidden class="anchor" aria-hidden="true" href="#03丨事务隔离为什么你改了我还看不见">#</a></h2>
+<blockquote>
+<p>ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）</p>
+</blockquote>
+<ul>
+<li>读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。</li>
+<li>读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。</li>
+<li>可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。</li>
+<li>串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。</li>
+</ul>
+<h2 id="04丨深入浅出索引上">04丨深入浅出索引（上）<a hidden class="anchor" aria-hidden="true" href="#04丨深入浅出索引上">#</a></h2>
+<h3 id="哈希表">哈希表<a hidden class="anchor" aria-hidden="true" href="#哈希表">#</a></h3>
+<p>适用于只有等值查询的场景，效率高，但无法范围查询</p>
+<h3 id="有序数组">有序数组<a hidden class="anchor" aria-hidden="true" href="#有序数组">#</a></h3>
+<p>等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移</p>
+<h3 id="二叉树bst">二叉树（BST）<a hidden class="anchor" aria-hidden="true" href="#二叉树bst">#</a></h3>
+<p>各方面都非常优秀，但是极端情况下可能会发展为链表</p>
+<h3 id="平衡二叉树avl">平衡二叉树（AVL）<a hidden class="anchor" aria-hidden="true" href="#平衡二叉树avl">#</a></h3>
+<p>二叉树的变异体，会根据情况自动左右旋转，维持子节点的平衡，但是树高无法维护</p>
+<h3 id="红黑树rbt">红黑树（RBT）<a hidden class="anchor" aria-hidden="true" href="#红黑树rbt">#</a></h3>
+<p>相比较平衡二叉树，平衡条件宽松，只需保证左右深度差一倍，使写的操作变化减少，提高写的性能</p>
+<h3 id="b树">B树<a hidden class="anchor" aria-hidden="true" href="#b树">#</a></h3>
+<p>可以拥有多节点，解决平衡二叉树存在的树层级太高，降低查询复杂度</p>
+<h3 id="b树-1">B+树<a hidden class="anchor" aria-hidden="true" href="#b树-1">#</a></h3>
+<p>B树的变异体，讲数据存储在叶节点（也成为<code>聚簇索引</code>），叶子节点会保存前后的指针地址</p>
+<h2 id="05丨深入浅出索引下">05丨深入浅出索引（下）<a hidden class="anchor" aria-hidden="true" href="#05丨深入浅出索引下">#</a></h2>
+<h3 id="覆盖索引">覆盖索引<a hidden class="anchor" aria-hidden="true" href="#覆盖索引">#</a></h3>
+<p>由于非主键索引存在回表的情况，所以select时选择主键字段，可以防止回表从而提高查询效率</p>
+<h3 id="最左前缀原则">最左前缀原则<a hidden class="anchor" aria-hidden="true" href="#最左前缀原则">#</a></h3>
+<h1 id="实践篇">实践篇<a hidden class="anchor" aria-hidden="true" href="#实践篇">#</a></h1>
+<h2 id="09丨普通索引和唯一索引应该怎么选择">09丨普通索引和唯一索引，应该怎么选择？<a hidden class="anchor" aria-hidden="true" href="#09丨普通索引和唯一索引应该怎么选择">#</a></h2>
+<h3 id="查询过程">查询过程<a hidden class="anchor" aria-hidden="true" href="#查询过程">#</a></h3>
+<ul>
+<li>对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。</li>
+<li>对于唯一索引来说，由于索引定义了唯一性，查找到第一个满足条件的记录后，就会停止继续检索。</li>
+</ul>
+<blockquote>
+<p>结论：性能上<code>微乎其微</code>，业务看具体场景</p>
+</blockquote>
+<p>理论上唯一索引的性能会比普通索引快，但是引擎是按页进行读写的，所以查询key行数据时候，去取出的data page大概率会有下一行的记录，所以只需要在内存级别再判断一次下一行的记录是否符合条件。</p>
+<p>即使复杂情况，key行在data page最后一行，必须读取下一页。这种情况换做整型的索引，但个data page可以存放上千个key，出现这种概率的情况也是极小的。</p>
+<h3 id="更新过程">更新过程<a hidden class="anchor" aria-hidden="true" href="#更新过程">#</a></h3>
+<p>了解新概念<code>change buffer</code></p>
+<ul>
+<li>当需要更新数据时候，在不影响一致性的情况下，innoDB会将这部分操作直接写到change buffer中。这样就不需要从磁盘中读取data page了。</li>
+<li>将change buffer写入data page的过程称为<code>merge</code>，访问数据也则会触发，系统也会定期执行。</li>
+<li>读取data page会占用<code>buffer pool</code>，这种方式可以提高内存利用率。</li>
+</ul>
+<p><strong>实际对比</strong></p>
+<p>唯一索引需要将data page读入内存，判断是否存在该值，所以无法使用change buffer</p>
+<p>普通索引则只需要更新记录到change buffer即可结束</p>
+<blockquote>
+<p>结论：<code>读多写少</code>的情况建议用<code>普通索引</code>，<code>强业务一致性</code>则用<code>唯一索引</code></p>
+</blockquote>
+<h3 id="redo-log-和-change-buffer-区别">redo log 和 change buffer 区别<a hidden class="anchor" aria-hidden="true" href="#redo-log-和-change-buffer-区别">#</a></h3>
+<ul>
+<li>redo log 主要节省的是随机写磁盘的 IO 消耗（转成顺序写），而 change buffer 主要节省的则是随机读磁盘的 IO 消耗。</li>
+</ul>
+<h2 id="10丨mysql为什么有时候会选错索引">10丨MySQL为什么有时候会选错索引？<a hidden class="anchor" aria-hidden="true" href="#10丨mysql为什么有时候会选错索引">#</a></h2>
+<h3 id="出现场景">出现场景<a hidden class="anchor" aria-hidden="true" href="#出现场景">#</a></h3>
+<p>优化器会根据不同情况选择对应的最有索引进行查询，当表数据中<code>抽样统计</code>的预估行数等信息出现误差时，导致优化器选择了非最优查询方式。</p>
+<h3 id="执行流程">执行流程<a hidden class="anchor" aria-hidden="true" href="#执行流程">#</a></h3>
+<p><img loading="lazy" src="/../static/images/202102220000/Untitled%202.png" alt="../static/images/202102220000/Untitled%202.png"  />
+</p>
+<h3 id="处理方法">处理方法<a hidden class="anchor" aria-hidden="true" href="#处理方法">#</a></h3>
+<ul>
+<li>
+<p>使用analyze table命令刷新抽样统计</p>
+</li>
+<li>
+<p>使用<code>force index(i1)</code>强制依赖某索引</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">from</span> <span style="color:#a6e22e">t</span> <span style="color:#a6e22e">force</span> <span style="color:#a6e22e">index</span>(<span style="color:#a6e22e">a</span>) <span style="color:#a6e22e">where</span> <span style="color:#a6e22e">a</span> <span style="color:#a6e22e">between</span> <span style="color:#ae81ff">10000</span> <span style="color:#a6e22e">and</span> <span style="color:#ae81ff">20000</span>;
+</code></pre></div></li>
+</ul>
+<h2 id="11丨怎么给字符串字段加索引">11丨怎么给字符串字段加索引？<a hidden class="anchor" aria-hidden="true" href="#11丨怎么给字符串字段加索引">#</a></h2>
+<h3 id="完整索引">完整索引<a hidden class="anchor" aria-hidden="true" href="#完整索引">#</a></h3>
+<p>直接创建完整索引，查询次数少，但是比较占用空间</p>
+<h3 id="前缀索引">前缀索引<a hidden class="anchor" aria-hidden="true" href="#前缀索引">#</a></h3>
+<p>节省空间，但是匹配精度降低，会增加查询扫描次数，并且无法使用覆盖索引</p>
+<h3 id="倒序存储">倒序存储<a hidden class="anchor" aria-hidden="true" href="#倒序存储">#</a></h3>
+<p>基于前缀索引，倒序存储数据，增加数据区分度</p>
+<h3 id="hash字段">hash字段<a hidden class="anchor" aria-hidden="true" href="#hash字段">#</a></h3>
+<p>创建hash字段索引，查询性能稳定，但是有额外的存储开销，并且不支持范围查询</p>
+<h2 id="12丨为什么我的mysql会抖一下">12丨为什么我的MySQL会“抖”一下？<a hidden class="anchor" aria-hidden="true" href="#12丨为什么我的mysql会抖一下">#</a></h2>
+<p><strong>当内存数据页跟磁盘数据页内容不一致的时候，我们称这个内存页为“<code>脏页</code>”。内存数据写入到磁盘后，内存和磁盘上的数据页的内容就一致了，称为“<code>干净页</code>”。</strong></p>
+<blockquote>
+<p>执行某sql时，可能存在redo log刷新数据到到磁盘的情况，而刷新的情况可能会比较多，导致延迟比较长</p>
+</blockquote>
+<ul>
+<li>**场景1：**redo log写满时，需要暂停所有更新操作，把数据刷入磁盘并且往前移checkpoint</li>
+<li>**场景2：**内存满了，会淘汰某些数据页，假如为“脏页”，就要先将数据刷入磁盘</li>
+<li>**场景3：**空闲时间，应用会自动将脏页数据刷入磁盘</li>
+<li>**场景4：**mysql关闭的话，也会将脏页数据刷入磁盘</li>
+</ul>
+<h2 id="13丨为什么表数据删掉一半表文件大小不变">13丨为什么表数据删掉一半，表文件大小不变？<a hidden class="anchor" aria-hidden="true" href="#13丨为什么表数据删掉一半表文件大小不变">#</a></h2>
+<p>**原因：**表数据的删除，只是讲行标记为可复用状态，但实际上还是占用内存磁盘空间的。</p>
+<p>**解决：**1. 重建表 alter table A engine=InnoDB</p>
+<h3 id="online-ddlmysql-56开始引入">Online DDL（Mysql 5.6开始引入）<a hidden class="anchor" aria-hidden="true" href="#online-ddlmysql-56开始引入">#</a></h3>
+<p>优化表重建过程中，有新的更新语句执行时不会阻塞整个流程</p>
+<p><strong>重建表流程：</strong></p>
+<ol>
+<li>建立一个临时文件，扫描表 A 主键的所有数据页；</li>
+<li>用数据页中表 A 的记录生成 B+ 树，存储到临时文件中；</li>
+<li>生成临时文件的过程中，将所有对 A 的操作记录在一个日志文件（row log）中，对应的是图中 state2 的状态；</li>
+<li>临时文件生成后，将日志文件中的操作应用到临时文件，得到一个逻辑数据上与表 A 相同的数据文件，对应的就是图中 state3 的状态；</li>
+<li>用临时文件替换表 A 的数据文件。</li>
+</ol>
+<p><img loading="lazy" src="/../static/images/202102220000/Untitled%203.png" alt="../static/images/202102220000/Untitled%203.png"  />
+</p>
+<h2 id="14丨count这么慢我该怎么办">14丨count这么慢，我该怎么办？<a hidden class="anchor" aria-hidden="true" href="#14丨count这么慢我该怎么办">#</a></h2>
+<ul>
+<li>MyISAM 表虽然 count(*) 很快，但是不支持事务；</li>
+<li>show table status 命令虽然返回很快，但是不准确；</li>
+<li>InnoDB 表直接 count(*) 会遍历全表，虽然结果准确，但会导致性能问题。</li>
+</ul>
+<p><strong>对于 count(主键 id) 来说</strong>，InnoDB 引擎会遍历整张表，把每一行的 id 值都取出来，返回给 server 层。server 层拿到 id 后，判断是不可能为空的，就按行累加。</p>
+<p><strong>对于 count(1) 来说</strong>，InnoDB 引擎遍历整张表，但不取值。server 层对于返回的每一行，放一个数字“1”进去，判断是不可能为空的，按行累加。</p>
+<p><strong>对于 count(字段) 来说</strong>：</p>
+<ol>
+<li>如果这个“字段”是定义为 not null 的话，一行行地从记录里面读出这个字段，判断不能为 null，按行累加；</li>
+<li>如果这个“字段”定义允许为 null，那么执行的时候，判断到有可能是 null，还要把值取出来再判断一下，不是 null 才累加。</li>
+</ol>
+<p><strong>但是 count(*)是例外</strong>，并不会把全部字段取出来，而是专门做了优化，不取值。count(*) 肯定不是 null，按行累加。</p>
+<blockquote>
+<p>结论：按照效率排序的话，count(字段)&lt;count(主键 id)&lt;count(1)≈count(<em>)，所以我建议你，尽量使用 count(</em>)</p>
+</blockquote>
+<h2 id="16丨orderby是怎么工作的">16丨“orderby”是怎么工作的？<a hidden class="anchor" aria-hidden="true" href="#16丨orderby是怎么工作的">#</a></h2>
+<p><img loading="lazy" src="/../static/images/202102220000/Untitled%204.png" alt="../static/images/202102220000/Untitled%204.png"  />
+</p>
+<h3 id="全字段排序流程">全字段排序流程<a hidden class="anchor" aria-hidden="true" href="#全字段排序流程">#</a></h3>
+<ol>
+<li>初始化 sort_buffer，确定放入 name、city、age 这三个字段；</li>
+<li>从索引 city 找到第一个满足 city=&lsquo;杭州’条件的主键 id，也就是图中的 ID_X；</li>
+<li>到主键 id 索引取出整行，取 name、city、age 三个字段的值，存入 sort_buffer 中；</li>
+<li>从索引 city 取下一个记录的主键 id；</li>
+<li>重复步骤 3、4 直到 city 的值不满足查询条件为止，对应的主键 id 也就是图中的 ID_Y；</li>
+<li>对 sort_buffer 中的数据按照字段 name 做快速排序；</li>
+<li>按照排序结果取前 1000 行返回给客户端。</li>
+</ol>
+<p><img loading="lazy" src="/../static/images/202102220000/Untitled%205.png" alt="../static/images/202102220000/Untitled%205.png"  />
+</p>
+<h3 id="rowid排序流程">rowid排序流程<a hidden class="anchor" aria-hidden="true" href="#rowid排序流程">#</a></h3>
+<ol>
+<li>初始化 sort_buffer，确定放入两个字段，即 name 和 id；</li>
+<li>从索引 city 找到第一个满足 city=&lsquo;杭州’条件的主键 id，也就是图中的 ID_X；</li>
+<li>到主键 id 索引取出整行，取 name、id 这两个字段，存入 sort_buffer 中；</li>
+<li>从索引 city 取下一个记录的主键 id；</li>
+<li>重复步骤 3、4 直到不满足 city=&lsquo;杭州’条件为止，也就是图中的 ID_Y；</li>
+<li>对 sort_buffer 中的数据按照字段 name 进行排序；</li>
+<li>遍历排序结果，取前 1000 行，并按照 id 的值回到原表中取出 city、name 和 age 三个字段返回给客户端。</li>
+</ol>
+<h3 id="优化">优化<a hidden class="anchor" aria-hidden="true" href="#优化">#</a></h3>
+<ol>
+<li>可将常需要排序的字段做联合索引</li>
+<li>使用覆盖索引优化回表逻辑</li>
+</ol>
+<p>普通排序：</p>
+<p><img loading="lazy" src="/../static/images/202102220000/Untitled%206.png" alt="../static/images/202102220000/Untitled%206.png"  />
+</p>
+<p>联合索引优化：</p>
+<p>结果Extra字段去除了Using filesort字眼，表示排序去除了文件排序方式</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">alter</span> <span style="color:#a6e22e">table</span> <span style="color:#a6e22e">t</span> <span style="color:#a6e22e">add</span> <span style="color:#a6e22e">index</span> <span style="color:#a6e22e">city_user</span>(<span style="color:#a6e22e">city</span>, <span style="color:#a6e22e">name</span>);
+</code></pre></div><p><img loading="lazy" src="/../static/images/202102220000/Untitled%207.png" alt="../static/images/202102220000/Untitled%207.png"  />
+</p>
+<p>覆盖索引优化：</p>
+<p>结果Extra字段为Using index表示使用了覆盖索引，性能会更高</p>
+<p><img loading="lazy" src="/../static/images/202102220000/Untitled%208.png" alt="../static/images/202102220000/Untitled%208.png"  />
+</p>
+<h2 id="17丨如何正确地显示随机消息">17丨如何正确地显示随机消息？<a hidden class="anchor" aria-hidden="true" href="#17丨如何正确地显示随机消息">#</a></h2>
+<p><strong>小结</strong></p>
+<p>今天这篇文章，我是借着随机排序的需求，跟你介绍了 MySQL 对临时表排序的执行过程。</p>
+<p>如果你直接使用 order by rand()，这个语句需要 Using temporary 和 Using filesort，查询的执行代价往往是比较大的。所以，在设计的时候你要量避开这种写法。</p>
+<p>今天的例子里面，我们不是仅仅在数据库内部解决问题，还会让应用代码配合拼接 SQL 语句。在实际应用的过程中，比较规范的用法就是：尽量将业务逻辑写在业务代码中，让数据库只做“读写数据”的事情。因此，这类方法的应用还是比较广泛的。</p>
+<h2 id="18丨为什么这些sql语句逻辑相同性能却差异巨大">18丨为什么这些SQL语句逻辑相同，性能却差异巨大？<a hidden class="anchor" aria-hidden="true" href="#18丨为什么这些sql语句逻辑相同性能却差异巨大">#</a></h2>
+<p><strong>小结</strong></p>
+<p>今天我给你举了三个例子，其实是在说同一件事儿，即：<strong>对索引字段做函数操作，可能会破坏索引值的有序性，因此优化器就决定放弃走树搜索功能。</strong></p>
+<p>第二个例子是隐式类型转换，第三个例子是隐式字符编码转换，它们都跟第一个例子一样，因为要求在索引字段上做函数操作而导致了全索引扫描。</p>
+<p>MySQL 的优化器确实有“偷懒”的嫌疑，即使简单地把 where id+1=1000 改写成 where id=1000-1 就能够用上索引快速查找，也不会主动做这个语句重写。</p>
+<p>因此，每次你的业务代码升级时，把可能出现的、新的 SQL 语句 explain 一下，是一个很好的习惯。</p>
+<h2 id="19丨为什么我只查一行的语句也执行这么慢">19丨为什么我只查一行的语句，也执行这么慢？<a hidden class="anchor" aria-hidden="true" href="#19丨为什么我只查一行的语句也执行这么慢">#</a></h2>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://nicko-ch.github.io/tags/mysql/">Mysql</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2022 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

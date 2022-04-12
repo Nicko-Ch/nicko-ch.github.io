@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Kafa核心技术与实战 | &gt; $ cd /home</title>
+<meta name="keywords" content="Kafka" />
+<meta name="description" content="概述 基本名词 Producer (消息生产者)：
+向 kafka broker 发消息的客户端；
+Consumer (消息消费者)：
+向 kafka broker 取消息的客户端；
+Consumer Group (消费者组)：
+由多个 consumer 组成。消费者组内每个消费者负责消费不同分区的数据，一个分区只能由一个组内消费者消费；消费者组之间互不影响。所有的消费者都属于某个消费者组，即消费者组是逻辑上的一个订阅者。
+Broker (服务器)：
+一台 kafka 服务器就是一个 broker。一个集群由多个 broker 组成。一个broker可以容纳多个 topic。
+Replica (副本)：
+为保证集群中的某个节点发生故障时，该节点上的 partition 数据不丢失，且 kafka 仍然能够继续工作，kafka 提供了副本机制，一个 topic 的每个分区都有若干个副本，一个 leader 和若干个 follower。
+Leader (主)：
+每个分区多个副本的“主”，生产者发送数据的对象，以及消费者消费数据的对 象都是 leader。
+Follower (从)：
+每个分区多个副本中的“从”，实时从 leader 中同步数据，保持和 leader 数据的同步。leader 发生故障时，某个 follower 会成为新的 leader 。
+Topic (主题)：
+主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。
+Partition (分区)：
+为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个 topic 可以分为多个 partition，每个 partition 是一个有序的队列；">
+<meta name="author" content="">
+<link rel="canonical" href="https://nicko-ch.github.io/posts/202104120000/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0459a4ebf56f381ae411e97a494635ba7ce9db741ff9a2cfbf7e12366bf1e73d.css" integrity="sha256-BFmk6/VvOBrkEel6SUY1unzp23Qf&#43;aLPv34SNmvx5z0=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.6f62d19b78590241c3e007a10f91f45f95ce2528ca8f3e33c542e95f8ed5691f.js" integrity="sha256-b2LRm3hZAkHD4AehD5H0X5XOJSjKjz4zxULpX47VaR8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nicko-ch.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://nicko-ch.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://nicko-ch.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.88.0" />
+<meta property="og:title" content="Kafa核心技术与实战" />
+<meta property="og:description" content="概述 基本名词 Producer (消息生产者)：
+向 kafka broker 发消息的客户端；
+Consumer (消息消费者)：
+向 kafka broker 取消息的客户端；
+Consumer Group (消费者组)：
+由多个 consumer 组成。消费者组内每个消费者负责消费不同分区的数据，一个分区只能由一个组内消费者消费；消费者组之间互不影响。所有的消费者都属于某个消费者组，即消费者组是逻辑上的一个订阅者。
+Broker (服务器)：
+一台 kafka 服务器就是一个 broker。一个集群由多个 broker 组成。一个broker可以容纳多个 topic。
+Replica (副本)：
+为保证集群中的某个节点发生故障时，该节点上的 partition 数据不丢失，且 kafka 仍然能够继续工作，kafka 提供了副本机制，一个 topic 的每个分区都有若干个副本，一个 leader 和若干个 follower。
+Leader (主)：
+每个分区多个副本的“主”，生产者发送数据的对象，以及消费者消费数据的对 象都是 leader。
+Follower (从)：
+每个分区多个副本中的“从”，实时从 leader 中同步数据，保持和 leader 数据的同步。leader 发生故障时，某个 follower 会成为新的 leader 。
+Topic (主题)：
+主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。
+Partition (分区)：
+为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个 topic 可以分为多个 partition，每个 partition 是一个有序的队列；" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://nicko-ch.github.io/posts/202104120000/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-04-12T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-04-12T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Kafa核心技术与实战"/>
+<meta name="twitter:description" content="概述 基本名词 Producer (消息生产者)：
+向 kafka broker 发消息的客户端；
+Consumer (消息消费者)：
+向 kafka broker 取消息的客户端；
+Consumer Group (消费者组)：
+由多个 consumer 组成。消费者组内每个消费者负责消费不同分区的数据，一个分区只能由一个组内消费者消费；消费者组之间互不影响。所有的消费者都属于某个消费者组，即消费者组是逻辑上的一个订阅者。
+Broker (服务器)：
+一台 kafka 服务器就是一个 broker。一个集群由多个 broker 组成。一个broker可以容纳多个 topic。
+Replica (副本)：
+为保证集群中的某个节点发生故障时，该节点上的 partition 数据不丢失，且 kafka 仍然能够继续工作，kafka 提供了副本机制，一个 topic 的每个分区都有若干个副本，一个 leader 和若干个 follower。
+Leader (主)：
+每个分区多个副本的“主”，生产者发送数据的对象，以及消费者消费数据的对 象都是 leader。
+Follower (从)：
+每个分区多个副本中的“从”，实时从 leader 中同步数据，保持和 leader 数据的同步。leader 发生故障时，某个 follower 会成为新的 leader 。
+Topic (主题)：
+主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。
+Partition (分区)：
+为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个 topic 可以分为多个 partition，每个 partition 是一个有序的队列；"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://nicko-ch.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Kafa核心技术与实战",
+      "item": "https://nicko-ch.github.io/posts/202104120000/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Kafa核心技术与实战",
+  "name": "Kafa核心技术与实战",
+  "description": "概述 基本名词 Producer (消息生产者)：\n向 kafka broker 发消息的客户端；\nConsumer (消息消费者)：\n向 kafka broker 取消息的客户端；\nConsumer Group (消费者组)：\n由多个 consumer 组成。消费者组内每个消费者负责消费不同分区的数据，一个分区只能由一个组内消费者消费；消费者组之间互不影响。所有的消费者都属于某个消费者组，即消费者组是逻辑上的一个订阅者。\nBroker (服务器)：\n一台 kafka 服务器就是一个 broker。一个集群由多个 broker 组成。一个broker可以容纳多个 topic。\nReplica (副本)：\n为保证集群中的某个节点发生故障时，该节点上的 partition 数据不丢失，且 kafka 仍然能够继续工作，kafka 提供了副本机制，一个 topic 的每个分区都有若干个副本，一个 leader 和若干个 follower。\nLeader (主)：\n每个分区多个副本的“主”，生产者发送数据的对象，以及消费者消费数据的对 象都是 leader。\nFollower (从)：\n每个分区多个副本中的“从”，实时从 leader 中同步数据，保持和 leader 数据的同步。leader 发生故障时，某个 follower 会成为新的 leader 。\nTopic (主题)：\n主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。\nPartition (分区)：\n为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个 topic 可以分为多个 partition，每个 partition 是一个有序的队列；",
+  "keywords": [
+    "Kafka"
+  ],
+  "articleBody": "概述 基本名词 Producer (消息生产者)：\n向 kafka broker 发消息的客户端；\nConsumer (消息消费者)：\n向 kafka broker 取消息的客户端；\nConsumer Group (消费者组)：\n由多个 consumer 组成。消费者组内每个消费者负责消费不同分区的数据，一个分区只能由一个组内消费者消费；消费者组之间互不影响。所有的消费者都属于某个消费者组，即消费者组是逻辑上的一个订阅者。\nBroker (服务器)：\n一台 kafka 服务器就是一个 broker。一个集群由多个 broker 组成。一个broker可以容纳多个 topic。\nReplica (副本)：\n为保证集群中的某个节点发生故障时，该节点上的 partition 数据不丢失，且 kafka 仍然能够继续工作，kafka 提供了副本机制，一个 topic 的每个分区都有若干个副本，一个 leader 和若干个 follower。\nLeader (主)：\n每个分区多个副本的“主”，生产者发送数据的对象，以及消费者消费数据的对 象都是 leader。\nFollower (从)：\n每个分区多个副本中的“从”，实时从 leader 中同步数据，保持和 leader 数据的同步。leader 发生故障时，某个 follower 会成为新的 leader 。\nTopic (主题)：\n主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。\nPartition (分区)：\n为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个 topic 可以分为多个 partition，每个 partition 是一个有序的队列；\nRebalance (重平衡)：\n消费者组内某个消费者实例挂掉后，其他消费者实例自动重新分配订阅主题分区的过程。Rebalance 是 Kafka 消费者端实现高可用的重要手段。\n核心原理 分区 分区的作用就是提供负载均衡的能力，或者说对数据进行分区的主要原因，就是为了实现系统的高伸缩性（Scalability）\n分区策略：\n1、轮询策略：轮询策略有非常优秀的负载均衡表现，它总是能保证消息最大限度地被平均分配到所有分区上，故默认情况下它是最合理的分区策略，也是我们最常用的分区策略之一。\n2、随机策略：所谓随机就是我们随意地将消息放置到任意一个分区上。\n3、按key指定策略：将计算得出相同的key值，分配到相同的分区上。这种策略常用于某些需要顺序消费的业务应用场景。\n零拷贝 传统的io操作：\n1、第一次：将磁盘文件，读取到操作系统内核缓冲区；\n2、第二次：将内核缓冲区的数据，copy到application应用程序的buffer；\n3、第三步：将application应用程序buffer中的数据，copy到socket网络发送缓冲区(属于操作系统内核的缓冲区)；\n4、第四次：将socket buffer的数据，copy到网卡，由网卡进行网络传输。\n总结：假设内容中途不需要任何修改，内核态与用户态第二和第三步的操作则是没有意义的，为了减少io的消耗，人们提出了零拷贝的思想。\n零拷贝方式：\n原理上都是为了减少io操作的次数\n1、mmap（Memory Mapped Files）\n此方式适用于Producer到Broker的入列过程，这样即使Broker需要对消息进行修改，也可以减少io操作，直接讲内容修改映射到磁盘对应的空间，避免了用户态的过程io拷贝。\nPS：mmap也有一个很明显的缺陷——不可靠，写到mmap中的数据并没有被真正的写到硬盘，操作系统会在程序主动调用flush的时候才把数据真正的写到硬盘。Kafka提供了一个参数——producer.type来控制是不是主动flush；如果Kafka写入到mmap之后就立即flush然后再返回Producer叫同步(sync)；写入mmap之后立即返回Producer不调用flush叫异步(async)。\n2、sendfile\n此方式适用于Broker到Consumer的出列过程，消费端获取消息的时候，不需要经过用户态的修改，可以内核态硬件之间直接进行io交互。\n",
+  "wordCount" : "103",
+  "inLanguage": "en",
+  "datePublished": "2021-04-12T00:00:00Z",
+  "dateModified": "2021-04-12T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://nicko-ch.github.io/posts/202104120000/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\u003e $ cd /home",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://nicko-ch.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://nicko-ch.github.io/" accesskey="h" title="&gt; $ cd /home (Alt + H)">&gt; $ cd /home</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://nicko-ch.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://nicko-ch.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://nicko-ch.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Kafa核心技术与实战
+    </h1>
+    <div class="post-meta">April 12, 2021&nbsp;·&nbsp;1 min
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <div class="details">Table of Contents</div>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e6%a6%82%e8%bf%b0" aria-label="概述">概述</a><ul>
+                        
+                <li>
+                    <a href="#%e5%9f%ba%e6%9c%ac%e5%90%8d%e8%af%8d" aria-label="基本名词">基本名词</a></li>
+                <li>
+                    <a href="#%e6%a0%b8%e5%bf%83%e5%8e%9f%e7%90%86" aria-label="核心原理">核心原理</a><ul>
+                        
+                <li>
+                    <a href="#%e5%88%86%e5%8c%ba" aria-label="分区">分区</a></li>
+                <li>
+                    <a href="#%e9%9b%b6%e6%8b%b7%e8%b4%9d" aria-label="零拷贝">零拷贝</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="概述">概述<a hidden class="anchor" aria-hidden="true" href="#概述">#</a></h1>
+<h2 id="基本名词">基本名词<a hidden class="anchor" aria-hidden="true" href="#基本名词">#</a></h2>
+<p><strong>Producer (消息生产者)：</strong></p>
+<p>向 kafka broker 发消息的客户端；</p>
+<p><strong>Consumer (消息消费者)：</strong></p>
+<p>向 kafka broker 取消息的客户端；</p>
+<p><strong>Consumer Group (消费者组)：</strong></p>
+<p>由多个 consumer 组成。消费者组内每个消费者负责消费不同分区的数据，一个分区只能由一个组内消费者消费；消费者组之间互不影响。所有的消费者都属于某个消费者组，即消费者组是逻辑上的一个订阅者。</p>
+<p><strong>Broker  (服务器)：</strong></p>
+<p>一台 kafka 服务器就是一个 broker。一个集群由多个 broker 组成。一个broker可以容纳多个 topic。</p>
+<p><strong>Replica (副本)：</strong></p>
+<p>为保证集群中的某个节点发生故障时，该节点上的 partition 数据不丢失，且 kafka 仍然能够继续工作，kafka 提供了副本机制，一个 topic 的每个分区都有若干个副本，一个 leader 和若干个 follower。</p>
+<p><strong>Leader (主)：</strong></p>
+<p>每个分区多个副本的“主”，生产者发送数据的对象，以及消费者消费数据的对
+象都是 leader。</p>
+<p><strong>Follower (从)：</strong></p>
+<p>每个分区多个副本中的“从”，实时从 leader 中同步数据，保持和 leader 数据的同步。leader 发生故障时，某个 follower 会成为新的 leader 。</p>
+<p><strong>Topic (主题)：</strong></p>
+<p>主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。</p>
+<p><strong>Partition (分区)：</strong></p>
+<p>为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个 topic 可以分为多个 partition，每个 partition 是一个有序的队列；</p>
+<p><strong>Rebalance (重平衡)：</strong></p>
+<p>消费者组内某个消费者实例挂掉后，其他消费者实例自动重新分配订阅主题分区的过程。Rebalance 是 Kafka 消费者端实现高可用的重要手段。</p>
+<p><img loading="lazy" src="/../static/images/202104120000/Untitled.png" alt="../static/images/202104120000/Untitled.png"  />
+</p>
+<p><img loading="lazy" src="/../static/images/202104120000/Untitled%201.png" alt="../static/images/202104120000/Untitled%201.png"  />
+</p>
+<h2 id="核心原理">核心原理<a hidden class="anchor" aria-hidden="true" href="#核心原理">#</a></h2>
+<h3 id="分区">分区<a hidden class="anchor" aria-hidden="true" href="#分区">#</a></h3>
+<p>分区的作用就是提供负载均衡的能力，或者说对数据进行分区的主要原因，就是为了实现系统的高伸缩性（Scalability）</p>
+<p><strong>分区策略：</strong></p>
+<p>1、轮询策略：轮询策略有非常优秀的负载均衡表现，它总是能保证消息最大限度地被平均分配到所有分区上，故默认情况下它是最合理的分区策略，也是我们最常用的分区策略之一。</p>
+<p><img loading="lazy" src="/../static/images/202104120000/Untitled%202.png" alt="../static/images/202104120000/Untitled%202.png"  />
+</p>
+<p>2、随机策略：所谓随机就是我们随意地将消息放置到任意一个分区上。</p>
+<p><img loading="lazy" src="/../static/images/202104120000/Untitled%203.png" alt="../static/images/202104120000/Untitled%203.png"  />
+</p>
+<p>3、按key指定策略：将计算得出相同的key值，分配到相同的分区上。<strong>这种策略常用于某些需要顺序消费的业务应用场景。</strong></p>
+<p><img loading="lazy" src="/../static/images/202104120000/Untitled%204.png" alt="../static/images/202104120000/Untitled%204.png"  />
+</p>
+<h3 id="零拷贝">零拷贝<a hidden class="anchor" aria-hidden="true" href="#零拷贝">#</a></h3>
+<p><strong>传统的io操作</strong>：</p>
+<p>1、第一次：将磁盘文件，读取到操作系统内核缓冲区；</p>
+<p>2、第二次：将内核缓冲区的数据，copy到application应用程序的buffer；</p>
+<p>3、第三步：将application应用程序buffer中的数据，copy到socket网络发送缓冲区(属于操作系统内核的缓冲区)；</p>
+<p>4、第四次：将socket buffer的数据，copy到网卡，由网卡进行网络传输。</p>
+<p><img loading="lazy" src="/../static/images/202104120000/Untitled%205.png" alt="../static/images/202104120000/Untitled%205.png"  />
+</p>
+<p>总结：假设内容中途不需要任何修改，内核态与用户态第二和第三步的操作则是没有意义的，为了减少io的消耗，人们提出了零拷贝的思想。</p>
+<p><strong>零拷贝方式</strong>：</p>
+<p>原理上都是为了减少io操作的次数</p>
+<p><img loading="lazy" src="/../static/images/202104120000/Untitled%206.png" alt="../static/images/202104120000/Untitled%206.png"  />
+</p>
+<p><strong>1、mmap（Memory Mapped Files）</strong></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>此方式适用于<strong>Producer</strong>到<strong>Broker</strong>的入列过程，这样即使<strong>Broker</strong>需要对消息进行修改，也可以减少io操作，直接讲内容修改映射到磁盘对应的空间，避免了用户态的过程io拷贝。</p>
+<p><img loading="lazy" src="/../static/images/202104120000/Untitled%207.png" alt="../static/images/202104120000/Untitled%207.png"  />
+</p>
+<p>PS：mmap也有一个很明显的缺陷——不可靠，写到mmap中的数据并没有被真正的写到硬盘，操作系统会在程序主动调用flush的时候才把数据真正的写到硬盘。Kafka提供了一个参数——producer.type来控制是不是主动flush；如果Kafka写入到mmap之后就立即flush然后再返回Producer叫同步(sync)；写入mmap之后立即返回Producer不调用flush叫异步(async)。</p>
+<p><strong>2、sendfile</strong></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>此方式适用于<strong>Broker</strong>到<strong>Consumer</strong>的出列过程，消费端获取消息的时候，不需要经过用户态的修改，可以内核态硬件之间直接进行io交互。</p>
+<p><img loading="lazy" src="/../static/images/202104120000/Untitled%208.png" alt="../static/images/202104120000/Untitled%208.png"  />
+</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://nicko-ch.github.io/tags/kafka/">Kafka</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2022 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

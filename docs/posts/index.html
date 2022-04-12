@@ -10,7 +10,7 @@
 <meta name="description" content="Posts - &gt; $ cd /home">
 <meta name="author" content="">
 <link rel="canonical" href="https://nicko-ch.github.io/posts/" />
-<link crossorigin="anonymous" href="/assets/css/stylesheet.min.f9fbda349130cbc2701b107d81ffce9fa97df5920ffcd75db0c8a4ca8445c96c.css" integrity="sha256-&#43;fvaNJEwy8JwGxB9gf/On6l99ZIP/NddsMikyoRFyWw=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0459a4ebf56f381ae411e97a494635ba7ce9db741ff9a2cfbf7e12366bf1e73d.css" integrity="sha256-BFmk6/VvOBrkEel6SUY1unzp23Qf&#43;aLPv34SNmvx5z0=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://nicko-ch.github.io/favicon-32x32.png">
@@ -142,89 +142,155 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2>Go基础语法</h2>
+    <h2>计算机考研408 - 计算机网络</h2>
   </header>
   <section class="entry-content">
-    <p>array 数组 声明方式
-var identifier [len]type // var arr [5]int  var arrAge = [5]int{18, 20, 15, 22, 16} // 声明容量为5的数组并初始化 var arrLazy = [...]int{5, 6, 7, 8, 22} // 初始化数组自动计算容量（实际上已是切片） var arrLazy = []int{5, 6, 7, 8, 22}	// 初始化得到的实际上是切片slice var arrKeyValue = [5]string{3: &#34;Chris&#34;, 4: &#34;Ron&#34;} // 0,1,2 都未空值 var arrKeyValue = []string{3: &#34;Chris&#34;, 4: &#34;Ron&#34;}	// 初始化得到的实际上是切片slice  slice 切片 本质
-不是一组数组的指针，是一种数据结构，用来操作内部元素。
-切片名称 [low : high : max] low: 起始下标位置 high: 结束下标位置 len = high - low max: 容量 cap = max - low 声明方式...</p>
+    <p>物理层 将计算机通过物理的方式连接起来，通过0/1的形式传输数据
+数据链路层 将电信号0和1以帧形势整合成一个个的数据包，将数据以包的形式进行解析。并且将数据包发送到子网络中的所有机器，让机器识别数据包头中的MAC地址跟自己是否匹配，从而捕获分析数据，此过程称为广播。
+网络层 在外网中，通过MAC地址去广播通信效率非常低，所以网络层主要是通过IP协议与其他的子网络进行通信。数据包通过外网ip发送到置顶的子网，子网设备内部再通过广播获取数据包。
+传输层 机器接受到数据包后，通过网卡内的端口传输到各各应用进程中。典型代表：udp、tcp协议
+应用层 应用进程通过Email、HTTP、FTP等通用协议进行收发数据包实现通信。</p>
   </section>
-  <footer class="entry-footer">January 14, 2021&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to Go基础语法" href="https://nicko-ch.github.io/posts/202101140000/"></a>
+  <footer class="entry-footer">August 22, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 计算机考研408 - 计算机网络" href="https://nicko-ch.github.io/posts/202108220000/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2>Laradock 切换数据库错误</h2>
+    <h2>计算机考研408 - 进位计数制</h2>
   </header>
   <section class="entry-content">
-    <p>Laradock 切换 数据库5.7版本 1. 修改.env文件 源文件
-### MYSQL #################################################MYSQL_VERSION=latestMYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d修改为
-### MYSQL #################################################MYSQL_VERSION=5.7.24MYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d 2. 删除旧容器相关数据 2.1 列出所有容器 docker ps -a2.2 停止所有容器 docker ps -a2.3 删除容器 docker rm &lt;容器ID1&gt; &lt;容器ID2&gt; ...2.4 列出镜像 docker images2.5 删除镜像 docker rmi &lt;镜像ID1&gt; &lt;镜像ID2&gt; ...2.6 查看挂载盘 docker volume ls2.7 删除镜像 docker volume rm &lt;VOLUME NAME1&gt; &lt;VOLUME NAME2&gt; ....</p>
+    <p>进位计数制 r进制 → 十进制 二进制 ↔ 八/十六进制 十进制 → r进制 整数位(除基取余法) 小数位(乘积取整法) </p>
   </section>
-  <footer class="entry-footer">November 7, 2018&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to Laradock 切换数据库错误" href="https://nicko-ch.github.io/posts/201811070834/"></a>
+  <footer class="entry-footer">August 16, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 计算机考研408 - 进位计数制" href="https://nicko-ch.github.io/posts/202108160000/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2>PHPStorm 项目目录分类管理配置</h2>
+    <h2>Git恢复之前版本的两种方法reset、revert</h2>
   </header>
   <section class="entry-content">
-    <p>phpstorm 为了方便用户管理项目目录，目前可以将项目文件夹设置为 4 类 Test,Sources,Excluded,Resource Root。 1. Test (颜色为绿色) &gt; 测试主目录，如 `Laravel` 的 `tests` 目录2. Source (颜色为蓝色) &gt; 项目主代码目录，如 `Laravel` 的 `app` 目录3. Excluded (颜色为红色) &gt; 第三方扩展依赖(不会修改代码)，不建立索引，不由`phpstorm`管理，如 `Laravel` 的 `vendor` 目录4. Resource Root (颜色为紫色) &gt; 前端资源，如 `Laravel` 的 `public` 目录合理设置项目的目录是有作用的，如  1 设置 Test 目录，可以在project勾选只显示 Test,方便测试时查看 2 设置 Excluded 目录，可以减少 phpstorm 建立索引的时间 3 设置 Resource Root 目录，以 Laravel 为例，可以帮助检测模板文件的资源路径    </p>
+    <p>方法一：git reset
+原理： git reset的作用是修改HEAD的位置，即将HEAD指向的位置改变为之前存在的某个版本，如下图所示，假设我们要回退到版本一：
+适用场景： 如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。
+具体操作：
+1. 查看版本号：
+可以使用命令“git log”查看：
+也可以在github网站上查看：</p>
   </section>
-  <footer class="entry-footer">November 1, 2018&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to PHPStorm 项目目录分类管理配置" href="https://nicko-ch.github.io/posts/201811011440/"></a>
+  <footer class="entry-footer">June 4, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Git恢复之前版本的两种方法reset、revert" href="https://nicko-ch.github.io/posts/202106040000/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2>Cmd Markdown 简明语法手册</h2>
+    <h2>Kafa核心技术与实战</h2>
   </header>
   <section class="entry-content">
-    <p>『Cmd 技术渲染的沙箱页面，点击此处编写自己的文档』
-Cmd Markdown 简明语法手册 标签： Cmd-Markdown
- 1. 斜体和粗体 使用 * 和 ** 表示斜体和粗体。
-示例：
-这是 斜体，这是 粗体。
-2. 分级标题 使用 === 表示一级标题，使用 — 表示二级标题。
-示例：
-这是一个一级标题============================这是一个二级标题--------------------------------------------------### 这是一个三级标题你也可以选择在行首加井号表示不同级别的标题 (H1-H6)，例如：# H1, ## H2, ### H3，#### H4。
-3. 外链接 使用 [描述](链接地址) 为文字增加外链接。
-示例：
-这是去往 本人博客 的链接。
-4. 无序列表 使用 *，&#43;，- 表示无序列表。
-示例：
- 无序列表项 一 无序列表项 二 无序列表项 三  5. 有序列表 使用数字和点表示有序列表。
-示例：
- 有序列表项 一 有序列表项 二 有序列表项 三  6....</p>
+    <p>概述 基本名词 Producer (消息生产者)：
+向 kafka broker 发消息的客户端；
+Consumer (消息消费者)：
+向 kafka broker 取消息的客户端；
+Consumer Group (消费者组)：
+由多个 consumer 组成。消费者组内每个消费者负责消费不同分区的数据，一个分区只能由一个组内消费者消费；消费者组之间互不影响。所有的消费者都属于某个消费者组，即消费者组是逻辑上的一个订阅者。
+Broker (服务器)：
+一台 kafka 服务器就是一个 broker。一个集群由多个 broker 组成。一个broker可以容纳多个 topic。
+Replica (副本)：
+为保证集群中的某个节点发生故障时，该节点上的 partition 数据不丢失，且 kafka 仍然能够继续工作，kafka 提供了副本机制，一个 topic 的每个分区都有若干个副本，一个 leader 和若干个 follower。
+Leader (主)：
+每个分区多个副本的“主”，生产者发送数据的对象，以及消费者消费数据的对 象都是 leader。
+Follower (从)：
+每个分区多个副本中的“从”，实时从 leader 中同步数据，保持和 leader 数据的同步。leader 发生故障时，某个 follower 会成为新的 leader 。
+Topic (主题)：
+主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。
+Partition (分区)：
+为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个 topic 可以分为多个 partition，每个 partition 是一个有序的队列；...</p>
   </section>
-  <footer class="entry-footer">October 31, 2018&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to Cmd Markdown 简明语法手册" href="https://nicko-ch.github.io/posts/201810311511/"></a>
+  <footer class="entry-footer">April 12, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Kafa核心技术与实战" href="https://nicko-ch.github.io/posts/202104120000/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2>Hello World</h2>
+    <h2>Go高级编程 - Benchmark</h2>
   </header>
   <section class="entry-content">
-    <p>Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick Start Create a new post $ hexo new &#34;My New Post&#34; More info: Writing
-Run server $ hexo server More info: Server
-Generate static files $ hexo generate More info: Generating
-Deploy to remote sites $ hexo deploy More info: Deployment...</p>
+    <p>基础用法  benchmark和普通单元测试用例一样，文件命名都为 _test.go 函数名以 Benchmark 开头，参数是 b *testing.B。 对比普通的单元测试用例： 函数名以 Test 开头，参数是 t *testing.T。  运行用例 基础用例  运行当前 package 内的用例：go test example 或 go test . 运行子 package 内的用例： go test example/&lt;package name&gt; 或 go test ./&lt;package name&gt; 如果想递归测试当前目录下的所有的 package：go test ./... 或 go test example/...。  $ go test -bench . goos: darwin goarch: amd64 pkg: example BenchmarkFib-8 200 5865240 ns/op PASS ok example 1.782s  正则匹配，例：只运行以 Fib 结尾的benchmark用例  $ go test -bench=&#39;Fib$&#39; ....</p>
   </section>
-  <footer class="entry-footer">October 23, 2018&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Hello World" href="https://nicko-ch.github.io/posts/201810231554/"></a>
+  <footer class="entry-footer">March 1, 2021&nbsp;·&nbsp;4 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - Benchmark" href="https://nicko-ch.github.io/posts/202103010000/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2></h2>
+    <h2>Mysql实战45讲 - 丁奇</h2>
   </header>
   <section class="entry-content">
-    <p>Advanced new() 和 make() 的区别 看起来二者没有什么区别，都在堆上分配内存，但是它们的行为不同，适用于不同的类型。
+    <p>基础篇 01丨基础架构：一条SQL查询语句是如何执行的？ 02丨日志系统：一条SQL更新语句是如何执行的？ 03丨事务隔离：为什么你改了我还看不见？  ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）
+  读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。 读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。 可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。 串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  04丨深入浅出索引（上） 哈希表 适用于只有等值查询的场景，效率高，但无法范围查询
+有序数组 等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移
+二叉树（BST） 各方面都非常优秀，但是极端情况下可能会发展为链表
+平衡二叉树（AVL） 二叉树的变异体，会根据情况自动左右旋转，维持子节点的平衡，但是树高无法维护
+红黑树（RBT） 相比较平衡二叉树，平衡条件宽松，只需保证左右深度差一倍，使写的操作变化减少，提高写的性能
+B树 可以拥有多节点，解决平衡二叉树存在的树层级太高，降低查询复杂度
+B&#43;树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引），叶子节点会保存前后的指针地址
+05丨深入浅出索引（下） 覆盖索引 由于非主键索引存在回表的情况，所以select时选择主键字段，可以防止回表从而提高查询效率
+最左前缀原则 实践篇 09丨普通索引和唯一索引，应该怎么选择？ 查询过程  对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。 对于唯一索引来说，由于索引定义了唯一性，查找到第一个满足条件的记录后，就会停止继续检索。   结论：性能上微乎其微，业务看具体场景
+ 理论上唯一索引的性能会比普通索引快，但是引擎是按页进行读写的，所以查询key行数据时候，去取出的data page大概率会有下一行的记录，所以只需要在内存级别再判断一次下一行的记录是否符合条件。
+即使复杂情况，key行在data page最后一行，必须读取下一页。这种情况换做整型的索引，但个data page可以存放上千个key，出现这种概率的情况也是极小的。
+更新过程 了解新概念change buffer
+ 当需要更新数据时候，在不影响一致性的情况下，innoDB会将这部分操作直接写到change buffer中。这样就不需要从磁盘中读取data page了。 将change buffer写入data page的过程称为merge，访问数据也则会触发，系统也会定期执行。 读取data page会占用buffer pool，这种方式可以提高内存利用率。  实际对比...</p>
+  </section>
+  <footer class="entry-footer">February 22, 2021&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Mysql实战45讲 - 丁奇" href="https://nicko-ch.github.io/posts/202102220000/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Go高级编程 - GMP并发模型</h2>
+  </header>
+  <section class="entry-content">
+    <p>Golang&#34;调度器&#34;由来 单进程时代  单一执行流程，CPU只能顺序的执行任务队列 进程阻塞导致CPU占用，浪费硬件资源，影响执行效率  多进程、多线程时代  设计变得复杂  进程/线程的数量越多，切换CPU执行时间片成本越大 多线程随着同步竞争（如 锁、竞争资源冲突等）   缺点  高内存占用 （进程：虚拟内存4G；线程：约4MB） 高CPU调度消耗    协程（co-routine）  N:1  无法利用多个CPU 出现阻塞的瓶颈   1:1  跟多线程/多进程模型无异 协程切换成本高   M:N  能够利用多核 过于依赖协程调度器的优化和算法    调度器的优化  早期Go调度器  基本的全局Go队列和比较传统的轮询利用多个thread去调度 弊端  创建、销毁、调度G都需要每个M获取锁，形成了激烈的锁竞争 M转移G会造成延迟和额外的系统负载 系统调用（CPU在M之间的切换）导致频繁的线程阻塞和取消阻塞的操作增加了系统的开销     Goroutine优化  内存占用低（几KB，大量开辟） 灵活调度，切换成本低    GMP模型的设计思想 GMP模型简介 GMP
+ G：goroutine 携程 P：processor 处理器 M：thread 内核线程...</p>
+  </section>
+  <footer class="entry-footer">January 7, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - GMP并发模型" href="https://nicko-ch.github.io/posts/202102070000/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Go高级编程 - GC垃圾回收原理</h2>
+  </header>
+  <section class="entry-content">
+    <p>标记清除法  STW（stop the world）→ 标记对象依赖关系 → 清楚待回收对象 → 结束STW
+ 步骤：
+ 暂停程序业务逻辑, 找出不可达的对象，和可达对象。 开始标记，程序找出它所有可达的对象，并做上标记。 开始清除未标记对象。 停止STW，让程序恢复运行。  缺点：
+ STW严重影响程序的运行效率 标记需要扫描整个heap 清除数据也会导致产生多余的heap碎片  优化：
+ 将步骤3和4互换位置，缩短STW的范围  三色标记法  白色：待回收对象 灰色：待扫描对象 黑色：已扫描对象
+ 目标：处理完所有灰色的对象为止
+  步骤：
+  将所有的对象标记为默认颜色“白色”
+  从根节点（Root Set）出发，遍历将被根节点引用的对象标记为&#34;灰色&#34;
+  遍历灰色集合，将灰色对象引用的白色对象标记为“灰色”，然后将遍历完的灰色对象标记为“黑色”
+  重复步骤3，直到灰色集合中无任何对象
+  最后回收所有白色集合对象
+  缺点（不启动STW保护）：
+有可能造成对象丢失，即过程中黑色对象引用了白色对象，同时白色对象丢失了灰色对象的关系，导致GC把黑色对象引用的白色对象被回收
+需同时满足两条件：
+ 一个白色对象被黑色对象引用（白色被挂载到黑色下） 灰色对象与被挂载的白色对象关系遭到破坏（灰色同时丢失了白色的挂载）  强弱三色不变式 强三色不变式  强制性不允许黑色对象引用白色对象（破坏条件1）
+ 弱三色不变式  允许黑色对象引用白色对象，但白色对象必须存在链路上游有灰色对象保持有引用关系（破坏条件2）...</p>
+  </section>
+  <footer class="entry-footer">January 5, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - GC垃圾回收原理" href="https://nicko-ch.github.io/posts/202101050000/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Go高级编程 - 基础</h2>
+  </header>
+  <section class="entry-content">
+    <p>new() 和 make() 的区别 看起来二者没有什么区别，都在堆上分配内存，但是它们的行为不同，适用于不同的类型。
  new(T) 为每个新的类型T分配一片内存，初始化为 0 并且返回类型为*T的内存地址：这种方法 返回一个指向类型为 T，值为 0 的地址的指针，它适用于值类型如数组和结构体；它相当于 &amp;T{}。 make(T) 返回一个类型为 T 的初始值，它只适用于3种内建的引用类型：切片、map 和 channel。  换言之，new 函数分配内存，make 函数初始化；下图给出了区别：
 译者注：如何理解new、make、slice、map、channel的关系
 1.slice、map以及channel都是golang内建的一种引用类型，三者在内存中存在多个组成部分， 需要对内存组成部分初始化后才能使用，而make就是对三者进行初始化的一种操作方式
@@ -232,9 +298,14 @@ Deploy to remote sites $ hexo deploy More info: Deployment...</p>
  编程内存模型  kernel内核区为操作系统专用 函数中局部变量是在stack中存放的 stack中的内存在函数结束后会被释放 函数中new和make声明的变量是在heap中存放的   fmt函数参数说明 基本
 %v	the value in a default formatwhen printing structs, the plus flag (%&#43;v) adds field names%#v	a Go-syntax representation of the value%T	a Go-syntax representation of the type of the value%%	a literal percent sign; consumes no valueThe default format for %v is:...</p>
   </section>
-  <footer class="entry-footer">2 min</footer>
-  <a class="entry-link" aria-label="post link to " href="https://nicko-ch.github.io/posts/202102010000/"></a>
+  <footer class="entry-footer">January 4, 2021&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - 基础" href="https://nicko-ch.github.io/posts/202101040000/"></a>
 </article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="next" href="https://nicko-ch.github.io/posts/page/2/">Next Page »</a>
+  </nav>
+</footer>
     </main>
     <footer class="footer">
     <span>&copy; 2022 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>

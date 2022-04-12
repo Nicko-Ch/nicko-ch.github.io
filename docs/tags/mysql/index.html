@@ -10,7 +10,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="https://nicko-ch.github.io/tags/mysql/" />
-<link crossorigin="anonymous" href="/assets/css/stylesheet.min.f9fbda349130cbc2701b107d81ffce9fa97df5920ffcd75db0c8a4ca8445c96c.css" integrity="sha256-&#43;fvaNJEwy8JwGxB9gf/On6l99ZIP/NddsMikyoRFyWw=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0459a4ebf56f381ae411e97a494635ba7ce9db741ff9a2cfbf7e12366bf1e73d.css" integrity="sha256-BFmk6/VvOBrkEel6SUY1unzp23Qf&#43;aLPv34SNmvx5z0=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://nicko-ch.github.io/favicon-32x32.png">
@@ -113,6 +113,30 @@
 <header class="page-header"><div class="breadcrumbs"><a href="https://nicko-ch.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://nicko-ch.github.io/tags/">Tags</a></div>
   <h1>Mysql</h1>
 </header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>Mysql实战45讲 - 丁奇</h2>
+  </header>
+  <section class="entry-content">
+    <p>基础篇 01丨基础架构：一条SQL查询语句是如何执行的？ 02丨日志系统：一条SQL更新语句是如何执行的？ 03丨事务隔离：为什么你改了我还看不见？  ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）
+  读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。 读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。 可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。 串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  04丨深入浅出索引（上） 哈希表 适用于只有等值查询的场景，效率高，但无法范围查询
+有序数组 等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移
+二叉树（BST） 各方面都非常优秀，但是极端情况下可能会发展为链表
+平衡二叉树（AVL） 二叉树的变异体，会根据情况自动左右旋转，维持子节点的平衡，但是树高无法维护
+红黑树（RBT） 相比较平衡二叉树，平衡条件宽松，只需保证左右深度差一倍，使写的操作变化减少，提高写的性能
+B树 可以拥有多节点，解决平衡二叉树存在的树层级太高，降低查询复杂度
+B&#43;树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引），叶子节点会保存前后的指针地址
+05丨深入浅出索引（下） 覆盖索引 由于非主键索引存在回表的情况，所以select时选择主键字段，可以防止回表从而提高查询效率
+最左前缀原则 实践篇 09丨普通索引和唯一索引，应该怎么选择？ 查询过程  对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。 对于唯一索引来说，由于索引定义了唯一性，查找到第一个满足条件的记录后，就会停止继续检索。   结论：性能上微乎其微，业务看具体场景
+ 理论上唯一索引的性能会比普通索引快，但是引擎是按页进行读写的，所以查询key行数据时候，去取出的data page大概率会有下一行的记录，所以只需要在内存级别再判断一次下一行的记录是否符合条件。
+即使复杂情况，key行在data page最后一行，必须读取下一页。这种情况换做整型的索引，但个data page可以存放上千个key，出现这种概率的情况也是极小的。
+更新过程 了解新概念change buffer
+ 当需要更新数据时候，在不影响一致性的情况下，innoDB会将这部分操作直接写到change buffer中。这样就不需要从磁盘中读取data page了。 将change buffer写入data page的过程称为merge，访问数据也则会触发，系统也会定期执行。 读取data page会占用buffer pool，这种方式可以提高内存利用率。  实际对比...</p>
+  </section>
+  <footer class="entry-footer">February 22, 2021&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Mysql实战45讲 - 丁奇" href="https://nicko-ch.github.io/posts/202102220000/"></a>
+</article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">

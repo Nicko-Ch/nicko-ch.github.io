@@ -267,6 +267,7 @@
     background: var(--code-bg);
     border-radius: var(--radius);
     padding: 0.4em;
+    font-size: 15px;
 }
 
 .dark .toc {
@@ -298,6 +299,10 @@
 
 .toc summary:focus {
     outline: 0;
+}
+
+.toc::-webkit-scrollbar {
+    display: none;
 }
 
 .post-footer {
