@@ -29,12 +29,12 @@ imageUrl = "https://avatars.githubusercontent.com/u/9588258?v=4" # optional
 imageWidth = 120 # custom size
 subtitle = "" 
 title = "Nicko_Ch's Home" # optional default will be site title
-[[params.profileMode.buttons]]
-name = "Archive"
-url = "/archive"
-[[params.profileMode.buttons]]
-name = "Github"
-url = "https://github.com/"
+# [[params.profileMode.buttons]]
+# name = "Archives"
+# url = "/archives"
+# [[params.profileMode.buttons]]
+# name = "Github"
+# url = "https://github.com/"
 
 [[params.socialIcons]]
 name = "github"
