@@ -85,5 +85,20 @@ Generate static files $ hexo generate More info: Generating
 Deploy to remote sites $ hexo deploy More info: Deployment</description>
     </item>
     
+    <item>
+      <title></title>
+      <link>https://nicko-ch.github.io/posts/202102010000/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://nicko-ch.github.io/posts/202102010000/</guid>
+      <description>Advanced new() 和 make() 的区别 看起来二者没有什么区别，都在堆上分配内存，但是它们的行为不同，适用于不同的类型。
+ new(T) 为每个新的类型T分配一片内存，初始化为 0 并且返回类型为*T的内存地址：这种方法 返回一个指向类型为 T，值为 0 的地址的指针，它适用于值类型如数组和结构体；它相当于 &amp;amp;T{}。 make(T) 返回一个类型为 T 的初始值，它只适用于3种内建的引用类型：切片、map 和 channel。  换言之，new 函数分配内存，make 函数初始化；下图给出了区别：
+译者注：如何理解new、make、slice、map、channel的关系
+1.slice、map以及channel都是golang内建的一种引用类型，三者在内存中存在多个组成部分， 需要对内存组成部分初始化后才能使用，而make就是对三者进行初始化的一种操作方式
+2. new 获取的是存储指定变量内存地址的一个变量，对于变量内部结构并不会执行相应的初始化操作， 所以slice、map、channel需要make进行初始化并获取对应的内存地址，而非new简单的获取内存地址
+ 编程内存模型  kernel内核区为操作系统专用 函数中局部变量是在stack中存放的 stack中的内存在函数结束后会被释放 函数中new和make声明的变量是在heap中存放的   fmt函数参数说明 基本
+%v	the value in a default formatwhen printing structs, the plus flag (%+v) adds field names%#v	a Go-syntax representation of the value%T	a Go-syntax representation of the type of the value%%	a literal percent sign; consumes no valueThe default format for %v is:</description>
+    </item>
+    
   </channel>
 </rss>
