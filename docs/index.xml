@@ -24,7 +24,7 @@ It makes use of a variety of open source projects including:
       <pubDate>Thu, 02 Sep 2021 10:12:10 +0800</pubDate>
       
       <guid>https://nicko-ch.github.io/posts/202109021012/</guid>
-      <description>bit ┌───┐ byte │ │ └───┘ ┌───┬───┐ short │ │ │ └───┴───┘ ┌───┬───┬───┬───┐ int │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ long │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┬───┬───┐ float │ │ │ │ │ └───┴───┴───┴───┘ ┌───┬───┬───┬───┬───┬───┬───┬───┐ double │ │ │ │ │ │ │ │ │ └───┴───┴───┴───┴───┴───┴───┴───┘ ┌───┬───┐ char │ │ │ └───┴───┘ /* golang */ package main import ( &amp;#34;fmt&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.com/gin-gonic/gin&amp;#34; ) func hljs() { ch := make(chan float64) ch &amp;lt;- 1.</description>
+      <description>bit ┌───┐byte │ │└───┘┌───┬───┐short │ │ │└───┴───┘┌───┬───┬───┬───┐int │ │ │ │ │└───┴───┴───┴───┘┌───┬───┬───┬───┬───┬───┬───┬───┐long │ │ │ │ │ │ │ │ │└───┴───┴───┴───┴───┴───┴───┴───┘┌───┬───┬───┬───┐float │ │ │ │ │└───┴───┴───┴───┘┌───┬───┬───┬───┬───┬───┬───┬───┐double │ │ │ │ │ │ │ │ │└───┴───┴───┴───┴───┴───┴───┴───┘┌───┬───┐char │ │ │└───┴───┘/* golang */ package main import ( &amp;#34;fmt&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.com/gin-gonic/gin&amp;#34; ) func hljs() { ch := make(chan float64) ch &amp;lt;- 1.</description>
     </item>
     
     <item>
