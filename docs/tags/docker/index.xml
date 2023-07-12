@@ -9,10 +9,10 @@
     <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Docker核心原理</title>
-      <link>https://nicko-ch.github.io/posts/202106020000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210602-docker%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/</link>
       <pubDate>Wed, 02 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202106020000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210602-docker%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/</guid>
       <description>核心原理 Namespace  独立进程，实现容器的 隔离性
  Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。
 Cgroups  控制进程资源分配，实现容器的 限制性
@@ -32,10 +32,10 @@ $ tree.├── A│ ├── a│ └── x└── B├── b└
     
     <item>
       <title>Laradock 切换数据库错误</title>
-      <link>https://nicko-ch.github.io/posts/201811070834/</link>
+      <link>https://nicko-ch.github.io/posts/2018/20181107-laradock-%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%99%E8%AF%AF/</link>
       <pubDate>Wed, 07 Nov 2018 08:34:55 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/201811070834/</guid>
+      <guid>https://nicko-ch.github.io/posts/2018/20181107-laradock-%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%99%E8%AF%AF/</guid>
       <description>Laradock 切换 数据库5.7版本 1. 修改.env文件 源文件
 ### MYSQL #################################################MYSQL_VERSION=latestMYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d修改为
 ### MYSQL #################################################MYSQL_VERSION=5.7.24MYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d 2. 删除旧容器相关数据 2.1 列出所有容器 docker ps -a2.2 停止所有容器 docker ps -a2.3 删除容器 docker rm &amp;lt;容器ID1&amp;gt; &amp;lt;容器ID2&amp;gt; ...2.4 列出镜像 docker images2.5 删除镜像 docker rmi &amp;lt;镜像ID1&amp;gt; &amp;lt;镜像ID2&amp;gt; ...2.6 查看挂载盘 docker volume ls2.7 删除镜像 docker volume rm &amp;lt;VOLUME NAME1&amp;gt; &amp;lt;VOLUME NAME2&amp;gt; .</description>

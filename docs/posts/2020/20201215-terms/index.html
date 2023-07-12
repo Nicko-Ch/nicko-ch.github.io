@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Terms | &gt; $ cd /home</title>
+<meta name="keywords" content="Terms" />
+<meta name="description" content="Terms     分布式事务方式   bloom filter   Bitmap   nginx平滑重启原理   Linux内核特性之VDSO   NTP UPDATE 和 NTPD   QUICK   Head-of-line blocking   cgroup   Scaling Memcache At Facebook   errorgroup   pipeline   链表   bytegraph   neo4j   发号器   Graph DB   位与操作   网易DDB   sharding   SOA   DDD   Machine line   COW   &ldquo;nginx_pool_t &quot;   tcmalloc   sync.">
+<meta name="author" content="">
+<link rel="canonical" href="https://nicko-ch.github.io/posts/2020/20201215-terms/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0459a4ebf56f381ae411e97a494635ba7ce9db741ff9a2cfbf7e12366bf1e73d.css" integrity="sha256-BFmk6/VvOBrkEel6SUY1unzp23Qf&#43;aLPv34SNmvx5z0=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.6f62d19b78590241c3e007a10f91f45f95ce2528ca8f3e33c542e95f8ed5691f.js" integrity="sha256-b2LRm3hZAkHD4AehD5H0X5XOJSjKjz4zxULpX47VaR8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nicko-ch.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://nicko-ch.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://nicko-ch.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.88.0" />
+<meta property="og:title" content="Terms" />
+<meta property="og:description" content="Terms     分布式事务方式   bloom filter   Bitmap   nginx平滑重启原理   Linux内核特性之VDSO   NTP UPDATE 和 NTPD   QUICK   Head-of-line blocking   cgroup   Scaling Memcache At Facebook   errorgroup   pipeline   链表   bytegraph   neo4j   发号器   Graph DB   位与操作   网易DDB   sharding   SOA   DDD   Machine line   COW   &ldquo;nginx_pool_t &quot;   tcmalloc   sync." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://nicko-ch.github.io/posts/2020/20201215-terms/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-12-15T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-12-15T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Terms"/>
+<meta name="twitter:description" content="Terms     分布式事务方式   bloom filter   Bitmap   nginx平滑重启原理   Linux内核特性之VDSO   NTP UPDATE 和 NTPD   QUICK   Head-of-line blocking   cgroup   Scaling Memcache At Facebook   errorgroup   pipeline   链表   bytegraph   neo4j   发号器   Graph DB   位与操作   网易DDB   sharding   SOA   DDD   Machine line   COW   &ldquo;nginx_pool_t &quot;   tcmalloc   sync."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://nicko-ch.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Terms",
+      "item": "https://nicko-ch.github.io/posts/2020/20201215-terms/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Terms",
+  "name": "Terms",
+  "description": "Terms     分布式事务方式   bloom filter   Bitmap   nginx平滑重启原理   Linux内核特性之VDSO   NTP UPDATE 和 NTPD   QUICK   Head-of-line blocking   cgroup   Scaling Memcache At Facebook   errorgroup   pipeline   链表   bytegraph   neo4j   发号器   Graph DB   位与操作   网易DDB   sharding   SOA   DDD   Machine line   COW   \u0026ldquo;nginx_pool_t \u0026quot;   tcmalloc   sync.",
+  "keywords": [
+    "Terms"
+  ],
+  "articleBody": "   Terms     分布式事务方式   bloom filter   Bitmap   nginx平滑重启原理   Linux内核特性之VDSO   NTP UPDATE 和 NTPD   QUICK   Head-of-line blocking   cgroup   Scaling Memcache At Facebook   errorgroup   pipeline   链表   bytegraph   neo4j   发号器   Graph DB   位与操作   网易DDB   sharding   SOA   DDD   Machine line   COW   “nginx_pool_t \"   tcmalloc   sync.pool 对象池   内存池   内存碎片 内存对齐   微博redis关系链   redis-cluster   single fly 单飞模式   一致性哈希   有界负载一致性哈希   slot sharding   pipeline   databus   flink   LVS    ",
+  "wordCount" : "56",
+  "inLanguage": "en",
+  "datePublished": "2020-12-15T00:00:00Z",
+  "dateModified": "2020-12-15T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://nicko-ch.github.io/posts/2020/20201215-terms/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\u003e $ cd /home",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://nicko-ch.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://nicko-ch.github.io/" accesskey="h" title="&gt; $ cd /home (Alt + H)">&gt; $ cd /home</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://nicko-ch.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://nicko-ch.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://nicko-ch.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Terms
+    </h1>
+    <div class="post-meta">December 15, 2020&nbsp;·&nbsp;1 min
+</div>
+  </header> 
+
+  <div class="post-content"><table>
+<thead>
+<tr>
+<th>Terms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分布式事务方式</td>
+</tr>
+<tr>
+<td>bloom filter</td>
+</tr>
+<tr>
+<td>Bitmap</td>
+</tr>
+<tr>
+<td>nginx平滑重启原理</td>
+</tr>
+<tr>
+<td>Linux内核特性之VDSO</td>
+</tr>
+<tr>
+<td>NTP UPDATE 和 NTPD</td>
+</tr>
+<tr>
+<td>QUICK</td>
+</tr>
+<tr>
+<td>Head-of-line blocking</td>
+</tr>
+<tr>
+<td>cgroup</td>
+</tr>
+<tr>
+<td>Scaling Memcache At Facebook</td>
+</tr>
+<tr>
+<td>errorgroup</td>
+</tr>
+<tr>
+<td>pipeline</td>
+</tr>
+<tr>
+<td>链表</td>
+</tr>
+<tr>
+<td>bytegraph</td>
+</tr>
+<tr>
+<td>neo4j</td>
+</tr>
+<tr>
+<td>发号器</td>
+</tr>
+<tr>
+<td>Graph DB</td>
+</tr>
+<tr>
+<td>位与操作</td>
+</tr>
+<tr>
+<td>网易DDB</td>
+</tr>
+<tr>
+<td>sharding</td>
+</tr>
+<tr>
+<td>SOA</td>
+</tr>
+<tr>
+<td>DDD</td>
+</tr>
+<tr>
+<td>Machine line</td>
+</tr>
+<tr>
+<td>COW</td>
+</tr>
+<tr>
+<td>&ldquo;nginx_pool_t &quot;</td>
+</tr>
+<tr>
+<td>tcmalloc</td>
+</tr>
+<tr>
+<td>sync.pool 对象池</td>
+</tr>
+<tr>
+<td>内存池</td>
+</tr>
+<tr>
+<td>内存碎片 内存对齐</td>
+</tr>
+<tr>
+<td>微博redis关系链</td>
+</tr>
+<tr>
+<td>redis-cluster</td>
+</tr>
+<tr>
+<td>single fly 单飞模式</td>
+</tr>
+<tr>
+<td>一致性哈希</td>
+</tr>
+<tr>
+<td>有界负载一致性哈希</td>
+</tr>
+<tr>
+<td>slot sharding</td>
+</tr>
+<tr>
+<td>pipeline</td>
+</tr>
+<tr>
+<td>databus</td>
+</tr>
+<tr>
+<td>flink</td>
+</tr>
+<tr>
+<td>LVS</td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://nicko-ch.github.io/tags/terms/">Terms</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2023 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

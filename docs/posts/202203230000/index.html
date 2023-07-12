@@ -4,7 +4,7 @@
 <head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <title>Kubernetes基础 | &gt; $ cd /home</title>
 <meta name="keywords" content="Kubernetes" />
 <meta name="description" content="1. 控制器类型 1.1 有状态服务 Statefulset  稳定持久化 稳定网络标志(地址) 有序部署 有序收缩(删除)  1.2 无状态服务 RC（ReplicationController） 副本数量与期望值之间的管理
@@ -30,85 +30,7 @@ Cron Job 周期性执行任务
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
 <meta name="generator" content="Hugo 0.88.0" />
-<meta property="og:title" content="Kubernetes基础" />
-<meta property="og:description" content="1. 控制器类型 1.1 有状态服务 Statefulset  稳定持久化 稳定网络标志(地址) 有序部署 有序收缩(删除)  1.2 无状态服务 RC（ReplicationController） 副本数量与期望值之间的管理
-RS（ReplicaSet） 功能类似于RC，但是多了集合式的标签选择器
-Deployment 支持滚动更新以及回滚
-DaemonSet 单例模式
-确保Node上有且只运行一个同类型pod
-Job 负责批处理任务，即仅执行一次的任务，它可以保证批处理任务一个或者多个Pod成功结束
-Cron Job 周期性执行任务
-2. 网络通讯方式 2.1 同 Pod 间不同容器间 IO
-2.2 不同 Pod 间的通讯 同物理机 Docker0 网桥实现报文转发
-不同物理机 flannel UDP 数据包二次封装" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://nicko-ch.github.io/posts/202203230000/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-03-23T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2022-03-23T00:00:00&#43;00:00" />
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Kubernetes基础"/>
-<meta name="twitter:description" content="1. 控制器类型 1.1 有状态服务 Statefulset  稳定持久化 稳定网络标志(地址) 有序部署 有序收缩(删除)  1.2 无状态服务 RC（ReplicationController） 副本数量与期望值之间的管理
-RS（ReplicaSet） 功能类似于RC，但是多了集合式的标签选择器
-Deployment 支持滚动更新以及回滚
-DaemonSet 单例模式
-确保Node上有且只运行一个同类型pod
-Job 负责批处理任务，即仅执行一次的任务，它可以保证批处理任务一个或者多个Pod成功结束
-Cron Job 周期性执行任务
-2. 网络通讯方式 2.1 同 Pod 间不同容器间 IO
-2.2 不同 Pod 间的通讯 同物理机 Docker0 网桥实现报文转发
-不同物理机 flannel UDP 数据包二次封装"/>
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://nicko-ch.github.io/posts/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "Kubernetes基础",
-      "item": "https://nicko-ch.github.io/posts/202203230000/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Kubernetes基础",
-  "name": "Kubernetes基础",
-  "description": "1. 控制器类型 1.1 有状态服务 Statefulset  稳定持久化 稳定网络标志(地址) 有序部署 有序收缩(删除)  1.2 无状态服务 RC（ReplicationController） 副本数量与期望值之间的管理\nRS（ReplicaSet） 功能类似于RC，但是多了集合式的标签选择器\nDeployment 支持滚动更新以及回滚\nDaemonSet 单例模式\n确保Node上有且只运行一个同类型pod\nJob 负责批处理任务，即仅执行一次的任务，它可以保证批处理任务一个或者多个Pod成功结束\nCron Job 周期性执行任务\n2. 网络通讯方式 2.1 同 Pod 间不同容器间 IO\n2.2 不同 Pod 间的通讯 同物理机 Docker0 网桥实现报文转发\n不同物理机 flannel UDP 数据包二次封装",
-  "keywords": [
-    "Kubernetes"
-  ],
-  "articleBody": "1. 控制器类型 1.1 有状态服务 Statefulset  稳定持久化 稳定网络标志(地址) 有序部署 有序收缩(删除)  1.2 无状态服务 RC（ReplicationController） 副本数量与期望值之间的管理\nRS（ReplicaSet） 功能类似于RC，但是多了集合式的标签选择器\nDeployment 支持滚动更新以及回滚\nDaemonSet 单例模式\n确保Node上有且只运行一个同类型pod\nJob 负责批处理任务，即仅执行一次的任务，它可以保证批处理任务一个或者多个Pod成功结束\nCron Job 周期性执行任务\n2. 网络通讯方式 2.1 同 Pod 间不同容器间 IO\n2.2 不同 Pod 间的通讯 同物理机 Docker0 网桥实现报文转发\n不同物理机 flannel UDP 数据包二次封装\n",
-  "wordCount" : "43",
-  "inLanguage": "en",
-  "datePublished": "2022-03-23T00:00:00Z",
-  "dateModified": "2022-03-23T00:00:00Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://nicko-ch.github.io/posts/202203230000/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "\u003e $ cd /home",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://nicko-ch.github.io/favicon.ico"
-    }
-  }
-}
-</script>
 </head>
 
 <body class="" id="top">

@@ -9,10 +9,10 @@
     <lastBuildDate>Sun, 22 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>计算机考研408 - 计算机网络</title>
-      <link>https://nicko-ch.github.io/posts/202108220000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210822-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</link>
       <pubDate>Sun, 22 Aug 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202108220000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210822-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</guid>
       <description>物理层 将计算机通过物理的方式连接起来，通过0/1的形式传输数据
 数据链路层 将电信号0和1以帧形势整合成一个个的数据包，将数据以包的形式进行解析。并且将数据包发送到子网络中的所有机器，让机器识别数据包头中的MAC地址跟自己是否匹配，从而捕获分析数据，此过程称为广播。
 网络层 在外网中，通过MAC地址去广播通信效率非常低，所以网络层主要是通过IP协议与其他的子网络进行通信。数据包通过外网ip发送到置顶的子网，子网设备内部再通过广播获取数据包。
@@ -22,10 +22,10 @@
     
     <item>
       <title>计算机考研408 - 进位计数制</title>
-      <link>https://nicko-ch.github.io/posts/202108160000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210816-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%BF%9B%E4%BD%8D%E8%AE%A1%E6%95%B0%E5%88%B6/</link>
       <pubDate>Mon, 16 Aug 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202108160000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210816-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%BF%9B%E4%BD%8D%E8%AE%A1%E6%95%B0%E5%88%B6/</guid>
       <description>进位计数制 r进制 → 十进制 二进制 ↔ 八/十六进制 十进制 → r进制 整数位(除基取余法) 小数位(乘积取整法) </description>
     </item>
     

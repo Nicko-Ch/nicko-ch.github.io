@@ -4,7 +4,7 @@
 <head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <title>算法系列 - 快速排序 | &gt; $ cd /home</title>
 <meta name="keywords" content="算法" />
 <meta name="description" content="描述 快速排序是对插入算法的一种优化，利用对问题的二分化，实现递归完成快速排序 ，在所有算法中二分化是最常用的方式，将问题尽量的分成两种情况加以分析， 最终以形成类似树的方式加以利用，因为在比较模型中的算法中，最快的排序时间复杂度为 O(log~n~).
@@ -23,71 +23,7 @@ package main import &#34;fmt&#34; func main() { sortSlice := quickSort([]int{1, 
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
 <meta name="generator" content="Hugo 0.88.0" />
-<meta property="og:title" content="算法系列 - 快速排序" />
-<meta property="og:description" content="描述 快速排序是对插入算法的一种优化，利用对问题的二分化，实现递归完成快速排序 ，在所有算法中二分化是最常用的方式，将问题尽量的分成两种情况加以分析， 最终以形成类似树的方式加以利用，因为在比较模型中的算法中，最快的排序时间复杂度为 O(log~n~).
-原理  选取边界值：temp 遍历比较数组中每个值与边界值大小关系：小于边界值放小于数组，大于边界值放大于数组 递归排序大、小数组 合并返回当前已排完序数组  PS：注意递归结束条件，数组中长度小于2，代表
-package main import &#34;fmt&#34; func main() { sortSlice := quickSort([]int{1, 9, 10, 30, 2, 5, 45, 8, 63, 234, 12}) fmt.Println(sortSlice) } func quickSort(arr []int) []int { if len(arr) &lt;= 2 { return arr } temp := arr[0] var low, high = make([]int, 0), make([]int, 0) for i := 1; i &lt; len(arr); i&#43;&#43; { if arr[i] &lt; temp { low = append(low, arr[i]) } else { high = append(high, arr[i]) } } lowSlice := quickSort(low) highSlice := quickSort(high) return append(append(lowSlice, temp), highSlice." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://nicko-ch.github.io/posts/202204180000/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-04-18T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2022-04-18T00:00:00&#43;00:00" />
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="算法系列 - 快速排序"/>
-<meta name="twitter:description" content="描述 快速排序是对插入算法的一种优化，利用对问题的二分化，实现递归完成快速排序 ，在所有算法中二分化是最常用的方式，将问题尽量的分成两种情况加以分析， 最终以形成类似树的方式加以利用，因为在比较模型中的算法中，最快的排序时间复杂度为 O(log~n~).
-原理  选取边界值：temp 遍历比较数组中每个值与边界值大小关系：小于边界值放小于数组，大于边界值放大于数组 递归排序大、小数组 合并返回当前已排完序数组  PS：注意递归结束条件，数组中长度小于2，代表
-package main import &#34;fmt&#34; func main() { sortSlice := quickSort([]int{1, 9, 10, 30, 2, 5, 45, 8, 63, 234, 12}) fmt.Println(sortSlice) } func quickSort(arr []int) []int { if len(arr) &lt;= 2 { return arr } temp := arr[0] var low, high = make([]int, 0), make([]int, 0) for i := 1; i &lt; len(arr); i&#43;&#43; { if arr[i] &lt; temp { low = append(low, arr[i]) } else { high = append(high, arr[i]) } } lowSlice := quickSort(low) highSlice := quickSort(high) return append(append(lowSlice, temp), highSlice."/>
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://nicko-ch.github.io/posts/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "算法系列 - 快速排序",
-      "item": "https://nicko-ch.github.io/posts/202204180000/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "算法系列 - 快速排序",
-  "name": "算法系列 - 快速排序",
-  "description": "描述 快速排序是对插入算法的一种优化，利用对问题的二分化，实现递归完成快速排序 ，在所有算法中二分化是最常用的方式，将问题尽量的分成两种情况加以分析， 最终以形成类似树的方式加以利用，因为在比较模型中的算法中，最快的排序时间复杂度为 O(log~n~).\n原理  选取边界值：temp 遍历比较数组中每个值与边界值大小关系：小于边界值放小于数组，大于边界值放大于数组 递归排序大、小数组 合并返回当前已排完序数组  PS：注意递归结束条件，数组中长度小于2，代表\npackage main import \u0026#34;fmt\u0026#34; func main() { sortSlice := quickSort([]int{1, 9, 10, 30, 2, 5, 45, 8, 63, 234, 12}) fmt.Println(sortSlice) } func quickSort(arr []int) []int { if len(arr) \u0026lt;= 2 { return arr } temp := arr[0] var low, high = make([]int, 0), make([]int, 0) for i := 1; i \u0026lt; len(arr); i++ { if arr[i] \u0026lt; temp { low = append(low, arr[i]) } else { high = append(high, arr[i]) } } lowSlice := quickSort(low) highSlice := quickSort(high) return append(append(lowSlice, temp), highSlice.",
-  "keywords": [
-    "算法"
-  ],
-  "articleBody": "描述 快速排序是对插入算法的一种优化，利用对问题的二分化，实现递归完成快速排序 ，在所有算法中二分化是最常用的方式，将问题尽量的分成两种情况加以分析， 最终以形成类似树的方式加以利用，因为在比较模型中的算法中，最快的排序时间复杂度为 O(log~n~).\n原理  选取边界值：temp 遍历比较数组中每个值与边界值大小关系：小于边界值放小于数组，大于边界值放大于数组 递归排序大、小数组 合并返回当前已排完序数组  PS：注意递归结束条件，数组中长度小于2，代表\npackage main import \"fmt\" func main() { sortSlice := quickSort([]int{1, 9, 10, 30, 2, 5, 45, 8, 63, 234, 12}) fmt.Println(sortSlice) } func quickSort(arr []int) []int { if len(arr)  2 { return arr } temp := arr[0] var low, high = make([]int, 0), make([]int, 0) for i := 1; i arr); i++ { if arr[i] temp { low = append(low, arr[i]) } else { high = append(high, arr[i]) } } lowSlice := quickSort(low) highSlice := quickSort(high) return append(append(lowSlice, temp), highSlice...) } ",
-  "wordCount" : "95",
-  "inLanguage": "en",
-  "datePublished": "2022-04-18T00:00:00Z",
-  "dateModified": "2022-04-18T00:00:00Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://nicko-ch.github.io/posts/202204180000/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "\u003e $ cd /home",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://nicko-ch.github.io/favicon.ico"
-    }
-  }
-}
-</script>
 </head>
 
 <body class="" id="top">

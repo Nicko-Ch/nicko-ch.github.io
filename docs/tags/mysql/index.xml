@@ -9,10 +9,10 @@
     <lastBuildDate>Mon, 22 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Mysql实战45讲 - 丁奇</title>
-      <link>https://nicko-ch.github.io/posts/202102220000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210222-mysql%E5%AE%9E%E6%88%9845%E8%AE%B2/</link>
       <pubDate>Mon, 22 Feb 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202102220000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210222-mysql%E5%AE%9E%E6%88%9845%E8%AE%B2/</guid>
       <description>基础篇 01丨基础架构：一条SQL查询语句是如何执行的？ 02丨日志系统：一条SQL更新语句是如何执行的？ 03丨事务隔离：为什么你改了我还看不见？  ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）
   读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。 读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。 可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。 串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  04丨深入浅出索引（上） 哈希表 适用于只有等值查询的场景，效率高，但无法范围查询
 有序数组 等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移
@@ -31,10 +31,10 @@ B+树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引）�
     
     <item>
       <title>Laradock 切换数据库错误</title>
-      <link>https://nicko-ch.github.io/posts/201811070834/</link>
+      <link>https://nicko-ch.github.io/posts/2018/20181107-laradock-%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%99%E8%AF%AF/</link>
       <pubDate>Wed, 07 Nov 2018 08:34:55 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/201811070834/</guid>
+      <guid>https://nicko-ch.github.io/posts/2018/20181107-laradock-%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%99%E8%AF%AF/</guid>
       <description>Laradock 切换 数据库5.7版本 1. 修改.env文件 源文件
 ### MYSQL #################################################MYSQL_VERSION=latestMYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d修改为
 ### MYSQL #################################################MYSQL_VERSION=5.7.24MYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d 2. 删除旧容器相关数据 2.1 列出所有容器 docker ps -a2.2 停止所有容器 docker ps -a2.3 删除容器 docker rm &amp;lt;容器ID1&amp;gt; &amp;lt;容器ID2&amp;gt; ...2.4 列出镜像 docker images2.5 删除镜像 docker rmi &amp;lt;镜像ID1&amp;gt; &amp;lt;镜像ID2&amp;gt; ...2.6 查看挂载盘 docker volume ls2.7 删除镜像 docker volume rm &amp;lt;VOLUME NAME1&amp;gt; &amp;lt;VOLUME NAME2&amp;gt; .</description>

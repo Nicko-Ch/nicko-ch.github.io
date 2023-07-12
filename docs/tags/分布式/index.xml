@@ -9,10 +9,10 @@
     <lastBuildDate>Thu, 08 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>分布式唯一ID</title>
-      <link>https://nicko-ch.github.io/posts/202104080000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210408-%E5%88%86%E5%B8%83%E5%BC%8F%E5%94%AF%E4%B8%80id/</link>
       <pubDate>Thu, 08 Apr 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202104080000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210408-%E5%88%86%E5%B8%83%E5%BC%8F%E5%94%AF%E4%B8%80id/</guid>
       <description>1. 为什么要用分布式ID 1.1 什么是分布式ID 拿MySQL数据库举个栗子：
 在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。
 但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有唯一ID做标识。此时一个能够生成全局唯一ID的系统是非常必要的。那么这个全局唯一ID就叫分布式ID。

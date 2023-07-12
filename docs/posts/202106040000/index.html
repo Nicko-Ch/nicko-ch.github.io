@@ -4,7 +4,7 @@
 <head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <title>Git恢复之前版本的两种方法reset、revert | &gt; $ cd /home</title>
 <meta name="keywords" content="Git" />
 <meta name="description" content="方法一：git reset
@@ -27,79 +27,7 @@
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
 <meta name="generator" content="Hugo 0.88.0" />
-<meta property="og:title" content="Git恢复之前版本的两种方法reset、revert" />
-<meta property="og:description" content="方法一：git reset
-原理： git reset的作用是修改HEAD的位置，即将HEAD指向的位置改变为之前存在的某个版本，如下图所示，假设我们要回退到版本一：
-适用场景： 如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。
-具体操作：
-1. 查看版本号：
-可以使用命令“git log”查看：
-也可以在github网站上查看：" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://nicko-ch.github.io/posts/202106040000/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-06-04T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-06-04T00:00:00&#43;00:00" />
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Git恢复之前版本的两种方法reset、revert"/>
-<meta name="twitter:description" content="方法一：git reset
-原理： git reset的作用是修改HEAD的位置，即将HEAD指向的位置改变为之前存在的某个版本，如下图所示，假设我们要回退到版本一：
-适用场景： 如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。
-具体操作：
-1. 查看版本号：
-可以使用命令“git log”查看：
-也可以在github网站上查看："/>
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://nicko-ch.github.io/posts/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "Git恢复之前版本的两种方法reset、revert",
-      "item": "https://nicko-ch.github.io/posts/202106040000/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Git恢复之前版本的两种方法reset、revert",
-  "name": "Git恢复之前版本的两种方法reset、revert",
-  "description": "方法一：git reset\n原理： git reset的作用是修改HEAD的位置，即将HEAD指向的位置改变为之前存在的某个版本，如下图所示，假设我们要回退到版本一：\n适用场景： 如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。\n具体操作：\n1. 查看版本号：\n可以使用命令“git log”查看：\n也可以在github网站上查看：",
-  "keywords": [
-    "Git"
-  ],
-  "articleBody": "方法一：git reset\n原理： git reset的作用是修改HEAD的位置，即将HEAD指向的位置改变为之前存在的某个版本，如下图所示，假设我们要回退到版本一：\n适用场景： 如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。\n具体操作：\n1. 查看版本号：\n可以使用命令“git log”查看：\n也可以在github网站上查看：\n",
-  "wordCount" : "13",
-  "inLanguage": "en",
-  "datePublished": "2021-06-04T00:00:00Z",
-  "dateModified": "2021-06-04T00:00:00Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://nicko-ch.github.io/posts/202106040000/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "\u003e $ cd /home",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://nicko-ch.github.io/favicon.ico"
-    }
-  }
-}
-</script>
 </head>
 
 <body class="" id="top">
@@ -194,16 +122,16 @@
 
   <div class="post-content"><p><strong>方法一：git reset</strong></p>
 <p><strong>原理：</strong> git reset的作用是修改HEAD的位置，即将HEAD指向的位置改变为之前存在的某个版本，如下图所示，假设我们要回退到版本一：</p>
-<p><img loading="lazy" src="/../static/images/202106040000/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTgwNDE0MjEyMjIxMDMz.png" alt="img"  />
+<p><img loading="lazy" src="/../../static/images/202106040000/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTgwNDE0MjEyMjIxMDMz.png" alt="img"  />
 </p>
 <p><strong>适用场景：</strong> 如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。</p>
 <p><strong>具体操作：</strong></p>
 <p><strong>1. 查看版本号：</strong></p>
 <p>可以使用命令“git log”查看：</p>
-<p><img loading="lazy" src="/../static/images/202106040000/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3l4bHNoaw==,size_16,color_FFFFFF,t_70.png" alt="img"  />
+<p><img loading="lazy" src="/../../static/images/202106040000/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3l4bHNoaw==,size_16,color_FFFFFF,t_70.png" alt="img"  />
 </p>
 <p>也可以在github网站上查看：</p>
-<p><img loading="lazy" src="/../static/images/202106040000/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTgwNDE0MjAzMzQ0MTM4.png" alt="img"  />
+<p><img loading="lazy" src="/../../static/images/202106040000/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTgwNDE0MjAzMzQ0MTM4.png" alt="img"  />
 </p>
 
 

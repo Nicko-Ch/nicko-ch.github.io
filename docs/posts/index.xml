@@ -9,10 +9,10 @@
     <lastBuildDate>Mon, 18 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>算法系列 - 快速排序</title>
-      <link>https://nicko-ch.github.io/posts/202204180000/</link>
+      <link>https://nicko-ch.github.io/posts/2022/20220418-%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</link>
       <pubDate>Mon, 18 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202204180000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2022/20220418-%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</guid>
       <description>描述 快速排序是对插入算法的一种优化，利用对问题的二分化，实现递归完成快速排序 ，在所有算法中二分化是最常用的方式，将问题尽量的分成两种情况加以分析， 最终以形成类似树的方式加以利用，因为在比较模型中的算法中，最快的排序时间复杂度为 O(log~n~).
 原理  选取边界值：temp 遍历比较数组中每个值与边界值大小关系：小于边界值放小于数组，大于边界值放大于数组 递归排序大、小数组 合并返回当前已排完序数组  PS：注意递归结束条件，数组中长度小于2，代表
 package main import &amp;#34;fmt&amp;#34; func main() { sortSlice := quickSort([]int{1, 9, 10, 30, 2, 5, 45, 8, 63, 234, 12}) fmt.Println(sortSlice) } func quickSort(arr []int) []int { if len(arr) &amp;lt;= 2 { return arr } temp := arr[0] var low, high = make([]int, 0), make([]int, 0) for i := 1; i &amp;lt; len(arr); i++ { if arr[i] &amp;lt; temp { low = append(low, arr[i]) } else { high = append(high, arr[i]) } } lowSlice := quickSort(low) highSlice := quickSort(high) return append(append(lowSlice, temp), highSlice.</description>
@@ -20,10 +20,10 @@ package main import &amp;#34;fmt&amp;#34; func main() { sortSlice := quickSort([
     
     <item>
       <title>Kubernetes基础</title>
-      <link>https://nicko-ch.github.io/posts/202203230000/</link>
+      <link>https://nicko-ch.github.io/posts/2022/20220323-kubernetes%E5%9F%BA%E7%A1%80/</link>
       <pubDate>Wed, 23 Mar 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202203230000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2022/20220323-kubernetes%E5%9F%BA%E7%A1%80/</guid>
       <description>1. 控制器类型 1.1 有状态服务 Statefulset  稳定持久化 稳定网络标志(地址) 有序部署 有序收缩(删除)  1.2 无状态服务 RC（ReplicationController） 副本数量与期望值之间的管理
 RS（ReplicaSet） 功能类似于RC，但是多了集合式的标签选择器
 Deployment 支持滚动更新以及回滚
@@ -38,10 +38,10 @@ Cron Job 周期性执行任务
     
     <item>
       <title>计算机考研408 - 计算机网络</title>
-      <link>https://nicko-ch.github.io/posts/202108220000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210822-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</link>
       <pubDate>Sun, 22 Aug 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202108220000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210822-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</guid>
       <description>物理层 将计算机通过物理的方式连接起来，通过0/1的形式传输数据
 数据链路层 将电信号0和1以帧形势整合成一个个的数据包，将数据以包的形式进行解析。并且将数据包发送到子网络中的所有机器，让机器识别数据包头中的MAC地址跟自己是否匹配，从而捕获分析数据，此过程称为广播。
 网络层 在外网中，通过MAC地址去广播通信效率非常低，所以网络层主要是通过IP协议与其他的子网络进行通信。数据包通过外网ip发送到置顶的子网，子网设备内部再通过广播获取数据包。
@@ -51,19 +51,19 @@ Cron Job 周期性执行任务
     
     <item>
       <title>计算机考研408 - 进位计数制</title>
-      <link>https://nicko-ch.github.io/posts/202108160000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210816-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%BF%9B%E4%BD%8D%E8%AE%A1%E6%95%B0%E5%88%B6/</link>
       <pubDate>Mon, 16 Aug 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202108160000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210816-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%BF%9B%E4%BD%8D%E8%AE%A1%E6%95%B0%E5%88%B6/</guid>
       <description>进位计数制 r进制 → 十进制 二进制 ↔ 八/十六进制 十进制 → r进制 整数位(除基取余法) 小数位(乘积取整法) </description>
     </item>
     
     <item>
       <title>Git恢复之前版本的两种方法reset、revert</title>
-      <link>https://nicko-ch.github.io/posts/202106040000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210604-git%E6%81%A2%E5%A4%8D%E4%B9%8B%E5%89%8D%E7%89%88%E6%9C%AC%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95resetrevert/</link>
       <pubDate>Fri, 04 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202106040000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210604-git%E6%81%A2%E5%A4%8D%E4%B9%8B%E5%89%8D%E7%89%88%E6%9C%AC%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95resetrevert/</guid>
       <description>方法一：git reset
 原理： git reset的作用是修改HEAD的位置，即将HEAD指向的位置改变为之前存在的某个版本，如下图所示，假设我们要回退到版本一：
 适用场景： 如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。
@@ -75,10 +75,10 @@ Cron Job 周期性执行任务
     
     <item>
       <title>Docker核心原理</title>
-      <link>https://nicko-ch.github.io/posts/202106020000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210602-docker%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/</link>
       <pubDate>Wed, 02 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202106020000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210602-docker%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/</guid>
       <description>核心原理 Namespace  独立进程，实现容器的 隔离性
  Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。
 Cgroups  控制进程资源分配，实现容器的 限制性
@@ -98,10 +98,10 @@ $ tree.├── A│ ├── a│ └── x└── B├── b└
     
     <item>
       <title>Kafa核心技术与实战</title>
-      <link>https://nicko-ch.github.io/posts/202104120000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210412-kafa%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E6%88%98/</link>
       <pubDate>Mon, 12 Apr 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202104120000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210412-kafa%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E6%88%98/</guid>
       <description>概述 基本名词 Producer (消息生产者)：
 向 kafka broker 发消息的客户端；
 Consumer (消息消费者)：
@@ -124,10 +124,10 @@ Partition (分区)：
     
     <item>
       <title>分布式唯一ID</title>
-      <link>https://nicko-ch.github.io/posts/202104080000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210408-%E5%88%86%E5%B8%83%E5%BC%8F%E5%94%AF%E4%B8%80id/</link>
       <pubDate>Thu, 08 Apr 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202104080000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210408-%E5%88%86%E5%B8%83%E5%BC%8F%E5%94%AF%E4%B8%80id/</guid>
       <description>1. 为什么要用分布式ID 1.1 什么是分布式ID 拿MySQL数据库举个栗子：
 在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。
 但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有唯一ID做标识。此时一个能够生成全局唯一ID的系统是非常必要的。那么这个全局唯一ID就叫分布式ID。
@@ -143,20 +143,11 @@ set @@auto_increment_offset = 2; -- 起始值set @@auto_increment_increme
     </item>
     
     <item>
-      <title>Go高级编程 - Benchmark</title>
-      <link>https://nicko-ch.github.io/posts/202103010000/</link>
-      <pubDate>Mon, 01 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicko-ch.github.io/posts/202103010000/</guid>
-      <description>基础用法  benchmark和普通单元测试用例一样，文件命名都为 _test.go 函数名以 Benchmark 开头，参数是 b *testing.B。 对比普通的单元测试用例： 函数名以 Test 开头，参数是 t *testing.T。  运行用例 基础用例  运行当前 package 内的用例：go test example 或 go test . 运行子 package 内的用例： go test example/&amp;lt;package name&amp;gt; 或 go test ./&amp;lt;package name&amp;gt; 如果想递归测试当前目录下的所有的 package：go test ./... 或 go test example/...。  $ go test -bench . goos: darwin goarch: amd64 pkg: example BenchmarkFib-8 200 5865240 ns/op PASS ok example 1.782s  正则匹配，例：只运行以 Fib 结尾的benchmark用例  $ go test -bench=&amp;#39;Fib$&amp;#39; .</description>
-    </item>
-    
-    <item>
       <title>Mysql实战45讲 - 丁奇</title>
-      <link>https://nicko-ch.github.io/posts/202102220000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210222-mysql%E5%AE%9E%E6%88%9845%E8%AE%B2/</link>
       <pubDate>Mon, 22 Feb 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202102220000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210222-mysql%E5%AE%9E%E6%88%9845%E8%AE%B2/</guid>
       <description>基础篇 01丨基础架构：一条SQL查询语句是如何执行的？ 02丨日志系统：一条SQL更新语句是如何执行的？ 03丨事务隔离：为什么你改了我还看不见？  ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）
   读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。 读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。 可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。 串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  04丨深入浅出索引（上） 哈希表 适用于只有等值查询的场景，效率高，但无法范围查询
 有序数组 等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移
@@ -174,21 +165,30 @@ B+树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引）�
     </item>
     
     <item>
+      <title>Go高级编程 - Benchmark</title>
+      <link>https://nicko-ch.github.io/posts/2021/20210220-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-benchmark/</link>
+      <pubDate>Sat, 20 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://nicko-ch.github.io/posts/2021/20210220-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-benchmark/</guid>
+      <description>基础用法  benchmark和普通单元测试用例一样，文件命名都为 _test.go 函数名以 Benchmark 开头，参数是 b *testing.B。 对比普通的单元测试用例： 函数名以 Test 开头，参数是 t *testing.T。  运行用例 基础用例  运行当前 package 内的用例：go test example 或 go test . 运行子 package 内的用例： go test example/&amp;lt;package name&amp;gt; 或 go test ./&amp;lt;package name&amp;gt; 如果想递归测试当前目录下的所有的 package：go test ./... 或 go test example/...。  $ go test -bench . goos: darwin goarch: amd64 pkg: example BenchmarkFib-8 200 5865240 ns/op PASS ok example 1.782s  正则匹配，例：只运行以 Fib 结尾的benchmark用例  $ go test -bench=&amp;#39;Fib$&amp;#39; .</description>
+    </item>
+    
+    <item>
       <title>Go高级编程 - GMP并发模型</title>
-      <link>https://nicko-ch.github.io/posts/202102070000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210207-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gmp%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</link>
       <pubDate>Thu, 07 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202102070000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210207-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gmp%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</guid>
       <description>Golang&amp;quot;调度器&amp;quot;由来 单进程时代  单一执行流程，CPU只能顺序的执行任务队列 进程阻塞导致CPU占用，浪费硬件资源，影响执行效率  多进程、多线程时代  设计变得复杂  进程/线程的数量越多，切换CPU执行时间片成本越大 多线程随着同步竞争（如 锁、竞争资源冲突等）   缺点  高内存占用 （进程：虚拟内存4G；线程：约4MB） 高CPU调度消耗    协程（co-routine）  N:1  无法利用多个CPU 出现阻塞的瓶颈   1:1  跟多线程/多进程模型无异 协程切换成本高   M:N  能够利用多核 过于依赖协程调度器的优化和算法    调度器的优化  早期Go调度器  基本的全局Go队列和比较传统的轮询利用多个thread去调度 弊端  创建、销毁、调度G都需要每个M获取锁，形成了激烈的锁竞争 M转移G会造成延迟和额外的系统负载 系统调用（CPU在M之间的切换）导致频繁的线程阻塞和取消阻塞的操作增加了系统的开销     Goroutine优化  内存占用低（几KB，大量开辟） 灵活调度，切换成本低    GMP模型的设计思想 GMP模型简介 GMP
  G：goroutine 携程 P：processor 处理器 M：thread 内核线程</description>
     </item>
     
     <item>
       <title>Go高级编程 - GC垃圾回收原理</title>
-      <link>https://nicko-ch.github.io/posts/202101050000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210105-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86/</link>
       <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202101050000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210105-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86/</guid>
       <description>标记清除法  STW（stop the world）→ 标记对象依赖关系 → 清楚待回收对象 → 结束STW
  步骤：
  暂停程序业务逻辑, 找出不可达的对象，和可达对象。 开始标记，程序找出它所有可达的对象，并做上标记。 开始清除未标记对象。 停止STW，让程序恢复运行。  缺点：
@@ -210,10 +210,10 @@ B+树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引）�
     
     <item>
       <title>Go高级编程 - 基础</title>
-      <link>https://nicko-ch.github.io/posts/202101040000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210104-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E5%9F%BA%E7%A1%80/</link>
       <pubDate>Mon, 04 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202101040000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210104-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E5%9F%BA%E7%A1%80/</guid>
       <description>new() 和 make() 的区别 看起来二者没有什么区别，都在堆上分配内存，但是它们的行为不同，适用于不同的类型。
  new(T) 为每个新的类型T分配一片内存，初始化为 0 并且返回类型为*T的内存地址：这种方法 返回一个指向类型为 T，值为 0 的地址的指针，它适用于值类型如数组和结构体；它相当于 &amp;amp;T{}。 make(T) 返回一个类型为 T 的初始值，它只适用于3种内建的引用类型：切片、map 和 channel。  换言之，new 函数分配内存，make 函数初始化；下图给出了区别：
 译者注：如何理解new、make、slice、map、channel的关系
@@ -225,28 +225,28 @@ B+树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引）�
     
     <item>
       <title>Go优秀开源项目分享</title>
-      <link>https://nicko-ch.github.io/posts/202012310000/</link>
+      <link>https://nicko-ch.github.io/posts/2020/20201231-go%E4%BC%98%E7%A7%80%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E5%88%86%E4%BA%AB/</link>
       <pubDate>Thu, 31 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202012310000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2020/20201231-go%E4%BC%98%E7%A7%80%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E5%88%86%E4%BA%AB/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Refference - Go高级编程</title>
-      <link>https://nicko-ch.github.io/posts/202012210000/</link>
+      <link>https://nicko-ch.github.io/posts/2020/20201221-refference-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/</link>
       <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202012210000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2020/20201221-refference-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/</guid>
       <description>Title Link Description     Golang深入理解GPM模型 https://www.bilibili.com/video/BV19r4y1w7Nx    Golang中GC回收机制三色标记与混合写屏障 https://www.bilibili.com/video/BV1wz4y1y7Kd    Golang修养之路 https://www.kancloud.cn/aceld/golang/1858955    Go语言规范 https://golang.google.cn/ref/spec    GO 命令教程 https://github.com/hyper0x/go_command_tutorial    Go 语言性能优化 https://cch123.github.io/perf_opt/    图解 Go pprof 收集数据的工作流 https://mp.weixin.qq.com/s/HQzz2NQ2lSg_LLsNB7C-mw    7天用Go从零实现Web框架Gee教程 https://geektutu.com/post/gee.html    build-web-application-with-golang https://github.com/astaxie/build-web-application-with-golang    B站最深度的Golang学习到实战 up主强力推荐 https://www.bilibili.com/video/BV1TK4y1a7ex    Go contributor 解答：关于 Go GC 的 20 个核心问题 https://blog.</description>
     </item>
     
     <item>
       <title>Go基础语法</title>
-      <link>https://nicko-ch.github.io/posts/202012180000/</link>
+      <link>https://nicko-ch.github.io/posts/2020/20201218-go%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</link>
       <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202012180000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2020/20201218-go%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</guid>
       <description>array 数组 声明方式
 var identifier [len]type // var arr [5]int  var arrAge = [5]int{18, 20, 15, 22, 16} // 声明容量为5的数组并初始化 var arrLazy = [...]int{5, 6, 7, 8, 22} // 初始化数组自动计算容量（实际上已是切片） var arrLazy = []int{5, 6, 7, 8, 22}	// 初始化得到的实际上是切片slice var arrKeyValue = [5]string{3: &amp;#34;Chris&amp;#34;, 4: &amp;#34;Ron&amp;#34;} // 0,1,2 都未空值 var arrKeyValue = []string{3: &amp;#34;Chris&amp;#34;, 4: &amp;#34;Ron&amp;#34;}	// 初始化得到的实际上是切片slice  slice 切片 本质
 不是一组数组的指针，是一种数据结构，用来操作内部元素。
@@ -255,28 +255,28 @@ var identifier [len]type // var arr [5]int  var arrAge = [5]int{18, 20, 15, 22, 
     
     <item>
       <title>Git基础语法</title>
-      <link>https://nicko-ch.github.io/posts/202012160000/</link>
+      <link>https://nicko-ch.github.io/posts/2020/20201216-git%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</link>
       <pubDate>Wed, 16 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202012160000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2020/20201216-git%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</guid>
       <description>Command 命令 git init 初始化仓库 $ git init Initialized empty Git repository in D:/www/git_class/.git/ git config 配置信息  —global [key] [value] 全局配置  $ git config --global user.name &amp;#39;Nicko_Ch&amp;#39; $ git config --global user.email cyn_411@sina.com git add {filename} 将文件添加到暂存区 $ touch README.md $ vim README.md $ git add README.md git status 查看项目的当前状态  -s 精简模式  $ git status On branch master Changes to be committed: (use &amp;#34;git restore --staged &amp;lt;file&amp;gt;.</description>
     </item>
     
     <item>
       <title>Terms</title>
-      <link>https://nicko-ch.github.io/posts/202012150000/</link>
+      <link>https://nicko-ch.github.io/posts/2020/20201215-terms/</link>
       <pubDate>Tue, 15 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202012150000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2020/20201215-terms/</guid>
       <description>Terms     分布式事务方式   bloom filter   Bitmap   nginx平滑重启原理   Linux内核特性之VDSO   NTP UPDATE 和 NTPD   QUICK   Head-of-line blocking   cgroup   Scaling Memcache At Facebook   errorgroup   pipeline   链表   bytegraph   neo4j   发号器   Graph DB   位与操作   网易DDB   sharding   SOA   DDD   Machine line   COW   &amp;ldquo;nginx_pool_t &amp;quot;   tcmalloc   sync.</description>
     </item>
     
     <item>
       <title>Laradock 切换数据库错误</title>
-      <link>https://nicko-ch.github.io/posts/201811070834/</link>
+      <link>https://nicko-ch.github.io/posts/2018/20181107-laradock-%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%99%E8%AF%AF/</link>
       <pubDate>Wed, 07 Nov 2018 08:34:55 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/201811070834/</guid>
+      <guid>https://nicko-ch.github.io/posts/2018/20181107-laradock-%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%99%E8%AF%AF/</guid>
       <description>Laradock 切换 数据库5.7版本 1. 修改.env文件 源文件
 ### MYSQL #################################################MYSQL_VERSION=latestMYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d修改为
 ### MYSQL #################################################MYSQL_VERSION=5.7.24MYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d 2. 删除旧容器相关数据 2.1 列出所有容器 docker ps -a2.2 停止所有容器 docker ps -a2.3 删除容器 docker rm &amp;lt;容器ID1&amp;gt; &amp;lt;容器ID2&amp;gt; ...2.4 列出镜像 docker images2.5 删除镜像 docker rmi &amp;lt;镜像ID1&amp;gt; &amp;lt;镜像ID2&amp;gt; ...2.6 查看挂载盘 docker volume ls2.7 删除镜像 docker volume rm &amp;lt;VOLUME NAME1&amp;gt; &amp;lt;VOLUME NAME2&amp;gt; .</description>
@@ -284,19 +284,19 @@ var identifier [len]type // var arr [5]int  var arrAge = [5]int{18, 20, 15, 22, 
     
     <item>
       <title>PHPStorm 项目目录分类管理配置</title>
-      <link>https://nicko-ch.github.io/posts/201811011440/</link>
+      <link>https://nicko-ch.github.io/posts/2018/20181101-phpstorm-%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%E5%88%86%E7%B1%BB%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE/</link>
       <pubDate>Thu, 01 Nov 2018 14:40:26 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/201811011440/</guid>
+      <guid>https://nicko-ch.github.io/posts/2018/20181101-phpstorm-%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%E5%88%86%E7%B1%BB%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE/</guid>
       <description>phpstorm 为了方便用户管理项目目录，目前可以将项目文件夹设置为 4 类 Test,Sources,Excluded,Resource Root。 1. Test (颜色为绿色) &amp;gt; 测试主目录，如 `Laravel` 的 `tests` 目录2. Source (颜色为蓝色) &amp;gt; 项目主代码目录，如 `Laravel` 的 `app` 目录3. Excluded (颜色为红色) &amp;gt; 第三方扩展依赖(不会修改代码)，不建立索引，不由`phpstorm`管理，如 `Laravel` 的 `vendor` 目录4. Resource Root (颜色为紫色) &amp;gt; 前端资源，如 `Laravel` 的 `public` 目录合理设置项目的目录是有作用的，如  1 设置 Test 目录，可以在project勾选只显示 Test,方便测试时查看 2 设置 Excluded 目录，可以减少 phpstorm 建立索引的时间 3 设置 Resource Root 目录，以 Laravel 为例，可以帮助检测模板文件的资源路径    </description>
     </item>
     
     <item>
       <title>Cmd Markdown 简明语法手册</title>
-      <link>https://nicko-ch.github.io/posts/201810311511/</link>
+      <link>https://nicko-ch.github.io/posts/2018/20181031-md%E7%AE%80%E6%98%8E%E8%AF%AD%E6%B3%95%E6%89%8B%E5%86%8C/</link>
       <pubDate>Wed, 31 Oct 2018 15:11:07 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/201810311511/</guid>
+      <guid>https://nicko-ch.github.io/posts/2018/20181031-md%E7%AE%80%E6%98%8E%E8%AF%AD%E6%B3%95%E6%89%8B%E5%86%8C/</guid>
       <description>『Cmd 技术渲染的沙箱页面，点击此处编写自己的文档』
 Cmd Markdown 简明语法手册 标签： Cmd-Markdown
  1. 斜体和粗体 使用 * 和 ** 表示斜体和粗体。
@@ -317,15 +317,26 @@ Cmd Markdown 简明语法手册 标签： Cmd-Markdown
     
     <item>
       <title>Hello World</title>
-      <link>https://nicko-ch.github.io/posts/201810231554/</link>
+      <link>https://nicko-ch.github.io/posts/2018/20181023-quick-start/</link>
       <pubDate>Tue, 23 Oct 2018 15:54:01 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/201810231554/</guid>
+      <guid>https://nicko-ch.github.io/posts/2018/20181023-quick-start/</guid>
       <description>Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
 Quick Start Create a new post $ hexo new &amp;#34;My New Post&amp;#34; More info: Writing
 Run server $ hexo server More info: Server
 Generate static files $ hexo generate More info: Generating
 Deploy to remote sites $ hexo deploy More info: Deployment</description>
+    </item>
+    
+    <item>
+      <title>Hugo Readme</title>
+      <link>https://nicko-ch.github.io/posts/hugo-readme/</link>
+      <pubDate>Sat, 01 Jan 2000 00:00:00 +0800</pubDate>
+      
+      <guid>https://nicko-ch.github.io/posts/hugo-readme/</guid>
+      <description>Prerequisites 1. install hugo //下载hugo编译文件 2. install git Add Content 新增文章
+hugo new posts/my-first-post.md 修改文章属性
+--- title: &amp;#34;My First Post&amp;#34; categoried: 分类 date: 2022-11-20T09:03:20-08:00 tags: - 标签1 - 标签2 draft: true --- Debug hugo server -D	//启动服务 -D 生成草稿 Publish hugo -D	//生成草稿 git commit //git提交github.io Hugo Help PS W:\www\nicko-ch.github.io&amp;gt; hugo help hugo is the main command, used to build your Hugo site. Hugo is a Fast and Flexible Static Site Generator built with love by spf13 and friends in Go.</description>
     </item>
     
   </channel>

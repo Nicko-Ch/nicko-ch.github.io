@@ -6,32 +6,32 @@
     <description>Recent content in Go高级编程 on &gt; $ cd /home</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 01 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/categories/go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/categories/go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Go高级编程 - Benchmark</title>
-      <link>https://nicko-ch.github.io/posts/202103010000/</link>
-      <pubDate>Mon, 01 Mar 2021 00:00:00 +0000</pubDate>
+      <link>https://nicko-ch.github.io/posts/2021/20210220-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-benchmark/</link>
+      <pubDate>Sat, 20 Feb 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202103010000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210220-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-benchmark/</guid>
       <description>基础用法  benchmark和普通单元测试用例一样，文件命名都为 _test.go 函数名以 Benchmark 开头，参数是 b *testing.B。 对比普通的单元测试用例： 函数名以 Test 开头，参数是 t *testing.T。  运行用例 基础用例  运行当前 package 内的用例：go test example 或 go test . 运行子 package 内的用例： go test example/&amp;lt;package name&amp;gt; 或 go test ./&amp;lt;package name&amp;gt; 如果想递归测试当前目录下的所有的 package：go test ./... 或 go test example/...。  $ go test -bench . goos: darwin goarch: amd64 pkg: example BenchmarkFib-8 200 5865240 ns/op PASS ok example 1.782s  正则匹配，例：只运行以 Fib 结尾的benchmark用例  $ go test -bench=&amp;#39;Fib$&amp;#39; .</description>
     </item>
     
     <item>
       <title>Go高级编程 - GMP并发模型</title>
-      <link>https://nicko-ch.github.io/posts/202102070000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210207-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gmp%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</link>
       <pubDate>Thu, 07 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202102070000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210207-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gmp%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</guid>
       <description>Golang&amp;quot;调度器&amp;quot;由来 单进程时代  单一执行流程，CPU只能顺序的执行任务队列 进程阻塞导致CPU占用，浪费硬件资源，影响执行效率  多进程、多线程时代  设计变得复杂  进程/线程的数量越多，切换CPU执行时间片成本越大 多线程随着同步竞争（如 锁、竞争资源冲突等）   缺点  高内存占用 （进程：虚拟内存4G；线程：约4MB） 高CPU调度消耗    协程（co-routine）  N:1  无法利用多个CPU 出现阻塞的瓶颈   1:1  跟多线程/多进程模型无异 协程切换成本高   M:N  能够利用多核 过于依赖协程调度器的优化和算法    调度器的优化  早期Go调度器  基本的全局Go队列和比较传统的轮询利用多个thread去调度 弊端  创建、销毁、调度G都需要每个M获取锁，形成了激烈的锁竞争 M转移G会造成延迟和额外的系统负载 系统调用（CPU在M之间的切换）导致频繁的线程阻塞和取消阻塞的操作增加了系统的开销     Goroutine优化  内存占用低（几KB，大量开辟） 灵活调度，切换成本低    GMP模型的设计思想 GMP模型简介 GMP
  G：goroutine 携程 P：processor 处理器 M：thread 内核线程</description>
     </item>
     
     <item>
       <title>Go高级编程 - GC垃圾回收原理</title>
-      <link>https://nicko-ch.github.io/posts/202101050000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210105-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86/</link>
       <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202101050000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210105-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86/</guid>
       <description>标记清除法  STW（stop the world）→ 标记对象依赖关系 → 清楚待回收对象 → 结束STW
  步骤：
  暂停程序业务逻辑, 找出不可达的对象，和可达对象。 开始标记，程序找出它所有可达的对象，并做上标记。 开始清除未标记对象。 停止STW，让程序恢复运行。  缺点：
@@ -53,10 +53,10 @@
     
     <item>
       <title>Go高级编程 - 基础</title>
-      <link>https://nicko-ch.github.io/posts/202101040000/</link>
+      <link>https://nicko-ch.github.io/posts/2021/20210104-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E5%9F%BA%E7%A1%80/</link>
       <pubDate>Mon, 04 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/202101040000/</guid>
+      <guid>https://nicko-ch.github.io/posts/2021/20210104-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E5%9F%BA%E7%A1%80/</guid>
       <description>new() 和 make() 的区别 看起来二者没有什么区别，都在堆上分配内存，但是它们的行为不同，适用于不同的类型。
  new(T) 为每个新的类型T分配一片内存，初始化为 0 并且返回类型为*T的内存地址：这种方法 返回一个指向类型为 T，值为 0 的地址的指针，它适用于值类型如数组和结构体；它相当于 &amp;amp;T{}。 make(T) 返回一个类型为 T 的初始值，它只适用于3种内建的引用类型：切片、map 和 channel。  换言之，new 函数分配内存，make 函数初始化；下图给出了区别：
 译者注：如何理解new、make、slice、map、channel的关系

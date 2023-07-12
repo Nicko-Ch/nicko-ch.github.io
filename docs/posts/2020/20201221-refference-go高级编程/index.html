@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Refference - Go高级编程 | &gt; $ cd /home</title>
+<meta name="keywords" content="Go, Golang, Refference" />
+<meta name="description" content="Title Link Description     Golang深入理解GPM模型 https://www.bilibili.com/video/BV19r4y1w7Nx    Golang中GC回收机制三色标记与混合写屏障 https://www.bilibili.com/video/BV1wz4y1y7Kd    Golang修养之路 https://www.kancloud.cn/aceld/golang/1858955    Go语言规范 https://golang.google.cn/ref/spec    GO 命令教程 https://github.com/hyper0x/go_command_tutorial    Go 语言性能优化 https://cch123.github.io/perf_opt/    图解 Go pprof 收集数据的工作流 https://mp.weixin.qq.com/s/HQzz2NQ2lSg_LLsNB7C-mw    7天用Go从零实现Web框架Gee教程 https://geektutu.com/post/gee.html    build-web-application-with-golang https://github.com/astaxie/build-web-application-with-golang    B站最深度的Golang学习到实战 up主强力推荐 https://www.bilibili.com/video/BV1TK4y1a7ex    Go contributor 解答：关于 Go GC 的 20 个核心问题 https://blog.">
+<meta name="author" content="">
+<link rel="canonical" href="https://nicko-ch.github.io/posts/2020/20201221-refference-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0459a4ebf56f381ae411e97a494635ba7ce9db741ff9a2cfbf7e12366bf1e73d.css" integrity="sha256-BFmk6/VvOBrkEel6SUY1unzp23Qf&#43;aLPv34SNmvx5z0=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.6f62d19b78590241c3e007a10f91f45f95ce2528ca8f3e33c542e95f8ed5691f.js" integrity="sha256-b2LRm3hZAkHD4AehD5H0X5XOJSjKjz4zxULpX47VaR8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nicko-ch.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://nicko-ch.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://nicko-ch.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.88.0" />
+<meta property="og:title" content="Refference - Go高级编程" />
+<meta property="og:description" content="Title Link Description     Golang深入理解GPM模型 https://www.bilibili.com/video/BV19r4y1w7Nx    Golang中GC回收机制三色标记与混合写屏障 https://www.bilibili.com/video/BV1wz4y1y7Kd    Golang修养之路 https://www.kancloud.cn/aceld/golang/1858955    Go语言规范 https://golang.google.cn/ref/spec    GO 命令教程 https://github.com/hyper0x/go_command_tutorial    Go 语言性能优化 https://cch123.github.io/perf_opt/    图解 Go pprof 收集数据的工作流 https://mp.weixin.qq.com/s/HQzz2NQ2lSg_LLsNB7C-mw    7天用Go从零实现Web框架Gee教程 https://geektutu.com/post/gee.html    build-web-application-with-golang https://github.com/astaxie/build-web-application-with-golang    B站最深度的Golang学习到实战 up主强力推荐 https://www.bilibili.com/video/BV1TK4y1a7ex    Go contributor 解答：关于 Go GC 的 20 个核心问题 https://blog." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://nicko-ch.github.io/posts/2020/20201221-refference-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-12-21T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-12-21T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Refference - Go高级编程"/>
+<meta name="twitter:description" content="Title Link Description     Golang深入理解GPM模型 https://www.bilibili.com/video/BV19r4y1w7Nx    Golang中GC回收机制三色标记与混合写屏障 https://www.bilibili.com/video/BV1wz4y1y7Kd    Golang修养之路 https://www.kancloud.cn/aceld/golang/1858955    Go语言规范 https://golang.google.cn/ref/spec    GO 命令教程 https://github.com/hyper0x/go_command_tutorial    Go 语言性能优化 https://cch123.github.io/perf_opt/    图解 Go pprof 收集数据的工作流 https://mp.weixin.qq.com/s/HQzz2NQ2lSg_LLsNB7C-mw    7天用Go从零实现Web框架Gee教程 https://geektutu.com/post/gee.html    build-web-application-with-golang https://github.com/astaxie/build-web-application-with-golang    B站最深度的Golang学习到实战 up主强力推荐 https://www.bilibili.com/video/BV1TK4y1a7ex    Go contributor 解答：关于 Go GC 的 20 个核心问题 https://blog."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://nicko-ch.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Refference - Go高级编程",
+      "item": "https://nicko-ch.github.io/posts/2020/20201221-refference-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Refference - Go高级编程",
+  "name": "Refference - Go高级编程",
+  "description": "Title Link Description     Golang深入理解GPM模型 https://www.bilibili.com/video/BV19r4y1w7Nx    Golang中GC回收机制三色标记与混合写屏障 https://www.bilibili.com/video/BV1wz4y1y7Kd    Golang修养之路 https://www.kancloud.cn/aceld/golang/1858955    Go语言规范 https://golang.google.cn/ref/spec    GO 命令教程 https://github.com/hyper0x/go_command_tutorial    Go 语言性能优化 https://cch123.github.io/perf_opt/    图解 Go pprof 收集数据的工作流 https://mp.weixin.qq.com/s/HQzz2NQ2lSg_LLsNB7C-mw    7天用Go从零实现Web框架Gee教程 https://geektutu.com/post/gee.html    build-web-application-with-golang https://github.com/astaxie/build-web-application-with-golang    B站最深度的Golang学习到实战 up主强力推荐 https://www.bilibili.com/video/BV1TK4y1a7ex    Go contributor 解答：关于 Go GC 的 20 个核心问题 https://blog.",
+  "keywords": [
+    "Go", "Golang", "Refference"
+  ],
+  "articleBody": "   Title Link Description     Golang深入理解GPM模型 https://www.bilibili.com/video/BV19r4y1w7Nx    Golang中GC回收机制三色标记与混合写屏障 https://www.bilibili.com/video/BV1wz4y1y7Kd    Golang修养之路 https://www.kancloud.cn/aceld/golang/1858955    Go语言规范 https://golang.google.cn/ref/spec    GO 命令教程 https://github.com/hyper0x/go_command_tutorial    Go 语言性能优化 https://cch123.github.io/perf_opt/    图解 Go pprof 收集数据的工作流 https://mp.weixin.qq.com/s/HQzz2NQ2lSg_LLsNB7C-mw    7天用Go从零实现Web框架Gee教程 https://geektutu.com/post/gee.html    build-web-application-with-golang https://github.com/astaxie/build-web-application-with-golang    B站最深度的Golang学习到实战 up主强力推荐 https://www.bilibili.com/video/BV1TK4y1a7ex    Go contributor 解答：关于 Go GC 的 20 个核心问题 https://blog.csdn.net/RA681t58CJxsgCkJ31/article/details/103884524    Go 语言笔试面试题汇总 https://geektutu.com/post/qa-golang.html    Go 语言简明教程 https://geektutu.com/post/quick-golang.html    Go 语言高性能编程 https://geektutu.com/post/high-performance-go.html    Go语言高级编程(Advanced Go Programming) https://chai2010.gitbooks.io/advanced-go-programming-book/content/    关于Golang GC的一些误解–真的比Java算法更领先吗？ https://mp.weixin.qq.com/s/eDd212DhjIRGpytBkgfzAg    图示Golang垃圾回收机制 https://zhuanlan.zhihu.com/p/297177002?utm_source=wechat_session\u0026utm_medium=social\u0026utm_oi=26711194337280\u0026utm_campaign=shareopn    无闻 unknwon/the-way-to-go_ZH_CN https://github.com/unknwon/the-way-to-go_ZH_CN/blob/master/eBook/directory.md    bilibili技术总监毛剑：B站高可用架构实践 https://zhuanlan.zhihu.com/p/139258985     ",
+  "wordCount" : "61",
+  "inLanguage": "en",
+  "datePublished": "2020-12-21T00:00:00Z",
+  "dateModified": "2020-12-21T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://nicko-ch.github.io/posts/2020/20201221-refference-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\u003e $ cd /home",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://nicko-ch.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://nicko-ch.github.io/" accesskey="h" title="&gt; $ cd /home (Alt + H)">&gt; $ cd /home</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://nicko-ch.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://nicko-ch.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://nicko-ch.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Refference - Go高级编程
+    </h1>
+    <div class="post-meta">December 21, 2020&nbsp;·&nbsp;1 min
+</div>
+  </header> 
+
+  <div class="post-content"><table>
+<thead>
+<tr>
+<th>Title</th>
+<th>Link</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Golang深入理解GPM模型</td>
+<td><a href="https://www.bilibili.com/video/BV19r4y1w7Nx">https://www.bilibili.com/video/BV19r4y1w7Nx</a></td>
+<td></td>
+</tr>
+<tr>
+<td>Golang中GC回收机制三色标记与混合写屏障</td>
+<td><a href="https://www.bilibili.com/video/BV1wz4y1y7Kd">https://www.bilibili.com/video/BV1wz4y1y7Kd</a></td>
+<td></td>
+</tr>
+<tr>
+<td>Golang修养之路</td>
+<td><a href="https://www.kancloud.cn/aceld/golang/1858955">https://www.kancloud.cn/aceld/golang/1858955</a></td>
+<td></td>
+</tr>
+<tr>
+<td>Go语言规范</td>
+<td><a href="https://golang.google.cn/ref/spec">https://golang.google.cn/ref/spec</a></td>
+<td></td>
+</tr>
+<tr>
+<td>GO 命令教程</td>
+<td><a href="https://github.com/hyper0x/go_command_tutorial">https://github.com/hyper0x/go_command_tutorial</a></td>
+<td></td>
+</tr>
+<tr>
+<td>Go 语言性能优化</td>
+<td><a href="https://cch123.github.io/perf_opt/">https://cch123.github.io/perf_opt/</a></td>
+<td></td>
+</tr>
+<tr>
+<td>图解 Go pprof 收集数据的工作流</td>
+<td><a href="https://mp.weixin.qq.com/s/HQzz2NQ2lSg_LLsNB7C-mw">https://mp.weixin.qq.com/s/HQzz2NQ2lSg_LLsNB7C-mw</a></td>
+<td></td>
+</tr>
+<tr>
+<td>7天用Go从零实现Web框架Gee教程</td>
+<td><a href="https://geektutu.com/post/gee.html">https://geektutu.com/post/gee.html</a></td>
+<td></td>
+</tr>
+<tr>
+<td>build-web-application-with-golang</td>
+<td><a href="https://github.com/astaxie/build-web-application-with-golang">https://github.com/astaxie/build-web-application-with-golang</a></td>
+<td></td>
+</tr>
+<tr>
+<td>B站最深度的Golang学习到实战 up主强力推荐</td>
+<td><a href="https://www.bilibili.com/video/BV1TK4y1a7ex">https://www.bilibili.com/video/BV1TK4y1a7ex</a></td>
+<td></td>
+</tr>
+<tr>
+<td>Go contributor 解答：关于 Go GC 的 20 个核心问题</td>
+<td><a href="https://blog.csdn.net/RA681t58CJxsgCkJ31/article/details/103884524">https://blog.csdn.net/RA681t58CJxsgCkJ31/article/details/103884524</a></td>
+<td></td>
+</tr>
+<tr>
+<td>Go 语言笔试面试题汇总</td>
+<td><a href="https://geektutu.com/post/qa-golang.html">https://geektutu.com/post/qa-golang.html</a></td>
+<td></td>
+</tr>
+<tr>
+<td>Go 语言简明教程</td>
+<td><a href="https://geektutu.com/post/quick-golang.html">https://geektutu.com/post/quick-golang.html</a></td>
+<td></td>
+</tr>
+<tr>
+<td>Go 语言高性能编程</td>
+<td><a href="https://geektutu.com/post/high-performance-go.html">https://geektutu.com/post/high-performance-go.html</a></td>
+<td></td>
+</tr>
+<tr>
+<td>Go语言高级编程(Advanced Go Programming)</td>
+<td><a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">https://chai2010.gitbooks.io/advanced-go-programming-book/content/</a></td>
+<td></td>
+</tr>
+<tr>
+<td>关于Golang GC的一些误解&ndash;真的比Java算法更领先吗？</td>
+<td><a href="https://mp.weixin.qq.com/s/eDd212DhjIRGpytBkgfzAg">https://mp.weixin.qq.com/s/eDd212DhjIRGpytBkgfzAg</a></td>
+<td></td>
+</tr>
+<tr>
+<td>图示Golang垃圾回收机制</td>
+<td><a href="https://zhuanlan.zhihu.com/p/297177002?utm_source=wechat_session&amp;utm_medium=social&amp;utm_oi=26711194337280&amp;utm_campaign=shareopn">https://zhuanlan.zhihu.com/p/297177002?utm_source=wechat_session&amp;utm_medium=social&amp;utm_oi=26711194337280&amp;utm_campaign=shareopn</a></td>
+<td></td>
+</tr>
+<tr>
+<td>无闻 unknwon/the-way-to-go_ZH_CN</td>
+<td><a href="https://github.com/unknwon/the-way-to-go_ZH_CN/blob/master/eBook/directory.md">https://github.com/unknwon/the-way-to-go_ZH_CN/blob/master/eBook/directory.md</a></td>
+<td></td>
+</tr>
+<tr>
+<td>bilibili技术总监毛剑：B站高可用架构实践</td>
+<td><a href="https://zhuanlan.zhihu.com/p/139258985">https://zhuanlan.zhihu.com/p/139258985</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://nicko-ch.github.io/tags/go/">Go</a></li>
+      <li><a href="https://nicko-ch.github.io/tags/golang/">Golang</a></li>
+      <li><a href="https://nicko-ch.github.io/tags/refference/">Refference</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2023 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -121,8 +121,8 @@
   <section class="entry-content">
     <p>基础用法  benchmark和普通单元测试用例一样，文件命名都为 _test.go 函数名以 Benchmark 开头，参数是 b *testing.B。 对比普通的单元测试用例： 函数名以 Test 开头，参数是 t *testing.T。  运行用例 基础用例  运行当前 package 内的用例：go test example 或 go test . 运行子 package 内的用例： go test example/&lt;package name&gt; 或 go test ./&lt;package name&gt; 如果想递归测试当前目录下的所有的 package：go test ./... 或 go test example/...。  $ go test -bench . goos: darwin goarch: amd64 pkg: example BenchmarkFib-8 200 5865240 ns/op PASS ok example 1.782s  正则匹配，例：只运行以 Fib 结尾的benchmark用例  $ go test -bench=&#39;Fib$&#39; ....</p>
   </section>
-  <footer class="entry-footer">March 1, 2021&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - Benchmark" href="https://nicko-ch.github.io/posts/202103010000/"></a>
+  <footer class="entry-footer">February 20, 2021&nbsp;·&nbsp;4 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - Benchmark" href="https://nicko-ch.github.io/posts/2021/20210220-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-benchmark/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -134,7 +134,7 @@
  G：goroutine 携程 P：processor 处理器 M：thread 内核线程...</p>
   </section>
   <footer class="entry-footer">January 7, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - GMP并发模型" href="https://nicko-ch.github.io/posts/202102070000/"></a>
+  <a class="entry-link" aria-label="post link to Go高级编程 - GMP并发模型" href="https://nicko-ch.github.io/posts/2021/20210207-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gmp%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -161,7 +161,7 @@
  弱三色不变式  允许黑色对象引用白色对象，但白色对象必须存在链路上游有灰色对象保持有引用关系（破坏条件2）...</p>
   </section>
   <footer class="entry-footer">January 5, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - GC垃圾回收原理" href="https://nicko-ch.github.io/posts/202101050000/"></a>
+  <a class="entry-link" aria-label="post link to Go高级编程 - GC垃圾回收原理" href="https://nicko-ch.github.io/posts/2021/20210105-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -178,7 +178,7 @@
 %v	the value in a default formatwhen printing structs, the plus flag (%&#43;v) adds field names%#v	a Go-syntax representation of the value%T	a Go-syntax representation of the type of the value%%	a literal percent sign; consumes no valueThe default format for %v is:...</p>
   </section>
   <footer class="entry-footer">January 4, 2021&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - 基础" href="https://nicko-ch.github.io/posts/202101040000/"></a>
+  <a class="entry-link" aria-label="post link to Go高级编程 - 基础" href="https://nicko-ch.github.io/posts/2021/20210104-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E5%9F%BA%E7%A1%80/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -189,7 +189,7 @@
     <p></p>
   </section>
   <footer class="entry-footer">December 31, 2020&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to Go优秀开源项目分享" href="https://nicko-ch.github.io/posts/202012310000/"></a>
+  <a class="entry-link" aria-label="post link to Go优秀开源项目分享" href="https://nicko-ch.github.io/posts/2020/20201231-go%E4%BC%98%E7%A7%80%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E5%88%86%E4%BA%AB/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -200,7 +200,7 @@
     <p>Title Link Description     Golang深入理解GPM模型 https://www.bilibili.com/video/BV19r4y1w7Nx    Golang中GC回收机制三色标记与混合写屏障 https://www.bilibili.com/video/BV1wz4y1y7Kd    Golang修养之路 https://www.kancloud.cn/aceld/golang/1858955    Go语言规范 https://golang.google.cn/ref/spec    GO 命令教程 https://github.com/hyper0x/go_command_tutorial    Go 语言性能优化 https://cch123.github.io/perf_opt/    图解 Go pprof 收集数据的工作流 https://mp.weixin.qq.com/s/HQzz2NQ2lSg_LLsNB7C-mw    7天用Go从零实现Web框架Gee教程 https://geektutu.com/post/gee.html    build-web-application-with-golang https://github.com/astaxie/build-web-application-with-golang    B站最深度的Golang学习到实战 up主强力推荐 https://www.bilibili.com/video/BV1TK4y1a7ex    Go contributor 解答：关于 Go GC 的 20 个核心问题 https://blog....</p>
   </section>
   <footer class="entry-footer">December 21, 2020&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Refference - Go高级编程" href="https://nicko-ch.github.io/posts/202012210000/"></a>
+  <a class="entry-link" aria-label="post link to Refference - Go高级编程" href="https://nicko-ch.github.io/posts/2020/20201221-refference-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/"></a>
 </article>
     </main>
     <footer class="footer">

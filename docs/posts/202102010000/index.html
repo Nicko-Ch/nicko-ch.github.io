@@ -13,7 +13,12 @@
 1.slice、map以及channel都是golang内建的一种引用类型，三者在内存中存在多个组成部分， 需要对内存组成部分初始化后才能使用，而make就是对三者进行初始化的一种操作方式
 2. new 获取的是存储指定变量内存地址的一个变量，对于变量内部结构并不会执行相应的初始化操作， 所以slice、map、channel需要make进行初始化并获取对应的内存地址，而非new简单的获取内存地址
  编程内存模型  kernel内核区为操作系统专用 函数中局部变量是在stack中存放的 stack中的内存在函数结束后会被释放 函数中new和make声明的变量是在heap中存放的   fmt函数参数说明 基本
-%v	the value in a default formatwhen printing structs, the plus flag (%&#43;v) adds field names%#v	a Go-syntax representation of the value%T	a Go-syntax representation of the type of the value%%	a literal percent sign; consumes no valueThe default format for %v is:">
+%v	the value in a default format
+when printing structs, the plus flag (%&#43;v) adds field names
+%#v	a Go-syntax representation of the value
+%T	a Go-syntax representation of the type of the value
+%%	a literal percent sign; consumes no value
+The default format for %v is:">
 <meta name="author" content="">
 <link rel="canonical" href="https://nicko-ch.github.io/posts/202102010000/" />
 <link crossorigin="anonymous" href="/assets/css/stylesheet.min.f9fbda349130cbc2701b107d81ffce9fa97df5920ffcd75db0c8a4ca8445c96c.css" integrity="sha256-&#43;fvaNJEwy8JwGxB9gf/On6l99ZIP/NddsMikyoRFyWw=" rel="preload stylesheet" as="style">
@@ -34,7 +39,12 @@
 1.slice、map以及channel都是golang内建的一种引用类型，三者在内存中存在多个组成部分， 需要对内存组成部分初始化后才能使用，而make就是对三者进行初始化的一种操作方式
 2. new 获取的是存储指定变量内存地址的一个变量，对于变量内部结构并不会执行相应的初始化操作， 所以slice、map、channel需要make进行初始化并获取对应的内存地址，而非new简单的获取内存地址
  编程内存模型  kernel内核区为操作系统专用 函数中局部变量是在stack中存放的 stack中的内存在函数结束后会被释放 函数中new和make声明的变量是在heap中存放的   fmt函数参数说明 基本
-%v	the value in a default formatwhen printing structs, the plus flag (%&#43;v) adds field names%#v	a Go-syntax representation of the value%T	a Go-syntax representation of the type of the value%%	a literal percent sign; consumes no valueThe default format for %v is:" />
+%v	the value in a default format
+when printing structs, the plus flag (%&#43;v) adds field names
+%#v	a Go-syntax representation of the value
+%T	a Go-syntax representation of the type of the value
+%%	a literal percent sign; consumes no value
+The default format for %v is:" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://nicko-ch.github.io/posts/202102010000/" /><meta property="article:section" content="posts" />
 
@@ -48,7 +58,12 @@
 1.slice、map以及channel都是golang内建的一种引用类型，三者在内存中存在多个组成部分， 需要对内存组成部分初始化后才能使用，而make就是对三者进行初始化的一种操作方式
 2. new 获取的是存储指定变量内存地址的一个变量，对于变量内部结构并不会执行相应的初始化操作， 所以slice、map、channel需要make进行初始化并获取对应的内存地址，而非new简单的获取内存地址
  编程内存模型  kernel内核区为操作系统专用 函数中局部变量是在stack中存放的 stack中的内存在函数结束后会被释放 函数中new和make声明的变量是在heap中存放的   fmt函数参数说明 基本
-%v	the value in a default formatwhen printing structs, the plus flag (%&#43;v) adds field names%#v	a Go-syntax representation of the value%T	a Go-syntax representation of the type of the value%%	a literal percent sign; consumes no valueThe default format for %v is:"/>
+%v	the value in a default format
+when printing structs, the plus flag (%&#43;v) adds field names
+%#v	a Go-syntax representation of the value
+%T	a Go-syntax representation of the type of the value
+%%	a literal percent sign; consumes no value
+The default format for %v is:"/>
 
 
 <script type="application/ld+json">
@@ -66,7 +81,7 @@
       "@type": "ListItem",
       "position":  2 ,
       "name": "",
-      "item": "https://nicko-ch.github.io/posts/202102010000/"
+      "item": "https://nicko-ch.github.io/posts/202102010000/"../../static/images../../static/images
     }
   ]
 }
@@ -215,14 +230,14 @@
                 <li>
                     <a href="#%e5%b9%b6%e5%8f%91%e4%b8%8e%e5%b9%b6%e8%a1%8c%e5%8c%ba%e5%88%ab" aria-label="并发与并行区别">并发与并行区别</a>
                 </li>
-            </ul>
+            </ul>../../static/images../../static/images
             </li>
             </ul>
         </div>
     </details>
 </div>
 
-  <div class="post-content"><h1 id="advanced">Advanced<a hidden class="anchor" aria-hidden="true" href="#advanced">#</a></h1>
+  <div class="post-content"><../../static/images>Advanced<a hidden class="anchor" ari../../static/imageshref="#advanced">#</a></h1>
 <h2 id="new-和-make-的区别">new() 和 make() 的区别<a hidden class="anchor" aria-hidden="true" href="#new-和-make-的区别">#</a></h2>
 <p>看起来二者没有什么区别，都在堆上分配内存，但是它们的行为不同，适用于不同的类型。</p>
 <ul>
@@ -280,7 +295,7 @@ pointer:                 %p
 %E	scientific notation, e.g. -1.234456E+78
 %f	decimal point but no exponent, e.g. 123.456
 %F	synonym for %f
-%g	%e for large exponents, %f otherwise
+%g	%e for large exponents, %f../../static/images../../static/images
 %G	%E for large exponents, %F otherwise
 </code></pre><p>String and slice of bytes (treated equivalently with these verbs):</p>
 <pre tabindex="0"><code>%s	the uninterpreted bytes of the string or slice
@@ -288,15 +303,15 @@ pointer:                 %p
 %x	base 16, lower-case, two characters per byte
 %X	base 16, upper-case, two characters per byte
 </code></pre><p>Pointer:</p>
-<pre tabindex="0"><code>%p	base 16 notation, with leading 0x
+<pre tabindex="0"><code>%p	ba../../static/imageswith leading 0x../../static/images
 </code></pre><hr>
 <h2 id="io缓冲区原理">IO缓冲区原理<a hidden class="anchor" aria-hidden="true" href="#io缓冲区原理">#</a></h2>
-<p>写：</p>
-<p>程序会将内容写入系统缓冲区，成功则默认为写入成功。系统缓冲区再又系统调度，实际落盘。</p>
+<p>写：../../static/images../../static/images
+<p>程序会将内容写入系统缓冲区，成功则默认为写入成功。系统缓冲../../static/images>
 <p>读：</p>
-<p>底层会将整个扇区的内容读取到用户缓存区，减少磁盘的物理操作</p>
+<p>底层会将整个扇区的内容读取到用户缓存区，减少磁盘的物../../static/images
 <p><img loading="lazy" src="/../static/images/202102010000/Untitled%202.png" alt="../static/images/202102010000/Untitled%202.png"  />
-</p>
+</p>../../static/images
 <hr>
 <h2 id="进程与线程">进程与线程<a hidden class="anchor" aria-hidden="true" href="#进程与线程">#</a></h2>
 <p>就绪态(初始态)：等待CPU时间片</p>
@@ -311,7 +326,7 @@ pointer:                 %p
 </p>
 <p><img loading="lazy" src="/../static/images/202102010000/Untitled.png" alt="Untitled"  />
 </p>
-<p><img loading="lazy" src="/../static/images/202102010000/Untitled-16497535554383.png" alt="Untitled"  />
+<p><img loading="lazy" src="/../../static/images/202102010000/Untitled-16497535554383../../static/imagesled"  />
 </p>
 <p>进程回收</p>
 <p>正常子进程退出，会收父进程管理回收</p>
