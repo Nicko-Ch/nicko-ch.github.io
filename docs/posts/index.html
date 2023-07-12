@@ -131,6 +131,19 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2>算法系列 - 快速排序</h2>
+  </header>
+  <section class="entry-content">
+    <p>描述 快速排序是对插入算法的一种优化，利用对问题的二分化，实现递归完成快速排序 ，在所有算法中二分化是最常用的方式，将问题尽量的分成两种情况加以分析， 最终以形成类似树的方式加以利用，因为在比较模型中的算法中，最快的排序时间复杂度为 O(log~n~).
+原理  选取边界值：temp 遍历比较数组中每个值与边界值大小关系：小于边界值放小于数组，大于边界值放大于数组 递归排序大、小数组 合并返回当前已排完序数组  PS：注意递归结束条件，数组中长度小于2，代表
+package main import &#34;fmt&#34; func main() { sortSlice := quickSort([]int{1, 9, 10, 30, 2, 5, 45, 8, 63, 234, 12}) fmt.Println(sortSlice) } func quickSort(arr []int) []int { if len(arr) &lt;= 2 { return arr } temp := arr[0] var low, high = make([]int, 0), make([]int, 0) for i := 1; i &lt; len(arr); i&#43;&#43; { if arr[i] &lt; temp { low = append(low, arr[i]) } else { high = append(high, arr[i]) } } lowSlice := quickSort(low) highSlice := quickSort(high) return append(append(lowSlice, temp), highSlice....</p>
+  </section>
+  <footer class="entry-footer">April 18, 2022&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 算法系列 - 快速排序" href="https://nicko-ch.github.io/posts/202204180000/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2>Kubernetes基础</h2>
   </header>
   <section class="entry-content">
@@ -301,18 +314,6 @@ B&#43;树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引
   <footer class="entry-footer">February 22, 2021&nbsp;·&nbsp;2 min</footer>
   <a class="entry-link" aria-label="post link to Mysql实战45讲 - 丁奇" href="https://nicko-ch.github.io/posts/202102220000/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Go高级编程 - GMP并发模型</h2>
-  </header>
-  <section class="entry-content">
-    <p>Golang&#34;调度器&#34;由来 单进程时代  单一执行流程，CPU只能顺序的执行任务队列 进程阻塞导致CPU占用，浪费硬件资源，影响执行效率  多进程、多线程时代  设计变得复杂  进程/线程的数量越多，切换CPU执行时间片成本越大 多线程随着同步竞争（如 锁、竞争资源冲突等）   缺点  高内存占用 （进程：虚拟内存4G；线程：约4MB） 高CPU调度消耗    协程（co-routine）  N:1  无法利用多个CPU 出现阻塞的瓶颈   1:1  跟多线程/多进程模型无异 协程切换成本高   M:N  能够利用多核 过于依赖协程调度器的优化和算法    调度器的优化  早期Go调度器  基本的全局Go队列和比较传统的轮询利用多个thread去调度 弊端  创建、销毁、调度G都需要每个M获取锁，形成了激烈的锁竞争 M转移G会造成延迟和额外的系统负载 系统调用（CPU在M之间的切换）导致频繁的线程阻塞和取消阻塞的操作增加了系统的开销     Goroutine优化  内存占用低（几KB，大量开辟） 灵活调度，切换成本低    GMP模型的设计思想 GMP模型简介 GMP
- G：goroutine 携程 P：processor 处理器 M：thread 内核线程...</p>
-  </section>
-  <footer class="entry-footer">January 7, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - GMP并发模型" href="https://nicko-ch.github.io/posts/202102070000/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="next" href="https://nicko-ch.github.io/posts/page/2/">Next Page »</a>
@@ -320,7 +321,7 @@ B&#43;树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引
 </footer>
     </main>
     <footer class="footer">
-    <span>&copy; 2022 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>
+    <span>&copy; 2023 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &

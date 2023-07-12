@@ -3,18 +3,24 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://nicko-ch.github.io/</loc>
-    <lastmod>2022-03-23T00:00:00+00:00</lastmod>
+    <lastmod>2022-04-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/posts/</loc>
+    <lastmod>2022-04-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/tags/</loc>
+    <lastmod>2022-04-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/tags/%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2022-04-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/posts/202204180000/</loc>
+    <lastmod>2022-04-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/kubernetes/</loc>
     <lastmod>2022-03-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/posts/202203230000/</loc>
-    <lastmod>2022-03-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nicko-ch.github.io/posts/</loc>
-    <lastmod>2022-03-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nicko-ch.github.io/tags/</loc>
     <lastmod>2022-03-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/about/</loc>
