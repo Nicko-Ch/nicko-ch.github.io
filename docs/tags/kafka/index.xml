@@ -9,10 +9,10 @@
     <lastBuildDate>Mon, 12 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/tags/kafka/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kafa核心技术与实战</title>
-      <link>https://nicko-ch.github.io/posts/2021/20210412-kafa%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E6%88%98/</link>
+      <link>https://nicko-ch.github.io/posts/kafka/20210412-kafa%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E6%88%98/</link>
       <pubDate>Mon, 12 Apr 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/2021/20210412-kafa%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E6%88%98/</guid>
+      <guid>https://nicko-ch.github.io/posts/kafka/20210412-kafa%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E6%88%98/</guid>
       <description>概述 基本名词 Producer (消息生产者)：
 向 kafka broker 发消息的客户端；
 Consumer (消息消费者)：

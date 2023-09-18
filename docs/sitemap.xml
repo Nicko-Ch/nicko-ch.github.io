@@ -3,31 +3,82 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://nicko-ch.github.io/</loc>
-    <lastmod>2022-04-18T00:00:00+00:00</lastmod>
+    <lastmod>2022-12-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/categories/</loc>
-    <lastmod>2022-04-18T00:00:00+00:00</lastmod>
+    <lastmod>2022-12-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/posts/</loc>
-    <lastmod>2022-04-18T00:00:00+00:00</lastmod>
+    <lastmod>2022-12-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/categories/solution/</loc>
+    <lastmod>2022-12-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/</loc>
-    <lastmod>2022-04-18T00:00:00+00:00</lastmod>
+    <lastmod>2022-12-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
+    <lastmod>2022-12-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/posts/solution/20221203-%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/</loc>
+    <lastmod>2022-12-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2022-04-18T00:00:00+00:00</lastmod>
+    <lastmod>2022-11-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/posts/solution/20221112-%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2022-11-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/tags/redis/</loc>
+    <lastmod>2022-09-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/categories/redis/</loc>
+    <lastmod>2022-09-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/posts/redis/20220916-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/</loc>
+    <lastmod>2022-09-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2022-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408/</loc>
+    <lastmod>2022-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/posts/computer-principles/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/20220822-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-io%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/</loc>
+    <lastmod>2022-08-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/categories/%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97/</loc>
     <lastmod>2022-04-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2022/20220418-%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</loc>
+    <loc>https://nicko-ch.github.io/posts/computer-principles/%E7%AE%97%E6%B3%95/20220418-%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</loc>
     <lastmod>2022-04-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/kubernetes/</loc>
     <lastmod>2022-03-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2022/20220323-kubernetes%E5%9F%BA%E7%A1%80/</loc>
+    <loc>https://nicko-ch.github.io/posts/kubernetes/20220323-kubernetes%E5%9F%BA%E7%A1%80/</loc>
     <lastmod>2022-03-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/tags/go/</loc>
+    <lastmod>2022-03-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/tags/golang/</loc>
+    <lastmod>2022-03-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/categories/go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/</loc>
+    <lastmod>2022-03-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/posts/golang/20220321-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B/</loc>
+    <lastmod>2022-03-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/posts/golang/20220108-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-golang%E4%B8%ADdefer%E5%BF%85%E6%8E%8C%E6%8F%A1%E7%9A%847%E7%9F%A5%E8%AF%86%E7%82%B9/</loc>
+    <lastmod>2022-01-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/posts/golang/20220106-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-golang%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2022-01-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nicko-ch.github.io/posts/golang/20220101-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E6%80%A7%E8%83%BD%E7%9B%91%E6%B5%8B%E4%B8%8E%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5%E6%96%B9%E6%B3%95/</loc>
+    <lastmod>2022-01-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/about/</loc>
     <lastmod>2021-09-02T16:01:47+08:00</lastmod>
@@ -35,67 +86,52 @@
     <loc>https://nicko-ch.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/</loc>
     <lastmod>2021-08-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408/</loc>
+    <loc>https://nicko-ch.github.io/posts/computer-principles/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/20210822-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
     <lastmod>2021-08-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2021/20210822-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
-    <lastmod>2021-08-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nicko-ch.github.io/posts/2021/20210816-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%BF%9B%E4%BD%8D%E8%AE%A1%E6%95%B0%E5%88%B6/</loc>
+    <loc>https://nicko-ch.github.io/posts/computer-principles/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/20210816-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%BF%9B%E4%BD%8D%E8%AE%A1%E6%95%B0%E5%88%B6/</loc>
     <lastmod>2021-08-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/git/</loc>
     <lastmod>2021-06-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2021/20210604-git%E6%81%A2%E5%A4%8D%E4%B9%8B%E5%89%8D%E7%89%88%E6%9C%AC%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95resetrevert/</loc>
+    <loc>https://nicko-ch.github.io/posts/git/20210604-git%E6%81%A2%E5%A4%8D%E4%B9%8B%E5%89%8D%E7%89%88%E6%9C%AC%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95resetrevert/</loc>
     <lastmod>2021-06-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/docker/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2021/20210602-docker%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/</loc>
+    <loc>https://nicko-ch.github.io/posts/docker/20210602-docker%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2021/20210412-kafa%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E6%88%98/</loc>
+    <loc>https://nicko-ch.github.io/posts/kafka/20210412-kafa%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E6%88%98/</loc>
     <lastmod>2021-04-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/kafka/</loc>
     <lastmod>2021-04-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
-    <lastmod>2021-04-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nicko-ch.github.io/posts/2021/20210408-%E5%88%86%E5%B8%83%E5%BC%8F%E5%94%AF%E4%B8%80id/</loc>
+    <loc>https://nicko-ch.github.io/posts/solution/20210408-%E5%88%86%E5%B8%83%E5%BC%8F%E5%94%AF%E4%B8%80id/</loc>
     <lastmod>2021-04-08T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/mysql/</loc>
     <lastmod>2021-02-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2021/20210222-mysql%E5%AE%9E%E6%88%9845%E8%AE%B2/</loc>
+    <loc>https://nicko-ch.github.io/posts/mysql/20210222-mysql%E5%AE%9E%E6%88%9845%E8%AE%B2/</loc>
     <lastmod>2021-02-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/tags/go/</loc>
+    <loc>https://nicko-ch.github.io/posts/golang/20210220-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-benchmark/</loc>
     <lastmod>2021-02-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/tags/golang/</loc>
-    <lastmod>2021-02-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nicko-ch.github.io/categories/go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/</loc>
-    <lastmod>2021-02-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nicko-ch.github.io/posts/2021/20210220-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-benchmark/</loc>
-    <lastmod>2021-02-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nicko-ch.github.io/posts/2021/20210207-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gmp%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</loc>
+    <loc>https://nicko-ch.github.io/posts/golang/20210207-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gmp%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</loc>
     <lastmod>2021-01-07T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2021/20210105-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86/</loc>
+    <loc>https://nicko-ch.github.io/posts/golang/20210105-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86/</loc>
     <lastmod>2021-01-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2021/20210104-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E5%9F%BA%E7%A1%80/</loc>
+    <loc>https://nicko-ch.github.io/posts/golang/20210104-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E5%9F%BA%E7%A1%80/</loc>
     <lastmod>2021-01-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2020/20201231-go%E4%BC%98%E7%A7%80%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E5%88%86%E4%BA%AB/</loc>
+    <loc>https://nicko-ch.github.io/posts/golang/20201231-go%E4%BC%98%E7%A7%80%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E5%88%86%E4%BA%AB/</loc>
     <lastmod>2020-12-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/refference/</loc>
@@ -104,13 +140,13 @@
     <loc>https://nicko-ch.github.io/categories/refference/</loc>
     <lastmod>2020-12-21T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2020/20201221-refference-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/</loc>
+    <loc>https://nicko-ch.github.io/posts/golang/20201221-refference-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/</loc>
     <lastmod>2020-12-21T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2020/20201218-go%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</loc>
+    <loc>https://nicko-ch.github.io/posts/golang/20201218-go%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2020/20201216-git%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</loc>
+    <loc>https://nicko-ch.github.io/posts/git/20201216-git%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</loc>
     <lastmod>2020-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/terms/</loc>
@@ -119,13 +155,13 @@
     <loc>https://nicko-ch.github.io/categories/terms/</loc>
     <lastmod>2020-12-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2020/20201215-terms/</loc>
+    <loc>https://nicko-ch.github.io/posts/%E6%9D%82%E9%A1%B9/20201215-terms/</loc>
     <lastmod>2020-12-15T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/laradock/</loc>
     <lastmod>2018-11-07T08:34:55+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2018/20181107-laradock-%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%99%E8%AF%AF/</loc>
+    <loc>https://nicko-ch.github.io/posts/%E6%9D%82%E9%A1%B9/20181107-laradock-%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%99%E8%AF%AF/</loc>
     <lastmod>2018-11-07T08:34:55+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/</loc>
@@ -137,13 +173,13 @@
     <loc>https://nicko-ch.github.io/tags/phpstorm/</loc>
     <lastmod>2018-11-01T14:40:26+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2018/20181101-phpstorm-%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%E5%88%86%E7%B1%BB%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE/</loc>
+    <loc>https://nicko-ch.github.io/posts/%E6%9D%82%E9%A1%B9/20181101-phpstorm-%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%E5%88%86%E7%B1%BB%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE/</loc>
     <lastmod>2018-11-01T14:40:26+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/cmd-mardown/</loc>
     <lastmod>2018-10-31T15:11:07+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2018/20181031-md%E7%AE%80%E6%98%8E%E8%AF%AD%E6%B3%95%E6%89%8B%E5%86%8C/</loc>
+    <loc>https://nicko-ch.github.io/posts/%E6%9D%82%E9%A1%B9/20181031-md%E7%AE%80%E6%98%8E%E8%AF%AD%E6%B3%95%E6%89%8B%E5%86%8C/</loc>
     <lastmod>2018-10-31T15:11:07+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/tags/grammar/</loc>
@@ -158,7 +194,7 @@
     <loc>https://nicko-ch.github.io/tags/hello-world/</loc>
     <lastmod>2018-10-23T15:54:01+00:00</lastmod>
   </url><url>
-    <loc>https://nicko-ch.github.io/posts/2018/20181023-quick-start/</loc>
+    <loc>https://nicko-ch.github.io/posts/%E6%9D%82%E9%A1%B9/20181023-quick-start/</loc>
     <lastmod>2018-10-23T15:54:01+00:00</lastmod>
   </url><url>
     <loc>https://nicko-ch.github.io/categories/%E7%94%9F%E6%B4%BB%E6%9D%82%E8%AE%B0/</loc>

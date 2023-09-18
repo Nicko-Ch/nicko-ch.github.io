@@ -9,10 +9,10 @@
     <lastBuildDate>Fri, 04 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Git恢复之前版本的两种方法reset、revert</title>
-      <link>https://nicko-ch.github.io/posts/2021/20210604-git%E6%81%A2%E5%A4%8D%E4%B9%8B%E5%89%8D%E7%89%88%E6%9C%AC%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95resetrevert/</link>
+      <link>https://nicko-ch.github.io/posts/git/20210604-git%E6%81%A2%E5%A4%8D%E4%B9%8B%E5%89%8D%E7%89%88%E6%9C%AC%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95resetrevert/</link>
       <pubDate>Fri, 04 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/2021/20210604-git%E6%81%A2%E5%A4%8D%E4%B9%8B%E5%89%8D%E7%89%88%E6%9C%AC%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95resetrevert/</guid>
+      <guid>https://nicko-ch.github.io/posts/git/20210604-git%E6%81%A2%E5%A4%8D%E4%B9%8B%E5%89%8D%E7%89%88%E6%9C%AC%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95resetrevert/</guid>
       <description>方法一：git reset
 原理： git reset的作用是修改HEAD的位置，即将HEAD指向的位置改变为之前存在的某个版本，如下图所示，假设我们要回退到版本一：
 适用场景： 如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。
@@ -24,10 +24,10 @@
     
     <item>
       <title>Git基础语法</title>
-      <link>https://nicko-ch.github.io/posts/2020/20201216-git%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</link>
+      <link>https://nicko-ch.github.io/posts/git/20201216-git%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</link>
       <pubDate>Wed, 16 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/2020/20201216-git%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</guid>
+      <guid>https://nicko-ch.github.io/posts/git/20201216-git%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</guid>
       <description>Command 命令 git init 初始化仓库 $ git init Initialized empty Git repository in D:/www/git_class/.git/ git config 配置信息  —global [key] [value] 全局配置  $ git config --global user.name &amp;#39;Nicko_Ch&amp;#39; $ git config --global user.email cyn_411@sina.com git add {filename} 将文件添加到暂存区 $ touch README.md $ vim README.md $ git add README.md git status 查看项目的当前状态  -s 精简模式  $ git status On branch master Changes to be committed: (use &amp;#34;git restore --staged &amp;lt;file&amp;gt;.</description>
     </item>
     

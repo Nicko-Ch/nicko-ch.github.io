@@ -9,10 +9,10 @@
     <lastBuildDate>Tue, 15 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/tags/terms/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Terms</title>
-      <link>https://nicko-ch.github.io/posts/2020/20201215-terms/</link>
+      <link>https://nicko-ch.github.io/posts/%E6%9D%82%E9%A1%B9/20201215-terms/</link>
       <pubDate>Tue, 15 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://nicko-ch.github.io/posts/2020/20201215-terms/</guid>
+      <guid>https://nicko-ch.github.io/posts/%E6%9D%82%E9%A1%B9/20201215-terms/</guid>
       <description>Terms     分布式事务方式   bloom filter   Bitmap   nginx平滑重启原理   Linux内核特性之VDSO   NTP UPDATE 和 NTPD   QUICK   Head-of-line blocking   cgroup   Scaling Memcache At Facebook   errorgroup   pipeline   链表   bytegraph   neo4j   发号器   Graph DB   位与操作   网易DDB   sharding   SOA   DDD   Machine line   COW   &amp;ldquo;nginx_pool_t &amp;quot;   tcmalloc   sync.</description>
     </item>
     

@@ -131,6 +131,71 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2>分布式缓存</h2>
+  </header>
+  <section class="entry-content">
+    <p>分布式缓存 Hash算法 简述 对资源进行取模运算：hash(资源) % 机器数 = 余数
+然后去余数对应的服务器存取资源
+缺点：一旦机器数量变更，将导致所有缓存失效
+一致性Hash 简述 设置一个Hash环，大小为2^32
+对资源进行取模运算：hash(资源) % 2^32 = 余数
+然后顺时针的往下寻找服务器
+优点：相较于hash算法，激起数量的变更，一致性hash只会导致部分缓存失效
+缺点：因为不均衡，产生hash偏斜，可能会导致大量缓存跑到某一台服务器
+Hash偏斜 解决方法：新增虚拟节点，让分布尽可能均匀</p>
+  </section>
+  <footer class="entry-footer">December 3, 2022&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 分布式缓存" href="https://nicko-ch.github.io/posts/solution/20221203-%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>限流算法</h2>
+  </header>
+  <section class="entry-content">
+    <p>限流算法 1 漏桶算法 假设当前请求b到来，at为上一次请求处理时间，w为剩余容量，c为总容量，r为滴漏速度
+伪代码 when(b): bt = now() // b到来时间为当前时间 	wb = (bt - at) * r // b到来的过程量=（b时间 - 上一次请求时间）* 流速 	w = max(w - wb, 0) // 剩余容量 = 最大值（剩余容量 - wb带来的容量，0） 木桶剩余最小为0 if(w &lt; c) // 如果剩余容量未满 	w&#43;&#43; // 剩余容量&#43;&#43; 	return true else: return false 2 令牌桶算法 假设当前请求b到来，at为上一次请求处理时间，w为剩余容量，c为总容量，r为滴漏速度
+伪代码 when(b): bt = now() // b到来时间为当前时间 	wb = (bt - at) * r // b到来的过程量=（b时间 - 上一次请求时间）* 流速 	w = min(w &#43; wb, c) // 剩余容量 = 最小值（剩余容量 &#43; wb带来的容量，c） if (w &gt; 1): // 如果桶内令牌大于1 	w-- // 令牌-- 	return true else: return false 3 比较 放入速度...</p>
+  </section>
+  <footer class="entry-footer">November 12, 2022&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 限流算法" href="https://nicko-ch.github.io/posts/solution/20221112-%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>设计与实现</h2>
+  </header>
+  <section class="entry-content">
+    <p>设计与实现 前言 查询数据类型 OBJECT ENCODING {key} 1. 基础数据类型 1.1 SDS 与 C字符串 区别 1.1.1 SDS简单动态字符串定义 struct sdshdr{ //记录buf数组中已使用字节的数量  //等于 SDS 保存字符串的长度  int len; //记录 buf 数组中未使用字节的数量  int free; //字节数组，用于保存字符串  char buf[]; } 1.1.2 可重用C函数 SDS遵循与C语言字符串一样的规则，以‘\0’(空字符)结尾，所以SDS可以直接重用部分C语言的字符串函数。（空字符不计入len属性，所以对于SDS使用者完全透明）
+1.1.3 二进制安全 泛指二进制数据在传输、存储、读取的时候都不会被篡改，如C语言中的字符串类型必须为空字符（\0）结束，则后续如果跟有其他数据，则读取处理将会跟原数据不同，即非二进制安全
+例如：
+在C语言中读取会返回“Redis”，空字符往后的则被忽略。 而在Redis中读取会返回“Redis Cluster ”，以len属性判断字符串是否结束
+1.1.4 获取长度 C语言字符串获取长度，需要遍历字符串中的每一位进行累加计算，时间复杂度为O(N)
+SDS获取长度，只需要直接获取len属性，时间复杂度为O(1)
+1.1.5 杜绝缓冲区溢出  C字符串中，如果未给变量申请足够的空间，进行了如srtcat复制操作，将可能导致新字符串过长，导致变量内存内容被覆盖。 与C语言不同，SDS会闲计算自身空间，如果不足会自动扩展。  1.1.6 空间预分配 为了防止频繁的进行空间分配，SDS每次扩容的时候都会进行一定的冗余扩充
+ 如果对 SDS 进行修改之后， SDS 的长度（也即是 len 属性的值）将小于 1 MB ， 那么程序分配和 len 属性同样大小的未使用空间， 这时 SDS len 属性的值将和 free 属性的值相同。 举个例子， 如果进行修改之后， SDS 的 len 将变成 13 字节， 那么程序也会分配13 字节的未使用空间， SDS 的 buf 数组的实际长度将变成 13 &#43; 13 &#43; 1 = 27 字节（额外的一字节用于保存空字符）。 如果对 SDS 进行修改之后， SDS 的长度将大于等于 1 MB ， 那么程序会分配 1 MB 的未使用空间。 举个例子， 如果进行修改之后， SDS 的 len 将变成 30 MB ， 那么程序会分配 1 MB 的未使用空间， SDS 的 buf 数组的实际长度将为 30 MB &#43; 1 MB &#43; 1 byte 。  1....</p>
+  </section>
+  <footer class="entry-footer">September 16, 2022&nbsp;·&nbsp;5 min</footer>
+  <a class="entry-link" aria-label="post link to 设计与实现" href="https://nicko-ch.github.io/posts/redis/20220916-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>计算机考研408 - I/O多路复用</h2>
+  </header>
+  <section class="entry-content">
+    <p>I/O多路复用 1、什么是I/O多路复用  **单线程或单进程同时监测若干个文件描述符是否可以执行IO操作的能力**
+ 2、流？I/O操作？阻塞？ （1）流  可以进行I/O操作的内核对象 文件、管道、套接字…… 流的入口：文件描述符(fd)  （2）I/O操作 所有对流的读写操作，我们都可以称之为IO操作。
+（3）阻塞 阻塞场景: 你有一份快递，家里有个座机，快递到了主动给你打电话，期间你可以休息。
+非阻塞，忙轮询场景: 你性子比较急躁， 每分钟就要打电话询问快递小哥一次， 到底有没有到，快递员接你电话要停止运输，这样很耽误快递小哥的运输速度。
+3、解决阻塞等待办法 （1）非阻塞、忙轮询 伪代码 while true { for i in 流[] { if i has 数据 { 读 或者 其他处理 } } } 特点  用户态不断请求内核态查看IO情况 请求间隔短会导致cpu无效占用率高 请求间隔长会导致io长时间无法处理  （2）select 伪代码 while true { select(流[]); //阻塞  //有消息抵达 	for i in 流[] { if i has 数据 { 读 或者 其他处理 } } } 特点  时间复杂度O(n) 开设一个代接收点，待内核态有io处理信号，则返回告诉用户 select只能通知用户IO事件发生，无法准确告诉是哪个IO流待处理，需要用户遍历查找 实现底层用的数组结构，理论上有最大连接数：1024(x86) 或 2048(x64) 每次调用select，都需要把集合fd从用户态拷贝到内核态  （3）poll 原理与select类似，但实现底层结构更换为链表，理论上没有最大连接数限制...</p>
+  </section>
+  <footer class="entry-footer">August 22, 2022&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 计算机考研408 - I/O多路复用" href="https://nicko-ch.github.io/posts/computer-principles/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/20220822-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-io%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2>算法系列 - 快速排序</h2>
   </header>
   <section class="entry-content">
@@ -139,7 +204,7 @@
 package main import &#34;fmt&#34; func main() { sortSlice := quickSort([]int{1, 9, 10, 30, 2, 5, 45, 8, 63, 234, 12}) fmt.Println(sortSlice) } func quickSort(arr []int) []int { if len(arr) &lt;= 2 { return arr } temp := arr[0] var low, high = make([]int, 0), make([]int, 0) for i := 1; i &lt; len(arr); i&#43;&#43; { if arr[i] &lt; temp { low = append(low, arr[i]) } else { high = append(high, arr[i]) } } lowSlice := quickSort(low) highSlice := quickSort(high) return append(append(lowSlice, temp), highSlice....</p>
   </section>
   <footer class="entry-footer">April 18, 2022&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 算法系列 - 快速排序" href="https://nicko-ch.github.io/posts/2022/20220418-%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/"></a>
+  <a class="entry-link" aria-label="post link to 算法系列 - 快速排序" href="https://nicko-ch.github.io/posts/computer-principles/%E7%AE%97%E6%B3%95/20220418-%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -159,160 +224,61 @@ Cron Job 周期性执行任务
 不同物理机 flannel UDP 数据包二次封装</p>
   </section>
   <footer class="entry-footer">March 23, 2022&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Kubernetes基础" href="https://nicko-ch.github.io/posts/2022/20220323-kubernetes%E5%9F%BA%E7%A1%80/"></a>
+  <a class="entry-link" aria-label="post link to Kubernetes基础" href="https://nicko-ch.github.io/posts/kubernetes/20220323-kubernetes%E5%9F%BA%E7%A1%80/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2>计算机考研408 - 计算机网络</h2>
+    <h2>Go高级编程 - 单元测试用例</h2>
   </header>
   <section class="entry-content">
-    <p>物理层 将计算机通过物理的方式连接起来，通过0/1的形式传输数据
-数据链路层 将电信号0和1以帧形势整合成一个个的数据包，将数据以包的形式进行解析。并且将数据包发送到子网络中的所有机器，让机器识别数据包头中的MAC地址跟自己是否匹配，从而捕获分析数据，此过程称为广播。
-网络层 在外网中，通过MAC地址去广播通信效率非常低，所以网络层主要是通过IP协议与其他的子网络进行通信。数据包通过外网ip发送到置顶的子网，子网设备内部再通过广播获取数据包。
-传输层 机器接受到数据包后，通过网卡内的端口传输到各各应用进程中。典型代表：udp、tcp协议
-应用层 应用进程通过Email、HTTP、FTP等通用协议进行收发数据包实现通信。</p>
+    <p>单元测试用例 文件命名规则 单元测试需要创建单独的测试文件，不能在原有文件中书写，名字规则为 xxx_test.go。这个规则很好理解。
+包命名规则 单元测试文件的包名为原文件的包名添加下划线接test，举例如下：
+// 原文件包名：  package xxx // 单元测试文件包名：  package xxx_test 方法命名规则 单元测试文件中的测试方法和原文件中的待测试的方法名相对应，以Test开头，举例如下：
+// 原文件方法： func Xxx(name string) error // 单元测试文件方法： func TestXxx() 方法参数 单元测试方法的参数必须是t *testing.T，举例如下：
+func TestZipFiles(t *testing.T) { ... 命令行执行 *go test **-v** cdfPrint_test.go **-run** TestPrintCDF // **-v** 指定文件 // **-run** 指定函数* </p>
   </section>
-  <footer class="entry-footer">August 22, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 计算机考研408 - 计算机网络" href="https://nicko-ch.github.io/posts/2021/20210822-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"></a>
+  <footer class="entry-footer">March 21, 2022&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - 单元测试用例" href="https://nicko-ch.github.io/posts/golang/20220321-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2>计算机考研408 - 进位计数制</h2>
+    <h2>Go高级编程 - Golang中Defer必掌握的7知识点</h2>
   </header>
   <section class="entry-content">
-    <p>进位计数制 r进制 → 十进制 二进制 ↔ 八/十六进制 十进制 → r进制 整数位(除基取余法) 小数位(乘积取整法) </p>
+    <p>Golang中Defer必掌握的7知识点 知识点1：defer的执行顺序 多个defer出现的时候，它是一个“栈”的关系，也就是先进后出。一个函数中，写在前面的defer会比写在后面的defer调用的晚。
+package main import &#34;fmt&#34; func main() { defer func1() defer func2() defer func3() } func func1() { fmt.Println(&#34;A&#34;) } func func2() { fmt.Println(&#34;B&#34;) } func func3() { fmt.Println(&#34;C&#34;) } 输出结果：
+C B A 结论为：先压栈后出栈
+知识点2：defer与return谁先谁后 package main import &#34;fmt&#34; func deferFunc() int { fmt.Println(&#34;defer func called&#34;) return 0 } func returnFunc() int { fmt.Println(&#34;return func called&#34;) return 0 } func returnAndDefer() int { defer deferFunc() return returnFunc() } func main() { returnAndDefer() } 输出结果：...</p>
   </section>
-  <footer class="entry-footer">August 16, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 计算机考研408 - 进位计数制" href="https://nicko-ch.github.io/posts/2021/20210816-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%BF%9B%E4%BD%8D%E8%AE%A1%E6%95%B0%E5%88%B6/"></a>
+  <footer class="entry-footer">January 8, 2022&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - Golang中Defer必掌握的7知识点" href="https://nicko-ch.github.io/posts/golang/20220108-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-golang%E4%B8%ADdefer%E5%BF%85%E6%8E%8C%E6%8F%A1%E7%9A%847%E7%9F%A5%E8%AF%86%E7%82%B9/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2>Git恢复之前版本的两种方法reset、revert</h2>
+    <h2>Go高级编程 - Golang逃逸分析</h2>
   </header>
   <section class="entry-content">
-    <p>方法一：git reset
-原理： git reset的作用是修改HEAD的位置，即将HEAD指向的位置改变为之前存在的某个版本，如下图所示，假设我们要回退到版本一：
-适用场景： 如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。
-具体操作：
-1. 查看版本号：
-可以使用命令“git log”查看：
-也可以在github网站上查看：</p>
+    <p>Golang逃逸分析 1、 原理 go语言编译器会自动决定把一个变量放在栈还是放在堆，编译器会做**逃逸分析(escape analysis)**，**当发现变量的作用域没有跑出函数范围，就可以在栈上，反之则必须分配在堆。**
+2、如何分析 2.1、案例 package main func foo(arg_val int) (*int) { var foo_val1 int = 11; var foo_val2 int = 12; var foo_val3 int = 13; var foo_val4 int = 14; var foo_val5 int = 15; //此处循环是防止go编译器将foo优化成inline(内联函数)  //如果是内联函数，main调用foo将是原地展开，所以foo_val1-5相当于main作用域的变量  //即使foo_val3发生逃逸，地址与其他也是连续的  for i := 0; i &lt; 5; i&#43;&#43; { println(&amp;arg_val, &amp;foo_val1, &amp;foo_val2, &amp;foo_val3, &amp;foo_val4, &amp;foo_val5) } //返回foo_val3给main函数  return &amp;foo_val3; } func main() { main_val := foo(666) println(*main_val, main_val) } 运行结果...</p>
   </section>
-  <footer class="entry-footer">June 4, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Git恢复之前版本的两种方法reset、revert" href="https://nicko-ch.github.io/posts/2021/20210604-git%E6%81%A2%E5%A4%8D%E4%B9%8B%E5%89%8D%E7%89%88%E6%9C%AC%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95resetrevert/"></a>
+  <footer class="entry-footer">January 6, 2022&nbsp;·&nbsp;4 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - Golang逃逸分析" href="https://nicko-ch.github.io/posts/golang/20220106-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-golang%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2>Docker核心原理</h2>
+    <h2>Go高级编程 - 性能监测与优化实践方法</h2>
   </header>
   <section class="entry-content">
-    <p>核心原理 Namespace  独立进程，实现容器的 隔离性
- Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。
-Cgroups  控制进程资源分配，实现容器的 限制性
- Linux Cgroups 的全称是 Linux Control Group。它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
-基于namespace实现的隔离性，只限于容器中的可视范围控制。实际上对于宿主机而言，容器中的进程也是宿主进程中的其中一个，所以理论上，容器进程和宿主进程占用的资源权限是一致的。为了防止某个容器抢占大量的资源导致其他容器乃至宿主机的奔溃，所以docker使用的linux中的cgroups进行进程资源的限制。
-ps：限制某进程使用的CPU核数等
-Rootfs  修改容器进程对于文件系统挂载点的可视范围，实现容器的 一致性
- 在 Linux 操作系统里，有一个名为 chroot 的命令可以帮助你在 shell 中方便地完成这个工作。顾名思义，它的作用就是帮你“change root file system”，即改变进程的根目录到你指定的位置。
-实际上，Mount Namespace 正是基于对 chroot 的不断改良才被发明出来的，它也是 Linux 操作系统里的第一个 Namespace。它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效。
-而这个挂载在容器根目录上、用来为容器进程提供隔离后执行环境的文件系统，就是所谓的“容器镜像”。它还有一个更为专业的名字，叫作：rootfs（根文件系统）。
-rootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。在 Linux 操作系统中，这两部分是分开存放的，操作系统只有在开机启动时才会加载指定版本的内核镜像。
-由于 rootfs 里打包的不只是应用，而是整个操作系统的文件和目录，也就意味着，应用以及它运行所需要的所有依赖，都被封装在了一起。
-镜像 为了防止容器碎片化，提高容器的复用率。Docker支持用Dockerfile的形式，对于现有容器镜像进行二次开发和定制化。
-Union File System Union File System 也叫 UnionFS，最主要的功能是将多个不同位置的目录联合挂载（union mount）到同一个目录下。比如，我现在有两个目录 A 和 B，它们分别有两个文件：
-$ tree.├── A│ ├── a│ └── x└── B├── b└── x然后，我使用联合挂载的方式，将这两个目录挂载到一个公共的目录 C 上：...</p>
+    <p>性能监测与优化实践方法 场景1：如何分析程序的运行时间与CPU利用率情况？ （1）shell内置time指令 $ time go run test2.go &amp;{{0 0} 张三 0} real	0m0.843s user	0m0.216s sys	0m0.389s  real ：从程序开始到结束，实际使用时间； user ：程序在用户态使用时间； sys ：程序在内核态使用时间。  一般情况下 real &gt;= user &#43; sys，因为系统还有其它进程(切换其他进程中间对于本进程会有空白期)。
+（2）/user/bin/time 指令 使用时需要输入决定路径，带上参数-v
+$ /usr/bin/time -v go run test2.go Command being timed: &#34;go run test2.go&#34; User time (seconds): 0.12 System time (seconds): 0.06 Percent of CPU this job got: 115% Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.16 Average shared text size (kbytes): 0 Average unshared data size (kbytes): 0 Average stack size (kbytes): 0 Average total size (kbytes): 0 Maximum resident set size (kbytes): 41172 Average resident set size (kbytes): 0 Major (requiring I/O) page faults: 1 Minor (reclaiming a frame) page faults: 15880 Voluntary context switches: 897 Involuntary context switches: 183 Swaps: 0 File system inputs: 256 File system outputs: 2664 Socket messages sent: 0 Socket messages received: 0 Signals delivered: 0 Page size (bytes): 4096 Exit status: 0  CPU占用率； 内存使用情况； Page Fault 情况； 进程切换情况； 文件系统IO； Socket 使用情况； ……  场景2：如何分析golang程序的内存使用情况？ （1）内存占用情况查看 场景例子代码demo...</p>
   </section>
-  <footer class="entry-footer">June 2, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Docker核心原理" href="https://nicko-ch.github.io/posts/2021/20210602-docker%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Kafa核心技术与实战</h2>
-  </header>
-  <section class="entry-content">
-    <p>概述 基本名词 Producer (消息生产者)：
-向 kafka broker 发消息的客户端；
-Consumer (消息消费者)：
-向 kafka broker 取消息的客户端；
-Consumer Group (消费者组)：
-由多个 consumer 组成。消费者组内每个消费者负责消费不同分区的数据，一个分区只能由一个组内消费者消费；消费者组之间互不影响。所有的消费者都属于某个消费者组，即消费者组是逻辑上的一个订阅者。
-Broker (服务器)：
-一台 kafka 服务器就是一个 broker。一个集群由多个 broker 组成。一个broker可以容纳多个 topic。
-Replica (副本)：
-为保证集群中的某个节点发生故障时，该节点上的 partition 数据不丢失，且 kafka 仍然能够继续工作，kafka 提供了副本机制，一个 topic 的每个分区都有若干个副本，一个 leader 和若干个 follower。
-Leader (主)：
-每个分区多个副本的“主”，生产者发送数据的对象，以及消费者消费数据的对 象都是 leader。
-Follower (从)：
-每个分区多个副本中的“从”，实时从 leader 中同步数据，保持和 leader 数据的同步。leader 发生故障时，某个 follower 会成为新的 leader 。
-Topic (主题)：
-主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。
-Partition (分区)：
-为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个 topic 可以分为多个 partition，每个 partition 是一个有序的队列；...</p>
-  </section>
-  <footer class="entry-footer">April 12, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Kafa核心技术与实战" href="https://nicko-ch.github.io/posts/2021/20210412-kafa%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E6%88%98/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>分布式唯一ID</h2>
-  </header>
-  <section class="entry-content">
-    <p>1. 为什么要用分布式ID 1.1 什么是分布式ID 拿MySQL数据库举个栗子：
-在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。
-但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有唯一ID做标识。此时一个能够生成全局唯一ID的系统是非常必要的。那么这个全局唯一ID就叫分布式ID。
-1.2 那么分布式ID需要满足那些条件？  全局唯一：必须保证ID是全局性唯一的，基本要求 高性能：高可用低延时，ID生成响应要块，否则反倒会成为业务瓶颈 高可用：100%的可用性是骗人的，但是也要无限接近于100%的可用性 好接入：要秉着拿来即用的设计原则，在系统设计和实现上要尽可能的简单 趋势递增：最好趋势递增，这个要求就得看具体业务场景了，一般不严格要求  2. 分布式ID都有哪些生成方式 2.1 UUID 优点：
- 生成足够简单，本地生成无网络消耗，具有唯一性  缺点：
- 无序的字符串，不具备自增特性 没有具体的业务含义 长度较大，不适合作为数据库主键，严重影响查询性能  2.2 数据库自增ID 优点：
- 实现简单，ID主键，数值类型，带自增特性  缺点：
- DB单机生成，存在并发宕机风险，无法扛住高并发场景  2.3 数据库集群模式 为了应对单机数据库的并发压力，设计上可以用双主模式集群的方式解决，但是这样也会引入一个新的问题，两个Mysql实例都是自增ID从1开始，会产生重复的ID怎么办？
-解决方案：设置起始值和自增步长
-MySQL_1 配置：
-set @@auto_increment_offset = 1; -- 起始值set @@auto_increment_increment = 2; -- 步长MySQL_2 配置：
-set @@auto_increment_offset = 2; -- 起始值set @@auto_increment_increment = 2; -- 步长这样两个MySQL实例的自增ID分别就是：...</p>
-  </section>
-  <footer class="entry-footer">April 8, 2021&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to 分布式唯一ID" href="https://nicko-ch.github.io/posts/2021/20210408-%E5%88%86%E5%B8%83%E5%BC%8F%E5%94%AF%E4%B8%80id/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Mysql实战45讲 - 丁奇</h2>
-  </header>
-  <section class="entry-content">
-    <p>基础篇 01丨基础架构：一条SQL查询语句是如何执行的？ 02丨日志系统：一条SQL更新语句是如何执行的？ 03丨事务隔离：为什么你改了我还看不见？  ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）
-  读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。 读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。 可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。 串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  04丨深入浅出索引（上） 哈希表 适用于只有等值查询的场景，效率高，但无法范围查询
-有序数组 等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移
-二叉树（BST） 各方面都非常优秀，但是极端情况下可能会发展为链表
-平衡二叉树（AVL） 二叉树的变异体，会根据情况自动左右旋转，维持子节点的平衡，但是树高无法维护
-红黑树（RBT） 相比较平衡二叉树，平衡条件宽松，只需保证左右深度差一倍，使写的操作变化减少，提高写的性能
-B树 可以拥有多节点，解决平衡二叉树存在的树层级太高，降低查询复杂度
-B&#43;树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引），叶子节点会保存前后的指针地址
-05丨深入浅出索引（下） 覆盖索引 由于非主键索引存在回表的情况，所以select时选择主键字段，可以防止回表从而提高查询效率
-最左前缀原则 实践篇 09丨普通索引和唯一索引，应该怎么选择？ 查询过程  对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。 对于唯一索引来说，由于索引定义了唯一性，查找到第一个满足条件的记录后，就会停止继续检索。   结论：性能上微乎其微，业务看具体场景
- 理论上唯一索引的性能会比普通索引快，但是引擎是按页进行读写的，所以查询key行数据时候，去取出的data page大概率会有下一行的记录，所以只需要在内存级别再判断一次下一行的记录是否符合条件。
-即使复杂情况，key行在data page最后一行，必须读取下一页。这种情况换做整型的索引，但个data page可以存放上千个key，出现这种概率的情况也是极小的。
-更新过程 了解新概念change buffer
- 当需要更新数据时候，在不影响一致性的情况下，innoDB会将这部分操作直接写到change buffer中。这样就不需要从磁盘中读取data page了。 将change buffer写入data page的过程称为merge，访问数据也则会触发，系统也会定期执行。 读取data page会占用buffer pool，这种方式可以提高内存利用率。  实际对比...</p>
-  </section>
-  <footer class="entry-footer">February 22, 2021&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to Mysql实战45讲 - 丁奇" href="https://nicko-ch.github.io/posts/2021/20210222-mysql%E5%AE%9E%E6%88%9845%E8%AE%B2/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Go高级编程 - Benchmark</h2>
-  </header>
-  <section class="entry-content">
-    <p>基础用法  benchmark和普通单元测试用例一样，文件命名都为 _test.go 函数名以 Benchmark 开头，参数是 b *testing.B。 对比普通的单元测试用例： 函数名以 Test 开头，参数是 t *testing.T。  运行用例 基础用例  运行当前 package 内的用例：go test example 或 go test . 运行子 package 内的用例： go test example/&lt;package name&gt; 或 go test ./&lt;package name&gt; 如果想递归测试当前目录下的所有的 package：go test ./... 或 go test example/...。  $ go test -bench . goos: darwin goarch: amd64 pkg: example BenchmarkFib-8 200 5865240 ns/op PASS ok example 1.782s  正则匹配，例：只运行以 Fib 结尾的benchmark用例  $ go test -bench=&#39;Fib$&#39; ....</p>
-  </section>
-  <footer class="entry-footer">February 20, 2021&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - Benchmark" href="https://nicko-ch.github.io/posts/2021/20210220-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-benchmark/"></a>
+  <footer class="entry-footer">January 1, 2022&nbsp;·&nbsp;8 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - 性能监测与优化实践方法" href="https://nicko-ch.github.io/posts/golang/20220101-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E6%80%A7%E8%83%BD%E7%9B%91%E6%B5%8B%E4%B8%8E%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5%E6%96%B9%E6%B3%95/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

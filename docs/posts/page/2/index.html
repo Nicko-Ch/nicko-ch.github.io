@@ -131,6 +131,159 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2>计算机考研408 - 计算机网络</h2>
+  </header>
+  <section class="entry-content">
+    <p>物理层 将计算机通过物理的方式连接起来，通过0/1的形式传输数据
+数据链路层 将电信号0和1以帧形势整合成一个个的数据包，将数据以包的形式进行解析。并且将数据包发送到子网络中的所有机器，让机器识别数据包头中的MAC地址跟自己是否匹配，从而捕获分析数据，此过程称为广播。
+网络层 在外网中，通过MAC地址去广播通信效率非常低，所以网络层主要是通过IP协议与其他的子网络进行通信。数据包通过外网ip发送到置顶的子网，子网设备内部再通过广播获取数据包。
+传输层 机器接受到数据包后，通过网卡内的端口传输到各各应用进程中。典型代表：udp、tcp协议
+应用层 应用进程通过Email、HTTP、FTP等通用协议进行收发数据包实现通信。</p>
+  </section>
+  <footer class="entry-footer">August 22, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 计算机考研408 - 计算机网络" href="https://nicko-ch.github.io/posts/computer-principles/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/20210822-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>计算机考研408 - 进位计数制</h2>
+  </header>
+  <section class="entry-content">
+    <p>进位计数制 r进制 → 十进制 二进制 ↔ 八/十六进制 十进制 → r进制 整数位(除基取余法) 小数位(乘积取整法) </p>
+  </section>
+  <footer class="entry-footer">August 16, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 计算机考研408 - 进位计数制" href="https://nicko-ch.github.io/posts/computer-principles/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/20210816-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%80%83%E7%A0%94408-%E8%BF%9B%E4%BD%8D%E8%AE%A1%E6%95%B0%E5%88%B6/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Git恢复之前版本的两种方法reset、revert</h2>
+  </header>
+  <section class="entry-content">
+    <p>方法一：git reset
+原理： git reset的作用是修改HEAD的位置，即将HEAD指向的位置改变为之前存在的某个版本，如下图所示，假设我们要回退到版本一：
+适用场景： 如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。
+具体操作：
+1. 查看版本号：
+可以使用命令“git log”查看：
+也可以在github网站上查看：</p>
+  </section>
+  <footer class="entry-footer">June 4, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Git恢复之前版本的两种方法reset、revert" href="https://nicko-ch.github.io/posts/git/20210604-git%E6%81%A2%E5%A4%8D%E4%B9%8B%E5%89%8D%E7%89%88%E6%9C%AC%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95resetrevert/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Docker核心原理</h2>
+  </header>
+  <section class="entry-content">
+    <p>核心原理 Namespace  独立进程，实现容器的 隔离性
+ Linux Namespaces机制提供一种资源隔离方案。PID,IPC,Network等系统资源不再是全局性的，而是属于某个特定的Namespace。每个namespace下的资源对于其他namespace下的资源都是透明，不可见的。系统中可以同时存在两个进程号为0,1,2的进程，由于属于不同的namespace，所以它们之间并不冲突。而在用户层面上只能看到属于用户自己namespace下的资源，例如使用ps命令只能列出自己namespace下的进程。
+Cgroups  控制进程资源分配，实现容器的 限制性
+ Linux Cgroups 的全称是 Linux Control Group。它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+基于namespace实现的隔离性，只限于容器中的可视范围控制。实际上对于宿主机而言，容器中的进程也是宿主进程中的其中一个，所以理论上，容器进程和宿主进程占用的资源权限是一致的。为了防止某个容器抢占大量的资源导致其他容器乃至宿主机的奔溃，所以docker使用的linux中的cgroups进行进程资源的限制。
+ps：限制某进程使用的CPU核数等
+Rootfs  修改容器进程对于文件系统挂载点的可视范围，实现容器的 一致性
+ 在 Linux 操作系统里，有一个名为 chroot 的命令可以帮助你在 shell 中方便地完成这个工作。顾名思义，它的作用就是帮你“change root file system”，即改变进程的根目录到你指定的位置。
+实际上，Mount Namespace 正是基于对 chroot 的不断改良才被发明出来的，它也是 Linux 操作系统里的第一个 Namespace。它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效。
+而这个挂载在容器根目录上、用来为容器进程提供隔离后执行环境的文件系统，就是所谓的“容器镜像”。它还有一个更为专业的名字，叫作：rootfs（根文件系统）。
+rootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。在 Linux 操作系统中，这两部分是分开存放的，操作系统只有在开机启动时才会加载指定版本的内核镜像。
+由于 rootfs 里打包的不只是应用，而是整个操作系统的文件和目录，也就意味着，应用以及它运行所需要的所有依赖，都被封装在了一起。
+镜像 为了防止容器碎片化，提高容器的复用率。Docker支持用Dockerfile的形式，对于现有容器镜像进行二次开发和定制化。
+Union File System Union File System 也叫 UnionFS，最主要的功能是将多个不同位置的目录联合挂载（union mount）到同一个目录下。比如，我现在有两个目录 A 和 B，它们分别有两个文件：
+$ tree.├── A│ ├── a│ └── x└── B├── b└── x然后，我使用联合挂载的方式，将这两个目录挂载到一个公共的目录 C 上：...</p>
+  </section>
+  <footer class="entry-footer">June 2, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Docker核心原理" href="https://nicko-ch.github.io/posts/docker/20210602-docker%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Kafa核心技术与实战</h2>
+  </header>
+  <section class="entry-content">
+    <p>概述 基本名词 Producer (消息生产者)：
+向 kafka broker 发消息的客户端；
+Consumer (消息消费者)：
+向 kafka broker 取消息的客户端；
+Consumer Group (消费者组)：
+由多个 consumer 组成。消费者组内每个消费者负责消费不同分区的数据，一个分区只能由一个组内消费者消费；消费者组之间互不影响。所有的消费者都属于某个消费者组，即消费者组是逻辑上的一个订阅者。
+Broker (服务器)：
+一台 kafka 服务器就是一个 broker。一个集群由多个 broker 组成。一个broker可以容纳多个 topic。
+Replica (副本)：
+为保证集群中的某个节点发生故障时，该节点上的 partition 数据不丢失，且 kafka 仍然能够继续工作，kafka 提供了副本机制，一个 topic 的每个分区都有若干个副本，一个 leader 和若干个 follower。
+Leader (主)：
+每个分区多个副本的“主”，生产者发送数据的对象，以及消费者消费数据的对 象都是 leader。
+Follower (从)：
+每个分区多个副本中的“从”，实时从 leader 中同步数据，保持和 leader 数据的同步。leader 发生故障时，某个 follower 会成为新的 leader 。
+Topic (主题)：
+主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。
+Partition (分区)：
+为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个 topic 可以分为多个 partition，每个 partition 是一个有序的队列；...</p>
+  </section>
+  <footer class="entry-footer">April 12, 2021&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Kafa核心技术与实战" href="https://nicko-ch.github.io/posts/kafka/20210412-kafa%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E6%88%98/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>分布式唯一ID</h2>
+  </header>
+  <section class="entry-content">
+    <p>1. 为什么要用分布式ID 1.1 什么是分布式ID 拿MySQL数据库举个栗子：
+在我们业务数据量不大的时候，单库单表完全可以支撑现有业务，数据再大一点搞个MySQL主从同步读写分离也能对付。
+但随着数据日渐增长，主从同步也扛不住了，就需要对数据库进行分库分表，但分库分表后需要有一个唯一ID来标识一条数据，数据库的自增ID显然不能满足需求；特别一点的如订单、优惠券也都需要有唯一ID做标识。此时一个能够生成全局唯一ID的系统是非常必要的。那么这个全局唯一ID就叫分布式ID。
+1.2 那么分布式ID需要满足那些条件？  全局唯一：必须保证ID是全局性唯一的，基本要求 高性能：高可用低延时，ID生成响应要块，否则反倒会成为业务瓶颈 高可用：100%的可用性是骗人的，但是也要无限接近于100%的可用性 好接入：要秉着拿来即用的设计原则，在系统设计和实现上要尽可能的简单 趋势递增：最好趋势递增，这个要求就得看具体业务场景了，一般不严格要求  2. 分布式ID都有哪些生成方式 2.1 UUID 优点：
+ 生成足够简单，本地生成无网络消耗，具有唯一性  缺点：
+ 无序的字符串，不具备自增特性 没有具体的业务含义 长度较大，不适合作为数据库主键，严重影响查询性能  2.2 数据库自增ID 优点：
+ 实现简单，ID主键，数值类型，带自增特性  缺点：
+ DB单机生成，存在并发宕机风险，无法扛住高并发场景  2.3 数据库集群模式 为了应对单机数据库的并发压力，设计上可以用双主模式集群的方式解决，但是这样也会引入一个新的问题，两个Mysql实例都是自增ID从1开始，会产生重复的ID怎么办？
+解决方案：设置起始值和自增步长
+MySQL_1 配置：
+set @@auto_increment_offset = 1; -- 起始值set @@auto_increment_increment = 2; -- 步长MySQL_2 配置：
+set @@auto_increment_offset = 2; -- 起始值set @@auto_increment_increment = 2; -- 步长这样两个MySQL实例的自增ID分别就是：...</p>
+  </section>
+  <footer class="entry-footer">April 8, 2021&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to 分布式唯一ID" href="https://nicko-ch.github.io/posts/solution/20210408-%E5%88%86%E5%B8%83%E5%BC%8F%E5%94%AF%E4%B8%80id/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Mysql实战45讲 - 丁奇</h2>
+  </header>
+  <section class="entry-content">
+    <p>基础篇 01丨基础架构：一条SQL查询语句是如何执行的？ 02丨日志系统：一条SQL更新语句是如何执行的？ 03丨事务隔离：为什么你改了我还看不见？  ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）
+  读未提交（read uncommitted）是指，一个事务还没提交时，它做的变更就能被别的事务看到。 读提交（read committed）是指，一个事务提交之后，它做的变更才会被其他事务看到。 可重复读（repeatable read）是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。 串行化（serializable ），顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  04丨深入浅出索引（上） 哈希表 适用于只有等值查询的场景，效率高，但无法范围查询
+有序数组 等值查询和范围查询场景中的性能就都非常优秀，但是更新数据效率低下，所有后续数据需往后移
+二叉树（BST） 各方面都非常优秀，但是极端情况下可能会发展为链表
+平衡二叉树（AVL） 二叉树的变异体，会根据情况自动左右旋转，维持子节点的平衡，但是树高无法维护
+红黑树（RBT） 相比较平衡二叉树，平衡条件宽松，只需保证左右深度差一倍，使写的操作变化减少，提高写的性能
+B树 可以拥有多节点，解决平衡二叉树存在的树层级太高，降低查询复杂度
+B&#43;树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引），叶子节点会保存前后的指针地址
+05丨深入浅出索引（下） 覆盖索引 由于非主键索引存在回表的情况，所以select时选择主键字段，可以防止回表从而提高查询效率
+最左前缀原则 实践篇 09丨普通索引和唯一索引，应该怎么选择？ 查询过程  对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。 对于唯一索引来说，由于索引定义了唯一性，查找到第一个满足条件的记录后，就会停止继续检索。   结论：性能上微乎其微，业务看具体场景
+ 理论上唯一索引的性能会比普通索引快，但是引擎是按页进行读写的，所以查询key行数据时候，去取出的data page大概率会有下一行的记录，所以只需要在内存级别再判断一次下一行的记录是否符合条件。
+即使复杂情况，key行在data page最后一行，必须读取下一页。这种情况换做整型的索引，但个data page可以存放上千个key，出现这种概率的情况也是极小的。
+更新过程 了解新概念change buffer
+ 当需要更新数据时候，在不影响一致性的情况下，innoDB会将这部分操作直接写到change buffer中。这样就不需要从磁盘中读取data page了。 将change buffer写入data page的过程称为merge，访问数据也则会触发，系统也会定期执行。 读取data page会占用buffer pool，这种方式可以提高内存利用率。  实际对比...</p>
+  </section>
+  <footer class="entry-footer">February 22, 2021&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Mysql实战45讲 - 丁奇" href="https://nicko-ch.github.io/posts/mysql/20210222-mysql%E5%AE%9E%E6%88%9845%E8%AE%B2/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Go高级编程 - Benchmark</h2>
+  </header>
+  <section class="entry-content">
+    <p>基础用法  benchmark和普通单元测试用例一样，文件命名都为 _test.go 函数名以 Benchmark 开头，参数是 b *testing.B。 对比普通的单元测试用例： 函数名以 Test 开头，参数是 t *testing.T。  运行用例 基础用例  运行当前 package 内的用例：go test example 或 go test . 运行子 package 内的用例： go test example/&lt;package name&gt; 或 go test ./&lt;package name&gt; 如果想递归测试当前目录下的所有的 package：go test ./... 或 go test example/...。  $ go test -bench . goos: darwin goarch: amd64 pkg: example BenchmarkFib-8 200 5865240 ns/op PASS ok example 1.782s  正则匹配，例：只运行以 Fib 结尾的benchmark用例  $ go test -bench=&#39;Fib$&#39; ....</p>
+  </section>
+  <footer class="entry-footer">February 20, 2021&nbsp;·&nbsp;4 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - Benchmark" href="https://nicko-ch.github.io/posts/golang/20210220-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-benchmark/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2>Go高级编程 - GMP并发模型</h2>
   </header>
   <section class="entry-content">
@@ -138,7 +291,7 @@
  G：goroutine 携程 P：processor 处理器 M：thread 内核线程...</p>
   </section>
   <footer class="entry-footer">January 7, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - GMP并发模型" href="https://nicko-ch.github.io/posts/2021/20210207-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gmp%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/"></a>
+  <a class="entry-link" aria-label="post link to Go高级编程 - GMP并发模型" href="https://nicko-ch.github.io/posts/golang/20210207-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gmp%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -165,106 +318,7 @@
  弱三色不变式  允许黑色对象引用白色对象，但白色对象必须存在链路上游有灰色对象保持有引用关系（破坏条件2）...</p>
   </section>
   <footer class="entry-footer">January 5, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - GC垃圾回收原理" href="https://nicko-ch.github.io/posts/2021/20210105-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Go高级编程 - 基础</h2>
-  </header>
-  <section class="entry-content">
-    <p>new() 和 make() 的区别 看起来二者没有什么区别，都在堆上分配内存，但是它们的行为不同，适用于不同的类型。
- new(T) 为每个新的类型T分配一片内存，初始化为 0 并且返回类型为*T的内存地址：这种方法 返回一个指向类型为 T，值为 0 的地址的指针，它适用于值类型如数组和结构体；它相当于 &amp;T{}。 make(T) 返回一个类型为 T 的初始值，它只适用于3种内建的引用类型：切片、map 和 channel。  换言之，new 函数分配内存，make 函数初始化；下图给出了区别：
-译者注：如何理解new、make、slice、map、channel的关系
-1.slice、map以及channel都是golang内建的一种引用类型，三者在内存中存在多个组成部分， 需要对内存组成部分初始化后才能使用，而make就是对三者进行初始化的一种操作方式
-2. new 获取的是存储指定变量内存地址的一个变量，对于变量内部结构并不会执行相应的初始化操作， 所以slice、map、channel需要make进行初始化并获取对应的内存地址，而非new简单的获取内存地址
- 编程内存模型  kernel内核区为操作系统专用 函数中局部变量是在stack中存放的 stack中的内存在函数结束后会被释放 函数中new和make声明的变量是在heap中存放的   fmt函数参数说明 基本
-%v	the value in a default formatwhen printing structs, the plus flag (%&#43;v) adds field names%#v	a Go-syntax representation of the value%T	a Go-syntax representation of the type of the value%%	a literal percent sign; consumes no valueThe default format for %v is:...</p>
-  </section>
-  <footer class="entry-footer">January 4, 2021&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - 基础" href="https://nicko-ch.github.io/posts/2021/20210104-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E5%9F%BA%E7%A1%80/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Go优秀开源项目分享</h2>
-  </header>
-  <section class="entry-content">
-    <p></p>
-  </section>
-  <footer class="entry-footer">December 31, 2020&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to Go优秀开源项目分享" href="https://nicko-ch.github.io/posts/2020/20201231-go%E4%BC%98%E7%A7%80%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E5%88%86%E4%BA%AB/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Refference - Go高级编程</h2>
-  </header>
-  <section class="entry-content">
-    <p>Title Link Description     Golang深入理解GPM模型 https://www.bilibili.com/video/BV19r4y1w7Nx    Golang中GC回收机制三色标记与混合写屏障 https://www.bilibili.com/video/BV1wz4y1y7Kd    Golang修养之路 https://www.kancloud.cn/aceld/golang/1858955    Go语言规范 https://golang.google.cn/ref/spec    GO 命令教程 https://github.com/hyper0x/go_command_tutorial    Go 语言性能优化 https://cch123.github.io/perf_opt/    图解 Go pprof 收集数据的工作流 https://mp.weixin.qq.com/s/HQzz2NQ2lSg_LLsNB7C-mw    7天用Go从零实现Web框架Gee教程 https://geektutu.com/post/gee.html    build-web-application-with-golang https://github.com/astaxie/build-web-application-with-golang    B站最深度的Golang学习到实战 up主强力推荐 https://www.bilibili.com/video/BV1TK4y1a7ex    Go contributor 解答：关于 Go GC 的 20 个核心问题 https://blog....</p>
-  </section>
-  <footer class="entry-footer">December 21, 2020&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Refference - Go高级编程" href="https://nicko-ch.github.io/posts/2020/20201221-refference-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Go基础语法</h2>
-  </header>
-  <section class="entry-content">
-    <p>array 数组 声明方式
-var identifier [len]type // var arr [5]int  var arrAge = [5]int{18, 20, 15, 22, 16} // 声明容量为5的数组并初始化 var arrLazy = [...]int{5, 6, 7, 8, 22} // 初始化数组自动计算容量（实际上已是切片） var arrLazy = []int{5, 6, 7, 8, 22}	// 初始化得到的实际上是切片slice var arrKeyValue = [5]string{3: &#34;Chris&#34;, 4: &#34;Ron&#34;} // 0,1,2 都未空值 var arrKeyValue = []string{3: &#34;Chris&#34;, 4: &#34;Ron&#34;}	// 初始化得到的实际上是切片slice  slice 切片 本质
-不是一组数组的指针，是一种数据结构，用来操作内部元素。
-切片名称 [low : high : max] low: 起始下标位置 high: 结束下标位置 len = high - low max: 容量 cap = max - low 声明方式...</p>
-  </section>
-  <footer class="entry-footer">December 18, 2020&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to Go基础语法" href="https://nicko-ch.github.io/posts/2020/20201218-go%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Git基础语法</h2>
-  </header>
-  <section class="entry-content">
-    <p>Command 命令 git init 初始化仓库 $ git init Initialized empty Git repository in D:/www/git_class/.git/ git config 配置信息  —global [key] [value] 全局配置  $ git config --global user.name &#39;Nicko_Ch&#39; $ git config --global user.email cyn_411@sina.com git add {filename} 将文件添加到暂存区 $ touch README.md $ vim README.md $ git add README.md git status 查看项目的当前状态  -s 精简模式  $ git status On branch master Changes to be committed: (use &#34;git restore --staged &lt;file&gt;....</p>
-  </section>
-  <footer class="entry-footer">December 16, 2020&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to Git基础语法" href="https://nicko-ch.github.io/posts/2020/20201216-git%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Terms</h2>
-  </header>
-  <section class="entry-content">
-    <p>Terms     分布式事务方式   bloom filter   Bitmap   nginx平滑重启原理   Linux内核特性之VDSO   NTP UPDATE 和 NTPD   QUICK   Head-of-line blocking   cgroup   Scaling Memcache At Facebook   errorgroup   pipeline   链表   bytegraph   neo4j   发号器   Graph DB   位与操作   网易DDB   sharding   SOA   DDD   Machine line   COW   “nginx_pool_t &#34;   tcmalloc   sync....</p>
-  </section>
-  <footer class="entry-footer">December 15, 2020&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Terms" href="https://nicko-ch.github.io/posts/2020/20201215-terms/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Laradock 切换数据库错误</h2>
-  </header>
-  <section class="entry-content">
-    <p>Laradock 切换 数据库5.7版本 1. 修改.env文件 源文件
-### MYSQL #################################################MYSQL_VERSION=latestMYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d修改为
-### MYSQL #################################################MYSQL_VERSION=5.7.24MYSQL_DATABASE=defaultMYSQL_USER=defaultMYSQL_PASSWORD=secretMYSQL_PORT=3306MYSQL_ROOT_PASSWORD=root123456MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d 2. 删除旧容器相关数据 2.1 列出所有容器 docker ps -a2.2 停止所有容器 docker ps -a2.3 删除容器 docker rm &lt;容器ID1&gt; &lt;容器ID2&gt; ...2.4 列出镜像 docker images2.5 删除镜像 docker rmi &lt;镜像ID1&gt; &lt;镜像ID2&gt; ...2.6 查看挂载盘 docker volume ls2.7 删除镜像 docker volume rm &lt;VOLUME NAME1&gt; &lt;VOLUME NAME2&gt; ....</p>
-  </section>
-  <footer class="entry-footer">November 7, 2018&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to Laradock 切换数据库错误" href="https://nicko-ch.github.io/posts/2018/20181107-laradock-%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%99%E8%AF%AF/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>PHPStorm 项目目录分类管理配置</h2>
-  </header>
-  <section class="entry-content">
-    <p>phpstorm 为了方便用户管理项目目录，目前可以将项目文件夹设置为 4 类 Test,Sources,Excluded,Resource Root。 1. Test (颜色为绿色) &gt; 测试主目录，如 `Laravel` 的 `tests` 目录2. Source (颜色为蓝色) &gt; 项目主代码目录，如 `Laravel` 的 `app` 目录3. Excluded (颜色为红色) &gt; 第三方扩展依赖(不会修改代码)，不建立索引，不由`phpstorm`管理，如 `Laravel` 的 `vendor` 目录4. Resource Root (颜色为紫色) &gt; 前端资源，如 `Laravel` 的 `public` 目录合理设置项目的目录是有作用的，如  1 设置 Test 目录，可以在project勾选只显示 Test,方便测试时查看 2 设置 Excluded 目录，可以减少 phpstorm 建立索引的时间 3 设置 Resource Root 目录，以 Laravel 为例，可以帮助检测模板文件的资源路径    </p>
-  </section>
-  <footer class="entry-footer">November 1, 2018&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to PHPStorm 项目目录分类管理配置" href="https://nicko-ch.github.io/posts/2018/20181101-phpstorm-%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%E5%88%86%E7%B1%BB%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE/"></a>
+  <a class="entry-link" aria-label="post link to Go高级编程 - GC垃圾回收原理" href="https://nicko-ch.github.io/posts/golang/20210105-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
