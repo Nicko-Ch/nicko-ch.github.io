@@ -131,6 +131,19 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2>Go高级编程 - 性能监测与优化实践方法</h2>
+  </header>
+  <section class="entry-content">
+    <p>性能监测与优化实践方法 场景1：如何分析程序的运行时间与CPU利用率情况？ （1）shell内置time指令 $ time go run test2.go &amp;{{0 0} 张三 0} real	0m0.843s user	0m0.216s sys	0m0.389s  real ：从程序开始到结束，实际使用时间； user ：程序在用户态使用时间； sys ：程序在内核态使用时间。  一般情况下 real &gt;= user &#43; sys，因为系统还有其它进程(切换其他进程中间对于本进程会有空白期)。
+（2）/user/bin/time 指令 使用时需要输入决定路径，带上参数-v
+$ /usr/bin/time -v go run test2.go Command being timed: &#34;go run test2.go&#34; User time (seconds): 0.12 System time (seconds): 0.06 Percent of CPU this job got: 115% Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.16 Average shared text size (kbytes): 0 Average unshared data size (kbytes): 0 Average stack size (kbytes): 0 Average total size (kbytes): 0 Maximum resident set size (kbytes): 41172 Average resident set size (kbytes): 0 Major (requiring I/O) page faults: 1 Minor (reclaiming a frame) page faults: 15880 Voluntary context switches: 897 Involuntary context switches: 183 Swaps: 0 File system inputs: 256 File system outputs: 2664 Socket messages sent: 0 Socket messages received: 0 Signals delivered: 0 Page size (bytes): 4096 Exit status: 0  CPU占用率； 内存使用情况； Page Fault 情况； 进程切换情况； 文件系统IO； Socket 使用情况； ……  场景2：如何分析golang程序的内存使用情况？ （1）内存占用情况查看 场景例子代码demo...</p>
+  </section>
+  <footer class="entry-footer">January 1, 2022&nbsp;·&nbsp;8 min</footer>
+  <a class="entry-link" aria-label="post link to Go高级编程 - 性能监测与优化实践方法" href="https://nicko-ch.github.io/posts/golang/20220101-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-%E6%80%A7%E8%83%BD%E7%9B%91%E6%B5%8B%E4%B8%8E%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5%E6%96%B9%E6%B3%95/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2>计算机考研408 - 计算机网络</h2>
   </header>
   <section class="entry-content">
@@ -292,33 +305,6 @@ B&#43;树 B树的变异体，讲数据存储在叶节点（也成为聚簇索引
   </section>
   <footer class="entry-footer">January 7, 2021&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Go高级编程 - GMP并发模型" href="https://nicko-ch.github.io/posts/golang/20210207-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gmp%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>Go高级编程 - GC垃圾回收原理</h2>
-  </header>
-  <section class="entry-content">
-    <p>标记清除法  STW（stop the world）→ 标记对象依赖关系 → 清楚待回收对象 → 结束STW
- 步骤：
- 暂停程序业务逻辑, 找出不可达的对象，和可达对象。 开始标记，程序找出它所有可达的对象，并做上标记。 开始清除未标记对象。 停止STW，让程序恢复运行。  缺点：
- STW严重影响程序的运行效率 标记需要扫描整个heap 清除数据也会导致产生多余的heap碎片  优化：
- 将步骤3和4互换位置，缩短STW的范围  三色标记法  白色：待回收对象 灰色：待扫描对象 黑色：已扫描对象
- 目标：处理完所有灰色的对象为止
-  步骤：
-  将所有的对象标记为默认颜色“白色”
-  从根节点（Root Set）出发，遍历将被根节点引用的对象标记为&#34;灰色&#34;
-  遍历灰色集合，将灰色对象引用的白色对象标记为“灰色”，然后将遍历完的灰色对象标记为“黑色”
-  重复步骤3，直到灰色集合中无任何对象
-  最后回收所有白色集合对象
-  缺点（不启动STW保护）：
-有可能造成对象丢失，即过程中黑色对象引用了白色对象，同时白色对象丢失了灰色对象的关系，导致GC把黑色对象引用的白色对象被回收
-需同时满足两条件：
- 一个白色对象被黑色对象引用（白色被挂载到黑色下） 灰色对象与被挂载的白色对象关系遭到破坏（灰色同时丢失了白色的挂载）  强弱三色不变式 强三色不变式  强制性不允许黑色对象引用白色对象（破坏条件1）
- 弱三色不变式  允许黑色对象引用白色对象，但白色对象必须存在链路上游有灰色对象保持有引用关系（破坏条件2）...</p>
-  </section>
-  <footer class="entry-footer">January 5, 2021&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Go高级编程 - GC垃圾回收原理" href="https://nicko-ch.github.io/posts/golang/20210105-go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

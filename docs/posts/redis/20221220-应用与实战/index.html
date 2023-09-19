@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Redis应用与实战 | &gt; $ cd /home</title>
+<meta name="keywords" content="Redis" />
+<meta name="description" content="应用与实战 Redis分布式锁 Redlock算法 Redlock 算法是 Redis 的作者 Antirez 提出的一种分布式锁的算法，Redlock 算法的基本思想是，使用多个 Redis 实例来存储锁，客户端需要同时向多个实例请求加锁和解锁，只有当大多数实例同意时，才认为操作成功。
+Redlock 算法的具体步骤如下：
+ 加锁：客户端获取当前时间戳，然后依次向 N 个 Redis 实例发送 SETNX 命令，将 key 设置为 lock，value 设置为一个随机字符串，并设置一个过期时间。如果向某个实例发送命令失败，就立即重试，直到成功或超时。然后客户端计算从获取时间戳到完成加锁的总耗时，如果超过了过期时间的一半，就认为加锁失败；否则，如果成功加锁的实例数超过了 N/2，就认为加锁成功，并返回 value；否则，就认为加锁失败，并向所有实例发送 DEL 命令，释放锁。 解锁：客户端向所有实例发送 GET 命令，获取 key 的值，并与自己保存的随机字符串比较。如果相同，表示是自己加的锁，就可以向所有实例发送 DEL 命令，删除 key，释放锁；如果不同，表示是别人加的锁，就不做任何操作。  Redlock 算法的优点是，它可以容忍少数实例故障或网络分区，只要大多数实例正常工作，就可以保证锁的正确性。它也可以避免单点故障导致的死锁。它的缺点是，它需要多个 Redis 实例和多次网络通信，可能会增加复杂度和开销。它也不能完全消除时钟漂移的影响，只能尽量减小其概率和影响。
+ 简化下步骤就是：
+  按顺序向5个master节点请求加锁 根据设置的超时时间来判断，是不是要跳过该master节点。 如果大于等于三个节点加锁成功，并且使用的时间小于锁的有效期，即可认定加锁成功啦。 如果获取锁失败，解锁！    什么是缓存穿透、缓存雪崩、缓存击穿 缓存穿透 指查询一个一定不存在的数据，由于缓存是不命中时需要从数据库查询，查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到数据库去查询，进而给数据库带来压力。
+ 如故意查询某错误值，直接穿透缓存层，导致DB压力过大   解决方案： 1、对接口非法参数进行校验； 2、如果数据库为空，也需要缓存一个空值，设置有效时间； 3、使用布隆过滤器快速判断数据是否存在；
+ 缓存雪崩 指缓存中数据大批量到过期时间，而查询数据量巨大，请求都直接访问数据库，引起数据库压力过大甚至down机。
+ 缓存雪奔一般是由于大量数据同时过期造成的，对于这个原因，可通过均匀设置过期时间解决，即让过期时间相对离散一点。 Redis 故障宕机也可能引起缓存雪奔。   解决方案： 1、如采用一个较大固定值&#43;一个较小的随机值，5小时&#43;0到1800秒酱紫； 2、对于故障宕机情况，使用RDB&#43;AOF快速恢复；">
+<meta name="author" content="">
+<link rel="canonical" href="https://nicko-ch.github.io/posts/redis/20221220-%E5%BA%94%E7%94%A8%E4%B8%8E%E5%AE%9E%E6%88%98/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0459a4ebf56f381ae411e97a494635ba7ce9db741ff9a2cfbf7e12366bf1e73d.css" integrity="sha256-BFmk6/VvOBrkEel6SUY1unzp23Qf&#43;aLPv34SNmvx5z0=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.6f62d19b78590241c3e007a10f91f45f95ce2528ca8f3e33c542e95f8ed5691f.js" integrity="sha256-b2LRm3hZAkHD4AehD5H0X5XOJSjKjz4zxULpX47VaR8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://nicko-ch.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://nicko-ch.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nicko-ch.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://nicko-ch.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://nicko-ch.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.88.0" />
+<meta property="og:title" content="Redis应用与实战" />
+<meta property="og:description" content="应用与实战 Redis分布式锁 Redlock算法 Redlock 算法是 Redis 的作者 Antirez 提出的一种分布式锁的算法，Redlock 算法的基本思想是，使用多个 Redis 实例来存储锁，客户端需要同时向多个实例请求加锁和解锁，只有当大多数实例同意时，才认为操作成功。
+Redlock 算法的具体步骤如下：
+ 加锁：客户端获取当前时间戳，然后依次向 N 个 Redis 实例发送 SETNX 命令，将 key 设置为 lock，value 设置为一个随机字符串，并设置一个过期时间。如果向某个实例发送命令失败，就立即重试，直到成功或超时。然后客户端计算从获取时间戳到完成加锁的总耗时，如果超过了过期时间的一半，就认为加锁失败；否则，如果成功加锁的实例数超过了 N/2，就认为加锁成功，并返回 value；否则，就认为加锁失败，并向所有实例发送 DEL 命令，释放锁。 解锁：客户端向所有实例发送 GET 命令，获取 key 的值，并与自己保存的随机字符串比较。如果相同，表示是自己加的锁，就可以向所有实例发送 DEL 命令，删除 key，释放锁；如果不同，表示是别人加的锁，就不做任何操作。  Redlock 算法的优点是，它可以容忍少数实例故障或网络分区，只要大多数实例正常工作，就可以保证锁的正确性。它也可以避免单点故障导致的死锁。它的缺点是，它需要多个 Redis 实例和多次网络通信，可能会增加复杂度和开销。它也不能完全消除时钟漂移的影响，只能尽量减小其概率和影响。
+ 简化下步骤就是：
+  按顺序向5个master节点请求加锁 根据设置的超时时间来判断，是不是要跳过该master节点。 如果大于等于三个节点加锁成功，并且使用的时间小于锁的有效期，即可认定加锁成功啦。 如果获取锁失败，解锁！    什么是缓存穿透、缓存雪崩、缓存击穿 缓存穿透 指查询一个一定不存在的数据，由于缓存是不命中时需要从数据库查询，查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到数据库去查询，进而给数据库带来压力。
+ 如故意查询某错误值，直接穿透缓存层，导致DB压力过大   解决方案： 1、对接口非法参数进行校验； 2、如果数据库为空，也需要缓存一个空值，设置有效时间； 3、使用布隆过滤器快速判断数据是否存在；
+ 缓存雪崩 指缓存中数据大批量到过期时间，而查询数据量巨大，请求都直接访问数据库，引起数据库压力过大甚至down机。
+ 缓存雪奔一般是由于大量数据同时过期造成的，对于这个原因，可通过均匀设置过期时间解决，即让过期时间相对离散一点。 Redis 故障宕机也可能引起缓存雪奔。   解决方案： 1、如采用一个较大固定值&#43;一个较小的随机值，5小时&#43;0到1800秒酱紫； 2、对于故障宕机情况，使用RDB&#43;AOF快速恢复；" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://nicko-ch.github.io/posts/redis/20221220-%E5%BA%94%E7%94%A8%E4%B8%8E%E5%AE%9E%E6%88%98/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-12-20T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2022-12-20T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Redis应用与实战"/>
+<meta name="twitter:description" content="应用与实战 Redis分布式锁 Redlock算法 Redlock 算法是 Redis 的作者 Antirez 提出的一种分布式锁的算法，Redlock 算法的基本思想是，使用多个 Redis 实例来存储锁，客户端需要同时向多个实例请求加锁和解锁，只有当大多数实例同意时，才认为操作成功。
+Redlock 算法的具体步骤如下：
+ 加锁：客户端获取当前时间戳，然后依次向 N 个 Redis 实例发送 SETNX 命令，将 key 设置为 lock，value 设置为一个随机字符串，并设置一个过期时间。如果向某个实例发送命令失败，就立即重试，直到成功或超时。然后客户端计算从获取时间戳到完成加锁的总耗时，如果超过了过期时间的一半，就认为加锁失败；否则，如果成功加锁的实例数超过了 N/2，就认为加锁成功，并返回 value；否则，就认为加锁失败，并向所有实例发送 DEL 命令，释放锁。 解锁：客户端向所有实例发送 GET 命令，获取 key 的值，并与自己保存的随机字符串比较。如果相同，表示是自己加的锁，就可以向所有实例发送 DEL 命令，删除 key，释放锁；如果不同，表示是别人加的锁，就不做任何操作。  Redlock 算法的优点是，它可以容忍少数实例故障或网络分区，只要大多数实例正常工作，就可以保证锁的正确性。它也可以避免单点故障导致的死锁。它的缺点是，它需要多个 Redis 实例和多次网络通信，可能会增加复杂度和开销。它也不能完全消除时钟漂移的影响，只能尽量减小其概率和影响。
+ 简化下步骤就是：
+  按顺序向5个master节点请求加锁 根据设置的超时时间来判断，是不是要跳过该master节点。 如果大于等于三个节点加锁成功，并且使用的时间小于锁的有效期，即可认定加锁成功啦。 如果获取锁失败，解锁！    什么是缓存穿透、缓存雪崩、缓存击穿 缓存穿透 指查询一个一定不存在的数据，由于缓存是不命中时需要从数据库查询，查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到数据库去查询，进而给数据库带来压力。
+ 如故意查询某错误值，直接穿透缓存层，导致DB压力过大   解决方案： 1、对接口非法参数进行校验； 2、如果数据库为空，也需要缓存一个空值，设置有效时间； 3、使用布隆过滤器快速判断数据是否存在；
+ 缓存雪崩 指缓存中数据大批量到过期时间，而查询数据量巨大，请求都直接访问数据库，引起数据库压力过大甚至down机。
+ 缓存雪奔一般是由于大量数据同时过期造成的，对于这个原因，可通过均匀设置过期时间解决，即让过期时间相对离散一点。 Redis 故障宕机也可能引起缓存雪奔。   解决方案： 1、如采用一个较大固定值&#43;一个较小的随机值，5小时&#43;0到1800秒酱紫； 2、对于故障宕机情况，使用RDB&#43;AOF快速恢复；"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://nicko-ch.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Redis应用与实战",
+      "item": "https://nicko-ch.github.io/posts/redis/20221220-%E5%BA%94%E7%94%A8%E4%B8%8E%E5%AE%9E%E6%88%98/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Redis应用与实战",
+  "name": "Redis应用与实战",
+  "description": "应用与实战 Redis分布式锁 Redlock算法 Redlock 算法是 Redis 的作者 Antirez 提出的一种分布式锁的算法，Redlock 算法的基本思想是，使用多个 Redis 实例来存储锁，客户端需要同时向多个实例请求加锁和解锁，只有当大多数实例同意时，才认为操作成功。\nRedlock 算法的具体步骤如下：\n 加锁：客户端获取当前时间戳，然后依次向 N 个 Redis 实例发送 SETNX 命令，将 key 设置为 lock，value 设置为一个随机字符串，并设置一个过期时间。如果向某个实例发送命令失败，就立即重试，直到成功或超时。然后客户端计算从获取时间戳到完成加锁的总耗时，如果超过了过期时间的一半，就认为加锁失败；否则，如果成功加锁的实例数超过了 N/2，就认为加锁成功，并返回 value；否则，就认为加锁失败，并向所有实例发送 DEL 命令，释放锁。 解锁：客户端向所有实例发送 GET 命令，获取 key 的值，并与自己保存的随机字符串比较。如果相同，表示是自己加的锁，就可以向所有实例发送 DEL 命令，删除 key，释放锁；如果不同，表示是别人加的锁，就不做任何操作。  Redlock 算法的优点是，它可以容忍少数实例故障或网络分区，只要大多数实例正常工作，就可以保证锁的正确性。它也可以避免单点故障导致的死锁。它的缺点是，它需要多个 Redis 实例和多次网络通信，可能会增加复杂度和开销。它也不能完全消除时钟漂移的影响，只能尽量减小其概率和影响。\n 简化下步骤就是：\n  按顺序向5个master节点请求加锁 根据设置的超时时间来判断，是不是要跳过该master节点。 如果大于等于三个节点加锁成功，并且使用的时间小于锁的有效期，即可认定加锁成功啦。 如果获取锁失败，解锁！    什么是缓存穿透、缓存雪崩、缓存击穿 缓存穿透 指查询一个一定不存在的数据，由于缓存是不命中时需要从数据库查询，查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到数据库去查询，进而给数据库带来压力。\n 如故意查询某错误值，直接穿透缓存层，导致DB压力过大   解决方案： 1、对接口非法参数进行校验； 2、如果数据库为空，也需要缓存一个空值，设置有效时间； 3、使用布隆过滤器快速判断数据是否存在；\n 缓存雪崩 指缓存中数据大批量到过期时间，而查询数据量巨大，请求都直接访问数据库，引起数据库压力过大甚至down机。\n 缓存雪奔一般是由于大量数据同时过期造成的，对于这个原因，可通过均匀设置过期时间解决，即让过期时间相对离散一点。 Redis 故障宕机也可能引起缓存雪奔。   解决方案： 1、如采用一个较大固定值+一个较小的随机值，5小时+0到1800秒酱紫； 2、对于故障宕机情况，使用RDB+AOF快速恢复；",
+  "keywords": [
+    "Redis"
+  ],
+  "articleBody": "应用与实战 Redis分布式锁 Redlock算法 Redlock 算法是 Redis 的作者 Antirez 提出的一种分布式锁的算法，Redlock 算法的基本思想是，使用多个 Redis 实例来存储锁，客户端需要同时向多个实例请求加锁和解锁，只有当大多数实例同意时，才认为操作成功。\nRedlock 算法的具体步骤如下：\n 加锁：客户端获取当前时间戳，然后依次向 N 个 Redis 实例发送 SETNX 命令，将 key 设置为 lock，value 设置为一个随机字符串，并设置一个过期时间。如果向某个实例发送命令失败，就立即重试，直到成功或超时。然后客户端计算从获取时间戳到完成加锁的总耗时，如果超过了过期时间的一半，就认为加锁失败；否则，如果成功加锁的实例数超过了 N/2，就认为加锁成功，并返回 value；否则，就认为加锁失败，并向所有实例发送 DEL 命令，释放锁。 解锁：客户端向所有实例发送 GET 命令，获取 key 的值，并与自己保存的随机字符串比较。如果相同，表示是自己加的锁，就可以向所有实例发送 DEL 命令，删除 key，释放锁；如果不同，表示是别人加的锁，就不做任何操作。  Redlock 算法的优点是，它可以容忍少数实例故障或网络分区，只要大多数实例正常工作，就可以保证锁的正确性。它也可以避免单点故障导致的死锁。它的缺点是，它需要多个 Redis 实例和多次网络通信，可能会增加复杂度和开销。它也不能完全消除时钟漂移的影响，只能尽量减小其概率和影响。\n 简化下步骤就是：\n  按顺序向5个master节点请求加锁 根据设置的超时时间来判断，是不是要跳过该master节点。 如果大于等于三个节点加锁成功，并且使用的时间小于锁的有效期，即可认定加锁成功啦。 如果获取锁失败，解锁！    什么是缓存穿透、缓存雪崩、缓存击穿 缓存穿透 指查询一个一定不存在的数据，由于缓存是不命中时需要从数据库查询，查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到数据库去查询，进而给数据库带来压力。\n 如故意查询某错误值，直接穿透缓存层，导致DB压力过大   解决方案： 1、对接口非法参数进行校验； 2、如果数据库为空，也需要缓存一个空值，设置有效时间； 3、使用布隆过滤器快速判断数据是否存在；\n 缓存雪崩 指缓存中数据大批量到过期时间，而查询数据量巨大，请求都直接访问数据库，引起数据库压力过大甚至down机。\n 缓存雪奔一般是由于大量数据同时过期造成的，对于这个原因，可通过均匀设置过期时间解决，即让过期时间相对离散一点。 Redis 故障宕机也可能引起缓存雪奔。   解决方案： 1、如采用一个较大固定值+一个较小的随机值，5小时+0到1800秒酱紫； 2、对于故障宕机情况，使用RDB+AOF快速恢复；\n 缓存击穿 指热点key在某个时间点过期的时候，而恰好在这个时间点对这个Key有大量的并发请求过来，从而大量的请求打到db。\n 缓存击穿与缓存雪崩的区别：击穿是单热key失效，而雪崩是大量key集体失效   解决方案： 1、使用分布式互斥锁更新数据，抢不到锁自旋等待； 2、热点数据不设置过期时间，待业务更新通过canel等插件触发更新；\n 什么是热Key问题，如何解决热key问题 如果某一热点key的请求到服务器主机时，由于请求量特别大，可能会导致主机资源不足，甚至宕机，从而影响正常的服务。\n 用户消费的数据远大于生产的数据，如秒杀、热点新闻等读多写少的场景。 请求分片集中，超过单Redi服务器的性能，比如固定名称key，Hash落入同一台服务器，瞬间访问量极大，超过机器瓶颈，产生热点Key问题。   解决方案： 1、Redis集群扩容：增加分片副本，均衡读流量； 2、使用一致性hash算法，解决缓存偏斜问题；\n Redis 过期策略和内存淘汰策略 过期策略 定时过期  每个设置过期时间的key都需要创建一个定时器，到过期时间就会立即对key进行清除。该策略可以立即清除过期的数据，对内存很友好；但是会占用大量的CPU资源去处理过期的数据，从而影响缓存的响应时间和吞吐量。\n 惰性过期  只有当访问一个key时，才会判断该key是否已过期，过期则清除。该策略可以最大化地节省CPU资源，却对内存非常不友好。极端情况可能出现大量的过期key没有再次被访问，从而不会被清除，占用大量内存。\n 定期过期  每隔一定的时间，会扫描一定数量的数据库的expires字典中一定数量的key，并清除其中已过期的key。该策略是前两者的一个折中方案。通过调整定时扫描的时间间隔和每次扫描的限定耗时，可以在不同情况下使得CPU和内存资源达到最优的平衡效果。\nexpires字典会保存所有设置了过期时间的key的过期时间数据，其中，key是指向键空间中的某个键的指针，value是该键的毫秒精度的UNIX时间戳表示的过期时间。键空间是指该Redis集群中保存的所有键。\n Redis中同时使用了**惰性过期**和**定期过期**两种过期策略。\n但是仍可能在内存大量读写的情况下，遗留大量已过期数据，仍占用内存，这种情况下为了避免redis宕机，redis有8种内存淘汰策略兜底~\n内存淘汰策略  volatile-lru：当内存不足以容纳新写入数据时，从设置了过期时间的key中使用LRU（最近最少使用）算法进行淘汰； allkeys-lru：当内存不足以容纳新写入数据时，从所有key中使用LRU（最近最少使用）算法进行淘汰。 volatile-lfu：4.0版本新增，当内存不足以容纳新写入数据时，在过期的key中，使用LFU算法进行删除key。 allkeys-lfu：4.0版本新增，当内存不足以容纳新写入数据时，从所有key中使用LFU算法进行淘汰； volatile-random：当内存不足以容纳新写入数据时，从设置了过期时间的key中，随机淘汰数据；。 allkeys-random：当内存不足以容纳新写入数据时，从所有key中随机淘汰数据。 volatile-ttl：当内存不足以容纳新写入数据时，在设置了过期时间的key中，根据过期时间进行淘汰，越早过期的优先被淘汰； noeviction：默认策略，当内存不足以容纳新写入数据时，新写入操作会报错。  什么是Redisson？说说它的原理 Redisson解决了，分布式锁可能存在锁过期释放，业务没执行完的问题。\n只要线程一加锁成功，就会启动一个watch dog看门狗，它是一个后台线程，会每隔10秒检查一下，如果线程1还持有锁，那么就会不断的延长锁key的生存时间。因此，Redisson就是使用watch dog解决了锁过期释放，业务没执行完问题。\nMysql与Redis如何保证数据一致性 通过订阅biglog异步删除缓存\n步骤如下：\n 修改DB canal订阅binlog，感知数据变更，发送请求至MQ MQ异步更新缓存  Canal Canal是阿里开源的用于订阅Mysql中的Binlog中间件，从而触发后续开发操作\n原理为：Mysql主备复制\n在生成 RDB期间，Redis 可以同时处理写请求么？ 可以的，Redis提供两个指令生成RDB，分别是save和bgsave。\n 如果是save指令，会阻塞，因为是主线程执行的。 如果是bgsave指令，是fork一个子进程来写入RDB文件的，快照持久化完全交给子进程来处理，父进程则可以继续处理客户端的请求。  布隆过滤器 布隆过滤器的主要作用是：快速判断元素是否在当前集合中\n判断是否存在：预分配一个很长的bitmap位图作为集合，对元素进行哈希散列运算，得到一串01数据，然后与集合进行“与”运算，结果与01数据串相同，即大概率存在，反之即不存在\n新增元素进集合：对元素进行哈希散列运算，得到一串01数据串，然后与集合进行”或“运算，即可得到新集合位图\n",
+  "wordCount" : "120",
+  "inLanguage": "en",
+  "datePublished": "2022-12-20T00:00:00Z",
+  "dateModified": "2022-12-20T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://nicko-ch.github.io/posts/redis/20221220-%E5%BA%94%E7%94%A8%E4%B8%8E%E5%AE%9E%E6%88%98/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\u003e $ cd /home",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://nicko-ch.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://nicko-ch.github.io/" accesskey="h" title="&gt; $ cd /home (Alt + H)">&gt; $ cd /home</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://nicko-ch.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://nicko-ch.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://nicko-ch.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://nicko-ch.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Redis应用与实战
+    </h1>
+    <div class="post-meta">December 20, 2022&nbsp;·&nbsp;1 min
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <div class="details">Table of Contents</div>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%ba%94%e7%94%a8%e4%b8%8e%e5%ae%9e%e6%88%98" aria-label="应用与实战">应用与实战</a></li>
+                <li>
+                    <a href="#redis%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81" aria-label="Redis分布式锁">Redis分布式锁</a><ul>
+                        
+                <li>
+                    <a href="#redlock%e7%ae%97%e6%b3%95" aria-label="Redlock算法">Redlock算法</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%98%af%e7%bc%93%e5%ad%98%e7%a9%bf%e9%80%8f%e7%bc%93%e5%ad%98%e9%9b%aa%e5%b4%a9%e7%bc%93%e5%ad%98%e5%87%bb%e7%a9%bf" aria-label="什么是缓存穿透、缓存雪崩、缓存击穿">什么是缓存穿透、缓存雪崩、缓存击穿</a><ul>
+                        
+                <li>
+                    <a href="#%e7%bc%93%e5%ad%98%e7%a9%bf%e9%80%8f" aria-label="缓存穿透">缓存穿透</a></li>
+                <li>
+                    <a href="#%e7%bc%93%e5%ad%98%e9%9b%aa%e5%b4%a9" aria-label="缓存雪崩">缓存雪崩</a></li>
+                <li>
+                    <a href="#%e7%bc%93%e5%ad%98%e5%87%bb%e7%a9%bf" aria-label="缓存击穿">缓存击穿</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%98%af%e7%83%adkey%e9%97%ae%e9%a2%98%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3%e7%83%adkey%e9%97%ae%e9%a2%98" aria-label="什么是热Key问题，如何解决热key问题"><strong><strong>什么是热Key问题，如何解决热key问题</strong></strong></a></li>
+                <li>
+                    <a href="#redis-%e8%bf%87%e6%9c%9f%e7%ad%96%e7%95%a5%e5%92%8c%e5%86%85%e5%ad%98%e6%b7%98%e6%b1%b0%e7%ad%96%e7%95%a5" aria-label="Redis 过期策略和内存淘汰策略"><strong><strong>Redis 过期策略和内存淘汰策略</strong></strong></a><ul>
+                        
+                <li>
+                    <a href="#%e8%bf%87%e6%9c%9f%e7%ad%96%e7%95%a5" aria-label="过期策略"><strong><strong>过期策略</strong></strong></a><ul>
+                        
+                <li>
+                    <a href="#%e5%ae%9a%e6%97%b6%e8%bf%87%e6%9c%9f" aria-label="定时过期"><strong>定时过期</strong></a></li>
+                <li>
+                    <a href="#%e6%83%b0%e6%80%a7%e8%bf%87%e6%9c%9f" aria-label="惰性过期"><strong>惰性过期</strong></a></li>
+                <li>
+                    <a href="#%e5%ae%9a%e6%9c%9f%e8%bf%87%e6%9c%9f" aria-label="定期过期"><strong>定期过期</strong></a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%86%85%e5%ad%98%e6%b7%98%e6%b1%b0%e7%ad%96%e7%95%a5" aria-label="内存淘汰策略">内存淘汰策略</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%98%afredisson%e8%af%b4%e8%af%b4%e5%ae%83%e7%9a%84%e5%8e%9f%e7%90%86" aria-label="什么是Redisson？说说它的原理">什么是Redisson？说说它的原理</a></li>
+                <li>
+                    <a href="#mysql%e4%b8%8eredis%e5%a6%82%e4%bd%95%e4%bf%9d%e8%af%81%e6%95%b0%e6%8d%ae%e4%b8%80%e8%87%b4%e6%80%a7" aria-label="Mysql与Redis如何保证数据一致性">Mysql与Redis如何保证数据一致性</a><ul>
+                        
+                <li>
+                    <a href="#canal" aria-label="Canal">Canal</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%9c%a8%e7%94%9f%e6%88%90-rdb%e6%9c%9f%e9%97%b4redis-%e5%8f%af%e4%bb%a5%e5%90%8c%e6%97%b6%e5%a4%84%e7%90%86%e5%86%99%e8%af%b7%e6%b1%82%e4%b9%88" aria-label="在生成 RDB期间，Redis 可以同时处理写请求么？"><strong><strong>在生成 RDB期间，Redis 可以同时处理写请求么？</strong></strong></a></li>
+                <li>
+                    <a href="#%e5%b8%83%e9%9a%86%e8%bf%87%e6%bb%a4%e5%99%a8" aria-label="布隆过滤器">布隆过滤器</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="应用与实战">应用与实战<a hidden class="anchor" aria-hidden="true" href="#应用与实战">#</a></h1>
+<h1 id="redis分布式锁">Redis分布式锁<a hidden class="anchor" aria-hidden="true" href="#redis分布式锁">#</a></h1>
+<h2 id="redlock算法">Redlock算法<a hidden class="anchor" aria-hidden="true" href="#redlock算法">#</a></h2>
+<p>Redlock 算法是 Redis 的作者 Antirez 提出的一种分布式锁的算法，Redlock 算法的基本思想是，使用多个 Redis 实例来存储锁，客户端需要同时向多个实例请求加锁和解锁，只有当大多数实例同意时，才认为操作成功。</p>
+<p>Redlock 算法的具体步骤如下：</p>
+<ul>
+<li>加锁：客户端获取当前时间戳，然后依次向 N 个 Redis 实例发送 SETNX 命令，将 key 设置为 lock，value 设置为一个随机字符串，并设置一个过期时间。如果向某个实例发送命令失败，就立即重试，直到成功或超时。然后客户端计算从获取时间戳到完成加锁的总耗时，如果超过了过期时间的一半，就认为加锁失败；否则，如果成功加锁的实例数超过了 N/2，就认为加锁成功，并返回 value；否则，就认为加锁失败，并向所有实例发送 DEL 命令，释放锁。</li>
+<li>解锁：客户端向所有实例发送 GET 命令，获取 key 的值，并与自己保存的随机字符串比较。如果相同，表示是自己加的锁，就可以向所有实例发送 DEL 命令，删除 key，释放锁；如果不同，表示是别人加的锁，就不做任何操作。</li>
+</ul>
+<p>Redlock 算法的优点是，它可以容忍少数实例故障或网络分区，只要大多数实例正常工作，就可以保证锁的正确性。它也可以避免单点故障导致的死锁。它的缺点是，它需要多个 Redis 实例和多次网络通信，可能会增加复杂度和开销。它也不能完全消除时钟漂移的影响，只能尽量减小其概率和影响。</p>
+<blockquote>
+<p>简化下步骤就是：</p>
+</blockquote>
+<ol>
+<li>按顺序向5个master节点请求加锁</li>
+<li>根据设置的超时时间来判断，是不是要跳过该master节点。</li>
+<li>如果大于等于三个节点加锁成功，并且使用的时间小于锁的有效期，即可认定加锁成功啦。</li>
+<li>如果获取锁失败，解锁！</li>
+</ol>
+<blockquote>
+</blockquote>
+<h1 id="什么是缓存穿透缓存雪崩缓存击穿">什么是缓存穿透、缓存雪崩、缓存击穿<a hidden class="anchor" aria-hidden="true" href="#什么是缓存穿透缓存雪崩缓存击穿">#</a></h1>
+<h2 id="缓存穿透">缓存穿透<a hidden class="anchor" aria-hidden="true" href="#缓存穿透">#</a></h2>
+<p>指查询一个一定不存在的数据，由于缓存是不命中时需要从数据库查询，查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到数据库去查询，进而给数据库带来压力。</p>
+<ul>
+<li>如故意查询某错误值，直接穿透缓存层，导致DB压力过大</li>
+</ul>
+<blockquote>
+<p>解决方案：
+1、对接口非法参数进行校验；
+2、如果数据库为空，也需要缓存一个空值，设置有效时间；
+3、使用布隆过滤器快速判断数据是否存在；</p>
+</blockquote>
+<h2 id="缓存雪崩">缓存雪崩<a hidden class="anchor" aria-hidden="true" href="#缓存雪崩">#</a></h2>
+<p>指缓存中数据大批量到过期时间，而查询数据量巨大，请求都直接访问数据库，引起数据库压力过大甚至down机。</p>
+<ul>
+<li>缓存雪奔一般是由于大量数据同时过期造成的，对于这个原因，可通过均匀设置过期时间解决，即让过期时间相对离散一点。</li>
+<li>Redis 故障宕机也可能引起缓存雪奔。</li>
+</ul>
+<blockquote>
+<p>解决方案：
+1、如采用一个较大固定值+一个较小的随机值，5小时+0到1800秒酱紫；
+2、对于故障宕机情况，使用RDB+AOF快速恢复；</p>
+</blockquote>
+<h2 id="缓存击穿">缓存击穿<a hidden class="anchor" aria-hidden="true" href="#缓存击穿">#</a></h2>
+<p>指热点key在某个时间点过期的时候，而恰好在这个时间点对这个Key有大量的并发请求过来，从而大量的请求打到db。</p>
+<ul>
+<li>缓存击穿与缓存雪崩的区别：<code>击穿是单热key失效，而雪崩是大量key集体失效</code></li>
+</ul>
+<blockquote>
+<p>解决方案：
+1、使用分布式互斥锁更新数据，抢不到锁自旋等待；
+2、热点数据不设置过期时间，待业务更新通过canel等插件触发更新；</p>
+</blockquote>
+<h1 id="什么是热key问题如何解决热key问题"><strong><strong>什么是热Key问题，如何解决热key问题</strong></strong><a hidden class="anchor" aria-hidden="true" href="#什么是热key问题如何解决热key问题">#</a></h1>
+<p>如果某一热点key的请求到服务器主机时，由于请求量特别大，可能会导致主机资源不足，甚至宕机，从而影响正常的服务。</p>
+<ul>
+<li>用户消费的数据远大于生产的数据，如秒杀、热点新闻等读多写少的场景。</li>
+<li>请求分片集中，超过单Redi服务器的性能，比如固定名称key，Hash落入同一台服务器，瞬间访问量极大，超过机器瓶颈，产生热点Key问题。</li>
+</ul>
+<blockquote>
+<p>解决方案：
+1、Redis集群扩容：增加分片副本，均衡读流量；
+2、使用一致性hash算法，解决缓存偏斜问题；</p>
+</blockquote>
+<h1 id="redis-过期策略和内存淘汰策略"><strong><strong>Redis 过期策略和内存淘汰策略</strong></strong><a hidden class="anchor" aria-hidden="true" href="#redis-过期策略和内存淘汰策略">#</a></h1>
+<h2 id="过期策略"><strong><strong>过期策略</strong></strong><a hidden class="anchor" aria-hidden="true" href="#过期策略">#</a></h2>
+<h3 id="定时过期"><strong>定时过期</strong><a hidden class="anchor" aria-hidden="true" href="#定时过期">#</a></h3>
+<blockquote>
+<p><code>每个设置过期时间的key都需要创建一个定时器，到过期时间就会立即对key进行清除。</code>该策略可以立即清除过期的数据，对内存很友好；但是会占用大量的CPU资源去处理过期的数据，从而影响缓存的响应时间和吞吐量。</p>
+</blockquote>
+<h3 id="惰性过期"><strong>惰性过期</strong><a hidden class="anchor" aria-hidden="true" href="#惰性过期">#</a></h3>
+<blockquote>
+<p><code>只有当访问一个key时，才会判断该key是否已过期，过期则清除。</code>该策略可以最大化地节省CPU资源，却对内存非常不友好。极端情况可能出现大量的过期key没有再次被访问，从而不会被清除，占用大量内存。</p>
+</blockquote>
+<h3 id="定期过期"><strong>定期过期</strong><a hidden class="anchor" aria-hidden="true" href="#定期过期">#</a></h3>
+<blockquote>
+<p><code>每隔一定的时间，会扫描一定数量的数据库的expires字典中一定数量的key，并清除其中已过期的key。</code>该策略是前两者的一个折中方案。通过调整定时扫描的时间间隔和每次扫描的限定耗时，可以在不同情况下使得CPU和内存资源达到最优的平衡效果。</p>
+<p>expires字典会保存所有设置了过期时间的key的过期时间数据，其中，key是指向键空间中的某个键的指针，value是该键的毫秒精度的UNIX时间戳表示的过期时间。键空间是指该Redis集群中保存的所有键。</p>
+</blockquote>
+<p>Redis中同时使用了**<code>惰性过期</code>**和**<code>定期过期</code>**两种过期策略。</p>
+<p>但是仍可能在内存大量读写的情况下，遗留大量已过期数据，仍占用内存，这种情况下为了避免redis宕机，redis有8种<strong>内存淘汰策略</strong>兜底~</p>
+<h2 id="内存淘汰策略">内存淘汰策略<a hidden class="anchor" aria-hidden="true" href="#内存淘汰策略">#</a></h2>
+<ol>
+<li>volatile-lru：当内存不足以容纳新写入数据时，从设置了过期时间的key中使用LRU（最近最少使用）算法进行淘汰；</li>
+<li>allkeys-lru：当内存不足以容纳新写入数据时，从所有key中使用LRU（最近最少使用）算法进行淘汰。</li>
+<li>volatile-lfu：4.0版本新增，当内存不足以容纳新写入数据时，在过期的key中，使用LFU算法进行删除key。</li>
+<li>allkeys-lfu：4.0版本新增，当内存不足以容纳新写入数据时，从所有key中使用LFU算法进行淘汰；</li>
+<li>volatile-random：当内存不足以容纳新写入数据时，从设置了过期时间的key中，随机淘汰数据；。</li>
+<li>allkeys-random：当内存不足以容纳新写入数据时，从所有key中随机淘汰数据。</li>
+<li>volatile-ttl：当内存不足以容纳新写入数据时，在设置了过期时间的key中，根据过期时间进行淘汰，越早过期的优先被淘汰；</li>
+<li>noeviction：默认策略，当内存不足以容纳新写入数据时，新写入操作会报错。</li>
+</ol>
+<h1 id="什么是redisson说说它的原理">什么是Redisson？说说它的原理<a hidden class="anchor" aria-hidden="true" href="#什么是redisson说说它的原理">#</a></h1>
+<p>Redisson解决了，<code>分布式锁</code>可能存在锁<code>过期释放，业务没执行完</code>的问题。</p>
+<p><img loading="lazy" src="/../../static/images/20221220%20-%20%E5%BA%94%E7%94%A8%E4%B8%8E%E5%AE%9E%E6%88%98/Untitled.png" alt="Untitled"  />
+</p>
+<p>只要线程一加锁成功，就会启动一个<code>watch dog</code>看门狗，它是一个后台线程，会每隔10秒检查一下，如果线程1还持有锁，那么就会不断的延长锁key的生存时间。因此，Redisson就是使用watch dog解决了<strong>锁过期释放，业务没执行完</strong>问题。</p>
+<h1 id="mysql与redis如何保证数据一致性">Mysql与Redis如何保证数据一致性<a hidden class="anchor" aria-hidden="true" href="#mysql与redis如何保证数据一致性">#</a></h1>
+<p>通过订阅biglog异步删除缓存</p>
+<p><img loading="lazy" src="/../../static/images/20221220%20-%20%E5%BA%94%E7%94%A8%E4%B8%8E%E5%AE%9E%E6%88%98/Untitled%201.png" alt="Untitled"  />
+</p>
+<p>步骤如下：</p>
+<ol>
+<li>修改DB</li>
+<li>canal订阅binlog，感知数据变更，发送请求至MQ</li>
+<li>MQ异步更新缓存</li>
+</ol>
+<h2 id="canal">Canal<a hidden class="anchor" aria-hidden="true" href="#canal">#</a></h2>
+<p>Canal是阿里开源的用于订阅Mysql中的Binlog中间件，从而触发后续开发操作</p>
+<p><strong>原理为：Mysql主备复制</strong></p>
+<p><img loading="lazy" src="/../../static/images/20221220%20-%20%E5%BA%94%E7%94%A8%E4%B8%8E%E5%AE%9E%E6%88%98/Untitled%202.png" alt="Untitled"  />
+</p>
+<h1 id="在生成-rdb期间redis-可以同时处理写请求么"><strong><strong>在生成 RDB期间，Redis 可以同时处理写请求么？</strong></strong><a hidden class="anchor" aria-hidden="true" href="#在生成-rdb期间redis-可以同时处理写请求么">#</a></h1>
+<p><strong>可以的</strong>，Redis提供两个指令生成RDB，分别是<strong>save和bgsave</strong>。</p>
+<ul>
+<li>如果是save指令，会阻塞，因为是主线程执行的。</li>
+<li>如果是bgsave指令，是fork一个子进程来写入RDB文件的，快照持久化完全交给子进程来处理，父进程则可以继续处理客户端的请求。</li>
+</ul>
+<h1 id="布隆过滤器">布隆过滤器<a hidden class="anchor" aria-hidden="true" href="#布隆过滤器">#</a></h1>
+<p>布隆过滤器的主要作用是：快速判断元素是否在当前集合中</p>
+<p><strong>判断是否存在</strong>：预分配一个很长的<code>bitmap位图</code>作为集合，对元素进行<code>哈希散列</code>运算，得到一串01数据，然后与集合进行<code>“与”</code>运算，结果与01数据串相同，即<code>大概率存在</code>，反之即<code>不存在</code></p>
+<p><strong>新增元素进集合</strong>：对元素进行<code>哈希散列</code>运算，得到一串01数据串，然后与集合进行<code>”或“</code>运算，即可得到新集合位图</p>
+<p><img loading="lazy" src="/../../static/images/20221220%20-%20%E5%BA%94%E7%94%A8%E4%B8%8E%E5%AE%9E%E6%88%98/Untitled%203.png" alt="Untitled"  />
+</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://nicko-ch.github.io/tags/redis/">Redis</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2023 <a href="https://nicko-ch.github.io/">&gt; $ cd /home</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

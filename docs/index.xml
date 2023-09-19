@@ -6,7 +6,23 @@
     <description>Recent content on &gt; $ cd /home</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 03 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 20 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://nicko-ch.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Redis应用与实战</title>
+      <link>https://nicko-ch.github.io/posts/redis/20221220-%E5%BA%94%E7%94%A8%E4%B8%8E%E5%AE%9E%E6%88%98/</link>
+      <pubDate>Tue, 20 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://nicko-ch.github.io/posts/redis/20221220-%E5%BA%94%E7%94%A8%E4%B8%8E%E5%AE%9E%E6%88%98/</guid>
+      <description>应用与实战 Redis分布式锁 Redlock算法 Redlock 算法是 Redis 的作者 Antirez 提出的一种分布式锁的算法，Redlock 算法的基本思想是，使用多个 Redis 实例来存储锁，客户端需要同时向多个实例请求加锁和解锁，只有当大多数实例同意时，才认为操作成功。
+Redlock 算法的具体步骤如下：
+ 加锁：客户端获取当前时间戳，然后依次向 N 个 Redis 实例发送 SETNX 命令，将 key 设置为 lock，value 设置为一个随机字符串，并设置一个过期时间。如果向某个实例发送命令失败，就立即重试，直到成功或超时。然后客户端计算从获取时间戳到完成加锁的总耗时，如果超过了过期时间的一半，就认为加锁失败；否则，如果成功加锁的实例数超过了 N/2，就认为加锁成功，并返回 value；否则，就认为加锁失败，并向所有实例发送 DEL 命令，释放锁。 解锁：客户端向所有实例发送 GET 命令，获取 key 的值，并与自己保存的随机字符串比较。如果相同，表示是自己加的锁，就可以向所有实例发送 DEL 命令，删除 key，释放锁；如果不同，表示是别人加的锁，就不做任何操作。  Redlock 算法的优点是，它可以容忍少数实例故障或网络分区，只要大多数实例正常工作，就可以保证锁的正确性。它也可以避免单点故障导致的死锁。它的缺点是，它需要多个 Redis 实例和多次网络通信，可能会增加复杂度和开销。它也不能完全消除时钟漂移的影响，只能尽量减小其概率和影响。
+ 简化下步骤就是：
+  按顺序向5个master节点请求加锁 根据设置的超时时间来判断，是不是要跳过该master节点。 如果大于等于三个节点加锁成功，并且使用的时间小于锁的有效期，即可认定加锁成功啦。 如果获取锁失败，解锁！    什么是缓存穿透、缓存雪崩、缓存击穿 缓存穿透 指查询一个一定不存在的数据，由于缓存是不命中时需要从数据库查询，查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到数据库去查询，进而给数据库带来压力。
+ 如故意查询某错误值，直接穿透缓存层，导致DB压力过大   解决方案： 1、对接口非法参数进行校验； 2、如果数据库为空，也需要缓存一个空值，设置有效时间； 3、使用布隆过滤器快速判断数据是否存在；
+ 缓存雪崩 指缓存中数据大批量到过期时间，而查询数据量巨大，请求都直接访问数据库，引起数据库压力过大甚至down机。
+ 缓存雪奔一般是由于大量数据同时过期造成的，对于这个原因，可通过均匀设置过期时间解决，即让过期时间相对离散一点。 Redis 故障宕机也可能引起缓存雪奔。   解决方案： 1、如采用一个较大固定值+一个较小的随机值，5小时+0到1800秒酱紫； 2、对于故障宕机情况，使用RDB+AOF快速恢复；</description>
+    </item>
+    
     <item>
       <title>分布式缓存</title>
       <link>https://nicko-ch.github.io/posts/solution/20221203-%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/</link>
@@ -36,7 +52,7 @@ Hash偏斜 解决方法：新增虚拟节点，让分布尽可能均匀</descrip
     </item>
     
     <item>
-      <title>设计与实现</title>
+      <title>Redis设计与实现</title>
       <link>https://nicko-ch.github.io/posts/redis/20220916-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/</link>
       <pubDate>Fri, 16 Sep 2022 00:00:00 +0000</pubDate>
       
@@ -48,7 +64,7 @@ Hash偏斜 解决方法：新增虚拟节点，让分布尽可能均匀</descrip
 1.1.4 获取长度 C语言字符串获取长度，需要遍历字符串中的每一位进行累加计算，时间复杂度为O(N)
 SDS获取长度，只需要直接获取len属性，时间复杂度为O(1)
 1.1.5 杜绝缓冲区溢出  C字符串中，如果未给变量申请足够的空间，进行了如srtcat复制操作，将可能导致新字符串过长，导致变量内存内容被覆盖。 与C语言不同，SDS会闲计算自身空间，如果不足会自动扩展。  1.1.6 空间预分配 为了防止频繁的进行空间分配，SDS每次扩容的时候都会进行一定的冗余扩充
- 如果对 SDS 进行修改之后， SDS 的长度（也即是 len 属性的值）将小于 1 MB ， 那么程序分配和 len 属性同样大小的未使用空间， 这时 SDS len 属性的值将和 free 属性的值相同。 举个例子， 如果进行修改之后， SDS 的 len 将变成 13 字节， 那么程序也会分配13 字节的未使用空间， SDS 的 buf 数组的实际长度将变成 13 + 13 + 1 = 27 字节（额外的一字节用于保存空字符）。 如果对 SDS 进行修改之后， SDS 的长度将大于等于 1 MB ， 那么程序会分配 1 MB 的未使用空间。 举个例子， 如果进行修改之后， SDS 的 len 将变成 30 MB ， 那么程序会分配 1 MB 的未使用空间， SDS 的 buf 数组的实际长度将为 30 MB + 1 MB + 1 byte 。  1.</description>
+ 如果对 SDS 进行修改之后， SDS 的长度（也即是 len 属性的值）将小于 1 MB ， 那么程序分配和 len 属性同样大小的未使用空间， 这时 SDS len 属性的值将和 free 属性的值相同。 举个例子， 如果进行修改之后， SDS 的 len 将变成 13 字节， 那么程序也会分配13 字节的未使用空间， SDS 的 buf 数组的实际长度将变成 13 + 13 + 1 = 27 字节（额外的一字节用于保存空字符）。 如果对 SDS 进行修改之后， SDS 的长度将大于等于 1 MB ， 那么程序会分配 1 MB 的未使用空间。 举个例子， 如果进行修改之后， SDS 的 len 将变成 30 MB ， 那么程序会分配 1 MB 的未使用空间， SDS 的 buf 数组的实际长度将为 30 MB + 1 MB + 1 byte 。  总结：小于1M则free和len预分配相同，大于1M则free每次预分配1M</description>
     </item>
     
     <item>
