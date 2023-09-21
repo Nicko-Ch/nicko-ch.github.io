@@ -1,5 +1,20 @@
 .post-content code {
     font-family: Consolas, Monaco, monospace;
+    /* font-size: .83em; */
+    color: #f92851;
+    background: var(--post-code-bg);
+}
+
+.post-content blockquote {
+    padding: 14px;
+    /* border: dotted; */
+    background: var(--blockquote);
+    border-inline-start: 5px solid var(--primary);
+}
+
+/* TOC索引目录字体不能为粗 */
+.toc details div ul li a strong {
+    font-weight: normal;
 }
 
 .post-content > table thead {
